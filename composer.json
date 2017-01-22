@@ -28,7 +28,8 @@
   ],
   "require": {
     "php": ">=7.0.0",
-    "cedx/lcov": "^0.2.0"
+    "cedx/lcov": "^0.2.0",
+    "symfony/yaml": "^3.2.2"
   },
   "require-dev": {
     "phing/phing": "^2.16.0",
