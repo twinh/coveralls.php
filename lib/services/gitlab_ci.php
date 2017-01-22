@@ -8,7 +8,7 @@ namespace coveralls\services\gitlab_ci;
  * Gets the configuration parameters from the environment.
  * @return array The configuration parameters.
  */
-function getConfiguration() {
+function getConfiguration(): array {
   return [
     'git_branch' => getenv('CI_BUILD_REF_NAME'),
     'git_commit' => getenv('CI_BUILD_REF'),

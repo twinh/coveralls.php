@@ -8,7 +8,7 @@ namespace coveralls\services\wercker;
  * Gets the configuration parameters from the environment.
  * @return array The configuration parameters.
  */
-function getConfiguration() {
+function getConfiguration(): array {
   return [
     'git_branch' => getenv('WERCKER_GIT_BRANCH'),
     'git_commit' => getenv('WERCKER_GIT_COMMIT'),

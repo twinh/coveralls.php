@@ -8,7 +8,7 @@ namespace coveralls\services\appveyor;
  * Gets the configuration parameters from the environment.
  * @return array The configuration parameters.
  */
-function getConfiguration() {
+function getConfiguration(): array {
   return [
     'git_branch' => getenv('APPVEYOR_REPO_BRANCH'),
     'git_commit' => getenv('APPVEYOR_REPO_COMMIT'),

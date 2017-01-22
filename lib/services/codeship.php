@@ -8,7 +8,7 @@ namespace coveralls\services\codeship;
  * Gets the configuration parameters from the environment.
  * @return array The configuration parameters.
  */
-function getConfiguration() {
+function getConfiguration(): array {
   return [
     'git_branch' => getenv('CI_BRANCH'),
     'git_commit' => getenv('CI_COMMIT_ID'),

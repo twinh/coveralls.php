@@ -8,7 +8,7 @@ namespace coveralls\services\circleci;
  * Gets the configuration parameters from the environment.
  * @return array The configuration parameters.
  */
-function getConfiguration() {
+function getConfiguration(): array {
   $map = [
     'git_branch' => getenv('CIRCLE_BRANCH'),
     'git_commit' => getenv('CIRCLE_SHA1'),
