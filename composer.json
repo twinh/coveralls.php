@@ -20,11 +20,11 @@
   },
   "keywords": [
     "client",
+    "clover",
     "code",
     "coverage",
     "coveralls",
-    "lcov",
-    "parser"
+    "lcov"
   ],
   "require": {
     "php": ">=7.0.0",
