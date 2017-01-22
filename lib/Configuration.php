@@ -4,17 +4,7 @@
  */
 namespace coveralls;
 
-use coveralls\services\{
-  appveyor,
-  circleci,
-  codeship,
-  gitlab_ci,
-  jenkins,
-  surf,
-  travis_ci,
-  wercker
-};
-
+use coveralls\services\{appveyor, circleci, codeship, gitlab_ci, jenkins, surf, travis_ci, wercker};
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -40,34 +30,36 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
    * @return Configuration The newly created configuration.
    */
   public static function fromEnvironment(): self {
-    $params = ['run_at' => getenv('COVERALLS_RUN_AT') ?: (new \DateTime())->format('c')];
+    $config = new static();
 
-    if ($value = getenv('COVERALLS_GIT_BRANCH')) $params['git_branch'] = $value;
-    if ($value = getenv('COVERALLS_GIT_COMMIT')) $params['git_commit'] = $value;
-    if (getenv('COVERALLS_PARALLEL') !== false) $params['parallel'] = true;
-    if ($value = getenv('COVERALLS_REPO_TOKEN')) $params['repo_token'] = $value;
-    if ($value = getenv('COVERALLS_SERVICE_JOB_ID')) $params['service_job_id'] = $value;
-    if ($value = getenv('COVERALLS_SERVICE_NAME')) $params['service_name'] = $value;
+    if ($value = getenv('COVERALLS_GIT_BRANCH')) $config['git_branch'] = $value;
+    if ($value = getenv('COVERALLS_GIT_COMMIT')) $config['git_commit'] = $value;
+    if (getenv('COVERALLS_PARALLEL') !== false) $config['parallel'] = true;
+    if ($value = getenv('COVERALLS_REPO_TOKEN')) $config['repo_token'] = $value;
+    $config['run_at'] = getenv('COVERALLS_RUN_AT') ?: (new \DateTime())->format('c');
+    if ($value = getenv('COVERALLS_SERVICE_JOB_ID')) $config['service_job_id'] = $value;
+    if ($value = getenv('COVERALLS_SERVICE_NAME')) $config['service_name'] = $value;
 
     /*
     $matches = new RegExp(r'(\d+)$').allMatches(getenv('CI_PULL_REQUEST') ?: '');
     if ($matches.length >= 2) $params['service_pull_request'] = $matches[1];
     */
 
-    $assign = function(array $values) use ($params) {
-      foreach ($values as $key => $value) { $params[$key] = $value; }
+    $fetch = function($service) use ($config) {
+      require_once __DIR__."/services/$service.php";
+      foreach (call_user_func("coveralls\\services\\$service\\getConfiguration") as $key => $value) $config[$key] = $value;
     };
 
-    if (getenv('TRAVIS') !== false) $assign(travis_ci\getConfiguration());
-    else if (getenv('APPVEYOR') !== false) $assign(appveyor\getConfiguration());
-    else if (getenv('CIRCLECI') !== false) $assign(circleci\getConfiguration());
-    else if (getenv('CI_NAME') == 'codeship') $assign(codeship\getConfiguration());
-    else if (getenv('GITLAB_CI') !== false) $assign(gitlab_ci\getConfiguration());
-    else if (getenv('JENKINS_URL') !== false) $assign(jenkins\getConfiguration());
-    else if (getenv('SURF_SHA1') !== false) $assign(surf\getConfiguration());
-    else if (getenv('WERCKER') !== false) $assign(wercker\getConfiguration());
+    if (getenv('TRAVIS') !== false) $fetch('travis_ci');
+    else if (getenv('APPVEYOR') !== false) $fetch('appveyor');
+    else if (getenv('CIRCLECI') !== false) $fetch('circleci');
+    else if (getenv('CI_NAME') == 'codeship') $fetch('codeship');
+    else if (getenv('GITLAB_CI') !== false) $fetch('gitlab_ci');
+    else if (getenv('JENKINS_URL') !== false) $fetch('jenkins');
+    else if (getenv('SURF_SHA1') !== false) $fetch('surf');
+    else if (getenv('WERCKER') !== false) $fetch('wercker');
 
-    return new static($params);
+    return $config;
   }
 
   /**
@@ -80,8 +72,8 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
   }
 
   /**
-   * Gets the number of key-value pairs in the map.
-   * @return int The number of key-value pairs in the map.
+   * Gets the number of key-value pairs in this configuration.
+   * @return int The number of key-value pairs in this configuration.
    */
   public function count(): int {
     return count($this->params);
@@ -109,7 +101,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
    * @return bool `true` if this configuration contains the specified offset, otherwiser `false`.
    */
   public function offsetExists($offset): bool {
-    return array_key_exists($offset, $this->params);
+    return isset($this->params[$offset]);
   }
 
   /**
