@@ -1,0 +1,47 @@
+{
+  "description": "Send Clover coverage reports to the Coveralls service.",
+  "homepage": "https://github.com/cedx/coveralls.php",
+  "name": "cedx/coveralls",
+
+  "license": "Apache-2.0",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "type": "library",
+
+  "authors": [{
+    "email": "cedric@belin.io",
+    "name": "Cédric Belin"
+  }],
+  "autoload": {
+    "psr-4": {"coveralls\\": "lib/"}
+  },
+  "config": {
+    "optimize-autoloader": true
+  },
+  "keywords": [
+    "client",
+    "code",
+    "coverage",
+    "coveralls",
+    "lcov",
+    "parser"
+  ],
+  "require": {
+    "php": ">=7.0.0",
+    "cedx/lcov": "^0.2.0"
+  },
+  "require-dev": {
+    "phing/phing": "^2.16.0",
+    "phpdocumentor/phpdocumentor": "^2.9.0",
+    "phpmd/phpmd": "^2.6.0",
+    "phpunit/phpunit": "^5.7.5",
+    "satooshi/php-coveralls": "^1.0.1"
+  },
+  "scripts": {
+    "coverage": "coveralls --coverage_clover=var/coverage.xml",
+    "test": "phpunit"
+  },
+  "support": {
+    "issues": "https://github.com/cedx/coveralls.php/issues"
+  }
+}
