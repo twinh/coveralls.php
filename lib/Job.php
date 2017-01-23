@@ -5,9 +5,9 @@
 namespace coveralls;
 
 /**
- * TODO
+ * Represents the coverage data from a single run of a test suite.
  */
-class Job {
+class Job implements \JsonSerializable {
 
   /**
    * @var Configuration The job configuration.
@@ -25,16 +25,8 @@ class Job {
    * @param Configuration $configuration The job configuration.
    */
   public function __construct(array $sourceFiles = [], Configuration $configuration = null) {
-    $this->configuration = $configuration ?: clone Configuration::getDefault();
+    $this->configuration = $configuration ?: (new Configuration())->merge(Configuration::getDefault());
     $this->sourceFiles = new \ArrayObject($sourceFiles);
-  }
-
-  /**
-   * Gets a value indicating whether the build will not be considered done until a webhook has been sent to Coveralls.
-   * @return bool `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
-   */
-  public function getParallel(): bool {
-    return $this->configuration['parallel'] == 'true';
   }
 
   /**
@@ -59,6 +51,35 @@ class Job {
    */
   public function getSourceFiles(): \ArrayObject {
     return $this->sourceFiles;
+  }
+
+  /**
+   * Gets a value indicating whether the build will not be considered done until a webhook has been sent to Coveralls.
+   * @return bool `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
+   */
+  public function isParallel(): bool {
+    $parallel = $this->configuration['parallel'];
+    return is_string($parallel) ? mb_strtolower($parallel) == 'true' : (bool) $parallel;
+  }
+
+  /**
+   * Converts this object to a map in JSON format.
+   * @return \stdClass The map in JSON format corresponding to this object.
+   */
+  public function jsonSerialize(): \stdClass {
+    return (object) [
+      // TODO
+    ];
+  }
+
+  /**
+   * Sets a value indicating whether the build will not be considered done until a webhook has been sent to Coveralls.
+   * @param bool $value `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
+   * @return Job This instance.
+   */
+  public function setParallel(bool $value) {
+    $this->configuration['parallel'] = $value ? 'true' : 'false';
+    return $this;
   }
 
   /**
