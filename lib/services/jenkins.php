@@ -11,10 +11,12 @@ use coveralls\Configuration;
  */
 function getConfiguration(): Configuration {
   return new Configuration([
-    'git_branch' => getenv('GIT_BRANCH'),
-    'git_commit' => getenv('GIT_COMMIT'),
+    'commit_sha' => getenv('GIT_COMMIT'),
+    'service_branch' => getenv('GIT_BRANCH'),
+    'service_build_url' => getenv('BUILD_URL'),
     'service_job_id' => getenv('BUILD_ID'),
     'service_name' => 'jenkins',
+    'service_number' => getenv('BUILD_NUMBER'),
     'service_pull_request' => getenv('ghprbPullId')
   ]);
 }

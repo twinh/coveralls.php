@@ -10,7 +10,13 @@ use coveralls\Configuration;
  * @return Configuration The configuration parameters.
  */
 function getConfiguration(): Configuration {
+  $serviceNumber = getenv('TDDIUM_SESSION_ID');
   return new Configuration([
-    // TODO Implement this function.
+    'service_branch' => getenv('TDDIUM_CURRENT_BRANCH'),
+    'service_build_url' => "https://ci.solanolabs.com/reports/$serviceNumber",
+    'service_job_number' => getenv('TDDIUM_TID'),
+    'service_name' => 'tddium',
+    'service_number' => $serviceNumber,
+    'service_pull_request' => getenv('TDDIUM_PR_ID')
   ]);
 }

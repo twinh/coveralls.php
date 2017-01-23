@@ -11,8 +11,8 @@ use coveralls\Configuration;
  */
 function getConfiguration(): Configuration {
   return new Configuration([
-    'git_branch' => getenv('SURF_REF'),
-    'git_commit' => getenv('SURF_SHA1'),
+    'commit_sha' => getenv('SURF_SHA1'),
+    'service_branch' => getenv('SURF_REF'),
     'service_name' => 'surf'
   ]);
 }

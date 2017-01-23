@@ -10,10 +10,15 @@ use coveralls\Configuration;
  * @return Configuration The configuration parameters.
  */
 function getConfiguration(): Configuration {
-  return new Configuration([
-    'git_branch' => getenv('TRAVIS_BRANCH'),
-    'git_commit' => 'HEAD',
+  $config = new Configuration([
+    'commit_sha' => 'HEAD',
+    'service_branch' => getenv('TRAVIS_BRANCH'),
     'service_job_id' => getenv('TRAVIS_JOB_ID'),
     'service_name' => 'travis-ci'
   ]);
+
+  $pullRequest = getenv('TRAVIS_PULL_REQUEST');
+  if ($pullRequest && $pullRequest != 'false') $config['service_pull_request'] = $pullRequest;
+
+  return $config;
 }

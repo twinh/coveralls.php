@@ -11,10 +11,12 @@ use coveralls\Configuration;
  */
 function getConfiguration(): Configuration {
   $config = new Configuration([
-    'git_branch' => getenv('CIRCLE_BRANCH'),
-    'git_commit' => getenv('CIRCLE_SHA1'),
-    'service_job_id' => getenv('CIRCLE_BUILD_NUM'),
-    'service_name' => 'circleci'
+    'commit_sha' => getenv('CIRCLE_SHA1'),
+    'service_branch' => getenv('CIRCLE_BRANCH'),
+    'parallel' => ((int) getenv('CIRCLE_NODE_TOTAL')) > 1 ? 'true' : 'false',
+    'service_job_number' => getenv('CIRCLE_NODE_INDEX'),
+    'service_name' => 'circleci',
+    'service_number' => getenv('CIRCLE_BUILD_NUM')
   ]);
 
   if ($pullRequest = getenv('CI_PULL_REQUEST')) {

@@ -11,8 +11,8 @@ use coveralls\Configuration;
  */
 function getConfiguration(): Configuration {
   return new Configuration([
-    'git_branch' => getenv('CI_BUILD_REF_NAME'),
-    'git_commit' => getenv('CI_BUILD_REF'),
+    'commit_sha' => getenv('CI_BUILD_REF'),
+    'service_branch' => getenv('CI_BUILD_REF_NAME'),
     'service_job_id' => getenv('CI_BUILD_ID'),
     'service_job_number' => getenv('CI_BUILD_NAME'),
     'service_name' => 'gitlab-ci'

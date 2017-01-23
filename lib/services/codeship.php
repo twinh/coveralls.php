@@ -11,11 +11,11 @@ use coveralls\Configuration;
  */
 function getConfiguration(): Configuration {
   return new Configuration([
-    'git_branch' => getenv('CI_BRANCH'),
-    'git_commit' => getenv('CI_COMMIT_ID'),
+    'commit_sha' => getenv('CI_COMMIT_ID'),
     'git_committer_email' => getenv('CI_COMMITTER_EMAIL'),
     'git_committer_name' => getenv('CI_COMMITTER_NAME'),
     'git_message' => getenv('CI_COMMIT_MESSAGE'),
+    'service_branch' => getenv('CI_BRANCH'),
     'service_job_id' => getenv('CI_BUILD_NUMBER'),
     'service_name' => 'codeship'
   ]);

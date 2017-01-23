@@ -10,11 +10,16 @@ use coveralls\Configuration;
  * @return Configuration The configuration parameters.
  */
 function getConfiguration(): Configuration {
+  $repoName = getenv('APPVEYOR_REPO_NAME');
+  $serviceNumber = getenv('APPVEYOR_BUILD_VERSION');
+
   return new Configuration([
-    'git_branch' => getenv('APPVEYOR_REPO_BRANCH'),
-    'git_commit' => getenv('APPVEYOR_REPO_COMMIT'),
+    'commit_sha' => getenv('APPVEYOR_REPO_COMMIT'),
+    'service_branch' => getenv('APPVEYOR_REPO_BRANCH'),
+    'service_build_url' => "https://ci.appveyor.com/project/$repoName/build/$serviceNumber",
     'service_job_id' => getenv('APPVEYOR_BUILD_ID'),
     'service_job_number' => getenv('APPVEYOR_BUILD_NUMBER'),
-    'service_name' => 'appveyor'
+    'service_name' => 'appveyor',
+    'service_number' => $serviceNumber
   ]);
 }

@@ -11,8 +11,8 @@ use coveralls\Configuration;
  */
 function getConfiguration(): Configuration {
   return new Configuration([
-    'git_branch' => getenv('WERCKER_GIT_BRANCH'),
-    'git_commit' => getenv('WERCKER_GIT_COMMIT'),
+    'commit_sha' => getenv('WERCKER_GIT_COMMIT'),
+    'service_branch' => getenv('WERCKER_GIT_BRANCH'),
     'service_job_id' => getenv('WERCKER_BUILD_ID'),
     'service_name' => 'wercker'
   ]);

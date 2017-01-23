@@ -11,6 +11,10 @@ use coveralls\Configuration;
  */
 function getConfiguration(): Configuration {
   return new Configuration([
-    // TODO Implement this function.
+    'commit_sha' => getenv('REVISION'),
+    'service_branch' => getenv('BRANCH_NAME'),
+    'service_name' => 'semaphore',
+    'service_number' => getenv('SEMAPHORE_BUILD_NUMBER'),
+    'service_pull_request' => getenv('PULL_REQUEST_NUMBER')
   ]);
 }
