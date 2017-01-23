@@ -13,6 +13,11 @@ use Symfony\Component\Yaml\Exception\ParseException;
 class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializable {
 
   /**
+   * @var Configuration The default configuration.
+   */
+  private static $default;
+
+  /**
    * @var array The configuration parameters.
    */
   private $params;
@@ -72,7 +77,7 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
     if ($value = getenv('GIT_ID')) $config['commit_sha'] = $value;
     if ($value = getenv('GIT_MESSAGE')) $config['git_message'] = $value;
 
-    // CI service.
+    // CI services.
     $merge = function($service) use ($config) {
       require_once __DIR__."/services/$service.php";
       $config->merge(call_user_func("coveralls\\services\\$service\\getConfiguration"));
@@ -117,20 +122,18 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
    * @return Configuration The default configuration.
    */
   public static function getDefault(): self {
-    static $instance;
-
-    if (!$instance) {
-      $instance = new static();
+    if (!static::$default) {
+      static::$default = new static();
 
       if (is_file($path = getcwd().'/.coveralls.yml')) {
         $config = static::fromYAML(@file_get_contents($path));
-        if ($config) $instance->merge($config);
+        if ($config) static::$default->merge($config);
       }
 
-      $instance->merge(static::fromEnvironment());
+      static::$default->merge(static::fromEnvironment());
     }
 
-    return $instance;
+    return static::$default;
   }
 
   /**
