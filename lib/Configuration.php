@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Provides access to the coverage settings.
  */
-class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
+class Configuration implements \ArrayAccess, \IteratorAggregate {
 
   /**
    * @var array The configuration parameters.
@@ -30,32 +30,34 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
   public static function fromEnvironment(): self {
     $config = new static();
 
-    if ($value = getenv('COVERALLS_GIT_BRANCH')) $config['git_branch'] = $value;
-    if ($value = getenv('COVERALLS_GIT_COMMIT')) $config['git_commit'] = $value;
-    if (getenv('COVERALLS_PARALLEL') !== false) $config['parallel'] = true;
-    if ($value = getenv('COVERALLS_REPO_TOKEN')) $config['repo_token'] = $value;
-    $config['run_at'] = getenv('COVERALLS_RUN_AT') ?: (new \DateTime())->format('c');
-    if ($value = getenv('COVERALLS_SERVICE_JOB_ID')) $config['service_job_id'] = $value;
-    if ($value = getenv('COVERALLS_SERVICE_NAME')) $config['service_name'] = $value;
+    // TODO: not sure if a default value is required.
+    $config->set('parallel', getenv('COVERALLS_PARALLEL') == 'true');
+    $config->set('run_at', getenv('COVERALLS_RUN_AT') ?: (new \DateTime())->format('c'));
+
+    if ($value = getenv('COVERALLS_GIT_BRANCH')) $config->set('git_branch', $value);
+    if ($value = getenv('COVERALLS_GIT_COMMIT')) $config->set('git_commit', $value);
+    if ($value = getenv('COVERALLS_REPO_TOKEN')) $config->set('repo_token', $value);
+    if ($value = getenv('COVERALLS_SERVICE_JOB_ID')) $config->set('service_job_id', $value);
+    if ($value = getenv('COVERALLS_SERVICE_NAME')) $config->set('service_name', $value);
 
     /*
     $matches = new RegExp(r'(\d+)$').allMatches(getenv('CI_PULL_REQUEST') ?: '');
     if ($matches.length >= 2) $params['service_pull_request'] = $matches[1];
     */
 
-    $fetch = function($service) use ($config) {
+    $merge = function($service) use ($config) {
       require_once __DIR__."/services/$service.php";
-      foreach (call_user_func("coveralls\\services\\$service\\getConfiguration") as $key => $value) $config->set($key, $value);
+      $config->merge(call_user_func("coveralls\\services\\$service\\getConfiguration"));
     };
 
-    if (getenv('TRAVIS') !== false) $fetch('travis_ci');
-    else if (getenv('APPVEYOR') !== false) $fetch('appveyor');
-    else if (getenv('CIRCLECI') !== false) $fetch('circleci');
-    else if (getenv('CI_NAME') == 'codeship') $fetch('codeship');
-    else if (getenv('GITLAB_CI') !== false) $fetch('gitlab_ci');
-    else if (getenv('JENKINS_URL') !== false) $fetch('jenkins');
-    else if (getenv('SURF_SHA1') !== false) $fetch('surf');
-    else if (getenv('WERCKER') !== false) $fetch('wercker');
+    if (getenv('TRAVIS') !== false) $merge('travis_ci');
+    else if (getenv('APPVEYOR') !== false) $merge('appveyor');
+    else if (getenv('CIRCLECI') !== false) $merge('circleci');
+    else if (getenv('CI_NAME') == 'codeship') $merge('codeship');
+    else if (getenv('GITLAB_CI') !== false) $merge('gitlab_ci');
+    else if (getenv('JENKINS_URL') !== false) $merge('jenkins');
+    else if (getenv('SURF_SHA1') !== false) $merge('surf');
+    else if (getenv('WERCKER') !== false) $merge('wercker');
 
     return $config;
   }
@@ -70,14 +72,6 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
   }
 
   /**
-   * Gets the number of key-value pairs in this configuration.
-   * @return int The number of key-value pairs in this configuration.
-   */
-  public function count(): int {
-    return count($this->params);
-  }
-
-  /**
    * Gets the value of the configuration parameter with the specified name.
    * @param string $name The name of the configuration parameter.
    * @param mixed $defaultValue The default parameter value if it does not exist.
@@ -85,6 +79,22 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
    */
   public function get(string $name, $defaultValue = null) {
     return $this->params[$name] ?? $defaultValue;
+  }
+
+  /**
+   * Returns the default configuration.
+   * @return Configuration The default configuration.
+   */
+  public static function getDefault(): self {
+    static $instance;
+
+    if (!isset($instance)) {
+      $instance = new static();
+      if (is_file($path = getcwd().'/.coveralls.yml')) $instance->merge(static::fromYAML(@file_get_contents($path)));
+      $instance->merge(static::fromEnvironment());
+    }
+
+    return $instance;
   }
 
   /**
@@ -101,6 +111,14 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
    */
   public function jsonSerialize(): \stdClass {
     return (object) $this->params;
+  }
+
+  /**
+   * Adds all key-value pairs of the specified configuration to this one.
+   * @param Configuration $config The configuration to be merged.
+   */
+  public function merge(self $config) {
+    foreach ($config as $key => $value) $this->set($key, $value);
   }
 
   /**
