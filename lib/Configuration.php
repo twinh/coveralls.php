@@ -3,8 +3,6 @@
  * Implementation of the `coveralls\Configuration` class.
  */
 namespace coveralls;
-
-use coveralls\services\{appveyor, circleci, codeship, gitlab_ci, jenkins, surf, travis_ci, wercker};
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -47,7 +45,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
 
     $fetch = function($service) use ($config) {
       require_once __DIR__."/services/$service.php";
-      foreach (call_user_func("coveralls\\services\\$service\\getConfiguration") as $key => $value) $config[$key] = $value;
+      foreach (call_user_func("coveralls\\services\\$service\\getConfiguration") as $key => $value) $config->set($key, $value);
     };
 
     if (getenv('TRAVIS') !== false) $fetch('travis_ci');
@@ -77,6 +75,16 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
    */
   public function count(): int {
     return count($this->params);
+  }
+
+  /**
+   * Gets the value of the configuration parameter with the specified name.
+   * @param string $name The name of the configuration parameter.
+   * @param mixed $defaultValue The default parameter value if it does not exist.
+   * @return mixed The value of the configuration parameter, or the default value if the parameter is not found.
+   */
+  public function get(string $name, $defaultValue = null) {
+    return $this->params[$name] ?? $defaultValue;
   }
 
   /**
@@ -110,7 +118,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
    * @return mixed The value, or a `null` reference is the offset is not found.
    */
   public function offsetGet($offset) {
-    return $this->params[$offset] ?? null;
+    return $this->get($offset);
   }
 
   /**
@@ -119,7 +127,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
    * @param mixed $value The new value.
    */
   public function offsetSet($offset, $value) {
-    $this->params[$offset] = $value;
+    $this->set($offset, $value);
   }
 
   /**
@@ -128,5 +136,16 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate {
    */
   public function offsetUnset($offset) {
     unset($this->params[$offset]);
+  }
+
+  /**
+   * Sets the value of the configuration parameter with the specified name.
+   * @param string $name The name of the configuration parameter.
+   * @param mixed $value The parameter value.
+   * @return Configuration This instance.
+   */
+  public function set(string $name, $value): self {
+    $this->params[$name] = $value;
+    return $this;
   }
 }
