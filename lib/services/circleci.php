@@ -12,8 +12,8 @@ use coveralls\Configuration;
 function getConfiguration(): Configuration {
   $config = new Configuration([
     'commit_sha' => getenv('CIRCLE_SHA1'),
-    'service_branch' => getenv('CIRCLE_BRANCH'),
     'parallel' => ((int) getenv('CIRCLE_NODE_TOTAL')) > 1 ? 'true' : 'false',
+    'service_branch' => getenv('CIRCLE_BRANCH'),
     'service_job_number' => getenv('CIRCLE_NODE_INDEX'),
     'service_name' => 'circleci',
     'service_number' => getenv('CIRCLE_BUILD_NUM')
