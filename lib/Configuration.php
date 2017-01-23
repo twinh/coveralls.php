@@ -31,14 +31,14 @@ class Configuration implements \ArrayAccess, \IteratorAggregate {
     $config = new static();
 
     // TODO: not sure if a default value is required.
-    $config->set('parallel', getenv('COVERALLS_PARALLEL') == 'true');
-    $config->set('run_at', getenv('COVERALLS_RUN_AT') ?: (new \DateTime())->format('c'));
+    $config['parallel'] = getenv('COVERALLS_PARALLEL') == 'true';
+    $config['run_at'] = getenv('COVERALLS_RUN_AT') ?: (new \DateTime())->format('c');
 
-    if ($value = getenv('COVERALLS_GIT_BRANCH')) $config->set('git_branch', $value);
-    if ($value = getenv('COVERALLS_GIT_COMMIT')) $config->set('git_commit', $value);
-    if ($value = getenv('COVERALLS_REPO_TOKEN')) $config->set('repo_token', $value);
-    if ($value = getenv('COVERALLS_SERVICE_JOB_ID')) $config->set('service_job_id', $value);
-    if ($value = getenv('COVERALLS_SERVICE_NAME')) $config->set('service_name', $value);
+    if ($value = getenv('COVERALLS_GIT_BRANCH')) $config['git_branch'] = $value;
+    if ($value = getenv('COVERALLS_GIT_COMMIT')) $config['git_commit'] = $value;
+    if ($value = getenv('COVERALLS_REPO_TOKEN')) $config['repo_token'] = $value;
+    if ($value = getenv('COVERALLS_SERVICE_JOB_ID')) $config['service_job_id'] = $value;
+    if ($value = getenv('COVERALLS_SERVICE_NAME')) $config['service_name'] = $value;
 
     /*
     $matches = new RegExp(r'(\d+)$').allMatches(getenv('CI_PULL_REQUEST') ?: '');
@@ -69,16 +69,6 @@ class Configuration implements \ArrayAccess, \IteratorAggregate {
    */
   public static function fromYAML(string $document): self {
     return new static(Yaml::parse($document));
-  }
-
-  /**
-   * Gets the value of the configuration parameter with the specified name.
-   * @param string $name The name of the configuration parameter.
-   * @param mixed $defaultValue The default parameter value if it does not exist.
-   * @return mixed The value of the configuration parameter, or the default value if the parameter is not found.
-   */
-  public function get(string $name, $defaultValue = null) {
-    return $this->params[$name] ?? $defaultValue;
   }
 
   /**
@@ -118,7 +108,7 @@ class Configuration implements \ArrayAccess, \IteratorAggregate {
    * @param Configuration $config The configuration to be merged.
    */
   public function merge(self $config) {
-    foreach ($config as $key => $value) $this->set($key, $value);
+    foreach ($config as $key => $value) $this->offsetSet($key, $value);
   }
 
   /**
@@ -136,7 +126,7 @@ class Configuration implements \ArrayAccess, \IteratorAggregate {
    * @return mixed The value, or a `null` reference is the offset is not found.
    */
   public function offsetGet($offset) {
-    return $this->get($offset);
+    return $this->params[$offset] ?? null;
   }
 
   /**
@@ -145,7 +135,7 @@ class Configuration implements \ArrayAccess, \IteratorAggregate {
    * @param mixed $value The new value.
    */
   public function offsetSet($offset, $value) {
-    $this->set($offset, $value);
+    $this->params[$offset] = $value;
   }
 
   /**
@@ -154,16 +144,5 @@ class Configuration implements \ArrayAccess, \IteratorAggregate {
    */
   public function offsetUnset($offset) {
     unset($this->params[$offset]);
-  }
-
-  /**
-   * Sets the value of the configuration parameter with the specified name.
-   * @param string $name The name of the configuration parameter.
-   * @param mixed $value The parameter value.
-   * @return Configuration This instance.
-   */
-  public function set(string $name, $value): self {
-    $this->params[$name] = $value;
-    return $this;
   }
 }

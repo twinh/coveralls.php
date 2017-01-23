@@ -34,7 +34,7 @@ class Job {
    * @return bool `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
    */
   public function getParallel(): bool {
-    return $this->configuration->get('parallel', 'false') == 'true';
+    return $this->configuration['parallel'] == 'true';
   }
 
   /**
@@ -42,7 +42,7 @@ class Job {
    * @return string The secret token for the repository.
    */
   public function getRepoToken(): string {
-    return $this->configuration->get('repo_token', '') ?: $this->configuration->get('repo_secret_token', '');
+    return $this->configuration['repo_token'] ?: ($this->configuration['repo_secret_token'] ?: '');
   }
 
   /**
@@ -50,7 +50,7 @@ class Job {
    * @return string The CI service or other environment in which the test suite was run.
    */
   public function getServiceName(): string {
-    return $this->configuration->get('service_name', '');
+    return $this->configuration['service_name'] ?: '';
   }
 
   /**

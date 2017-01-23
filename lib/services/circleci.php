@@ -10,7 +10,7 @@ use coveralls\Configuration;
  * @return Configuration The configuration parameters.
  */
 function getConfiguration(): Configuration {
-  $map = new Configuration([
+  $config = new Configuration([
     'git_branch' => getenv('CIRCLE_BRANCH'),
     'git_commit' => getenv('CIRCLE_SHA1'),
     'service_job_id' => getenv('CIRCLE_BUILD_NUM'),
@@ -19,8 +19,8 @@ function getConfiguration(): Configuration {
 
   if ($pullRequest = getenv('CI_PULL_REQUEST')) {
     $parts = explode('/pull/', $pullRequest);
-    if (count($parts) >= 2) $map['service_pull_request'] = $parts[1];
+    if (count($parts) >= 2) $config['service_pull_request'] = $parts[1];
   }
 
-  return $map;
+  return $config;
 }
