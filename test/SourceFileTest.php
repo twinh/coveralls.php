@@ -40,19 +40,19 @@ class SourceFileTest extends \PHPUnit_Framework_TestCase {
    * Tests the `SourceFile::jsonSerialize()` method.
    */
   public function testJsonSerialize() {
-    $data = (new SourceFile())->jsonSerialize();
-    $this->assertCount(3, get_object_vars($data));
-    $this->assertCount(0, $data->coverage);
-    $this->assertEmpty($data->name);
-    $this->assertEmpty($data->source_digest);
+    $map = (new SourceFile())->jsonSerialize();
+    $this->assertCount(3, get_object_vars($map));
+    $this->assertCount(0, $map->coverage);
+    $this->assertEmpty($map->name);
+    $this->assertEmpty($map->source_digest);
 
-    $data = (new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', [null, 2, 0, null, 4, 15, null], 'function main() {}'))->jsonSerialize();
-    $this->assertCount(4, get_object_vars($data));
-    $this->assertCount(7, $data->coverage);
-    $this->assertNull($data->coverage[0]);
-    $this->assertEquals(2, $data->coverage[1]);
-    $this->assertEquals('coveralls.php', $data->name);
-    $this->assertEquals('function main() {}', $data->source);
-    $this->assertEquals('e23fb141da9a7b438479a48eac7b7249', $data->source_digest);
+    $map = (new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', [null, 2, 0, null, 4, 15, null], 'function main() {}'))->jsonSerialize();
+    $this->assertCount(4, get_object_vars($map));
+    $this->assertCount(7, $map->coverage);
+    $this->assertNull($map->coverage[0]);
+    $this->assertEquals(2, $map->coverage[1]);
+    $this->assertEquals('coveralls.php', $map->name);
+    $this->assertEquals('function main() {}', $map->source);
+    $this->assertEquals('e23fb141da9a7b438479a48eac7b7249', $map->source_digest);
   }
 }
