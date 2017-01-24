@@ -15,6 +15,9 @@ function getConfiguration(): Configuration {
 
   return new Configuration([
     'commit_sha' => getenv('APPVEYOR_REPO_COMMIT'),
+    'git_author_email' => getenv('APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL'),
+    'git_author_name' => getenv('APPVEYOR_REPO_COMMIT_AUTHOR'),
+    'git_message' => getenv('APPVEYOR_REPO_COMMIT_MESSAGE'),
     'service_branch' => getenv('APPVEYOR_REPO_BRANCH'),
     'service_build_url' => "https://ci.appveyor.com/project/$repoName/build/$serviceNumber",
     'service_job_id' => getenv('APPVEYOR_BUILD_ID'),

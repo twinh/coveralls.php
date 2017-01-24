@@ -15,7 +15,6 @@ function getConfiguration(): Configuration {
     'git_committer_email' => getenv('CI_COMMITTER_EMAIL'),
     'git_committer_name' => getenv('CI_COMMITTER_NAME'),
     'git_message' => getenv('CI_COMMIT_MESSAGE'),
-    'service_branch' => getenv('CI_BRANCH'),
     'service_job_id' => getenv('CI_BUILD_NUMBER'),
     'service_name' => 'codeship'
   ]);
