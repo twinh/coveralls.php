@@ -10,12 +10,7 @@ use Symfony\Component\Yaml\Exception\ParseException;
 /**
  * Provides access to the coverage settings.
  */
-class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializable {
-
-  /**
-   * @var Configuration The default configuration.
-   */
-  private static $default;
+class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable {
 
   /**
    * @var array The configuration parameters.
@@ -47,18 +42,18 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
     $config = new static();
 
     // Standard.
+    $serviceName = getenv('CI_NAME') ?: '';
+    if (mb_strlen($serviceName)) $config['service_name'] = $serviceName;
+
     if ($value = getenv('CI_BRANCH')) $config['service_branch'] = $value;
     if ($value = getenv('CI_BUILD_NUMBER')) $config['service_number'] = $value;
     if ($value = getenv('CI_BUILD_URL')) $config['service_build_url'] = $value;
     if ($value = getenv('CI_COMMIT')) $config['commit_sha'] = $value;
     if ($value = getenv('CI_JOB_ID')) $config['service_job_id'] = $value;
-    if ($value = getenv('CI_NAME')) $config['service_name'] = $value;
 
-    /* TODO
-    if ($value = getenv('CI_PULL_REQUEST')) {
-      preg_match_all('/(\d+)$/', $value, $matches);
+    if (($value = getenv('CI_PULL_REQUEST')) && preg_match('/(\d+)$/', $value, $matches)) {
       if (count($matches) >= 2) $config['service_pull_request'] = $matches[1];
-    }*/
+    }
 
     // Coveralls.
     if ($value = getenv('COVERALLS_COMMIT_SHA')) $config['commit_sha'] = $value;
@@ -87,7 +82,7 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
     if (getenv('TRAVIS') !== false) $merge('travis_ci');
     else if (getenv('APPVEYOR') !== false) $merge('appveyor');
     else if (getenv('CIRCLECI') !== false) $merge('circleci');
-    else if (getenv('CI_NAME') == 'codeship') $merge('codeship');
+    else if ($serviceName == 'codeship') $merge('codeship');
     else if (getenv('GITLAB_CI') !== false) $merge('gitlab_ci');
     else if (getenv('JENKINS_URL') !== false) $merge('jenkins');
     else if (getenv('SEMAPHORE') !== false) $merge('semaphore');
@@ -109,22 +104,11 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
   }
 
   /**
-   * Returns the default configuration.
-   * @return Configuration The default configuration.
+   * Gets the number of key-value pairs in this configuration.
+   * @return int The number of key-value pairs in this configuration.
    */
-  public static function getDefault(): self {
-    if (!static::$default) {
-      static::$default = new static();
-
-      if (is_file($path = getcwd().'/.coveralls.yml')) {
-        $config = static::fromYAML(@file_get_contents($path));
-        if ($config) static::$default->merge($config);
-      }
-
-      static::$default->merge(static::fromEnvironment());
-    }
-
-    return static::$default;
+  public function count(): int {
+    return count($this->params);
   }
 
   /**
@@ -144,10 +128,27 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
   }
 
   /**
+   * Creates a new configuration from the default values.
+   * These values are taken from the `.coveralls.yml` file and the environment variables.
+   * @return Configuration The default configuration.
+   */
+  public static function loadDefaults(): self {
+    $defaults = new static();
+
+    if (is_file($path = getcwd().'/.coveralls.yml')) {
+      $config = static::fromYAML(@file_get_contents($path));
+      if ($config) $defaults->merge($config);
+    }
+
+    $defaults->merge(static::fromEnvironment());
+    return $defaults;
+  }
+
+  /**
    * Adds all key-value pairs of the specified configuration to this one.
    * @param Configuration $config The configuration to be merged.
    */
-  public function merge(self $config): self {
+  public function merge(self $config) {
     foreach ($config as $key => $value) $this[$key] = $value;
   }
 

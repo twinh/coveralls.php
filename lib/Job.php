@@ -21,11 +21,11 @@ class Job implements \JsonSerializable {
 
   /**
    * Initializes a new instance of the class.
-   * @param array $sourceFiles The list of source files.
    * @param Configuration $configuration The job configuration.
+   * @param array $sourceFiles The list of source files.
    */
-  public function __construct(array $sourceFiles = [], Configuration $configuration = null) {
-    $this->configuration = $configuration ?: (new Configuration())->merge(Configuration::getDefault());
+  public function __construct(Configuration $configuration = null, array $sourceFiles = []) {
+    $this->configuration = $configuration ?: new Configuration();
     $this->sourceFiles = new \ArrayObject($sourceFiles);
   }
 
