@@ -99,22 +99,12 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
   }
 
   /**
-   * Creates a new configuration from the specified JSON map.
-   * @param mixed $map A JSON map representing configuration parameters.
-   * @return Configuration The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
-   */
-  public static function fromJSON($map) {
-    if (is_object($map)) $map = (array) $map;
-    return is_array($map) ? new static($map) : null;
-  }
-
-  /**
    * Creates a new configuration from the specified YAML document.
    * @param string $document A YAML document providing configuration parameters.
    * @return Configuration The instance corresponding to the specified YAML document, or `null` if a parsing error occurred.
    */
   public static function fromYAML(string $document) {
-    try { return mb_strlen($document) ? static::fromJSON(Yaml::parse($document)) : null; }
+    try { return mb_strlen($document) ? new static(Yaml::parse($document)) : null; }
     catch (ParseException $e) { return null; }
   }
 
