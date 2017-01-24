@@ -128,8 +128,8 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   }
 
   /**
-   * Creates a new configuration from the default values.
-   * These values are taken from the `.coveralls.yml` file and the environment variables.
+   * Loads the default configuration.
+   * The default values are read from the `.coveralls.yml` file and the environment variables.
    * @return Configuration The default configuration.
    */
   public static function loadDefaults(): self {
