@@ -33,10 +33,10 @@ class SourceFile implements \JsonSerializable {
    * Initializes a new instance of the class.
    * @param string $name The file path of this source file.
    * @param string $sourceDigest The MD5 digest of the full source code of this file.
-   * @param int[] $coverage The coverage data for this file's job.
    * @param string $source The contents of this source file.
+   * @param int[] $coverage The coverage data for this file's job.
    */
-  public function __construct(string $name = '', string $sourceDigest = '', array $coverage = [], string $source = '') {
+  public function __construct(string $name = '', string $sourceDigest = '', string $source = '', array $coverage = []) {
     $this->coverage = new \ArrayObject($coverage);
     $this->setName($name);
     $this->setSource($source);
@@ -62,8 +62,8 @@ class SourceFile implements \JsonSerializable {
     return !is_object($map) ? null : new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',
       isset($map->source_digest) && is_string($map->source_digest) ? $map->source_digest : '',
-      isset($map->coverage) && is_array($map->coverage) ? $map->coverage : [],
-      isset($map->source) && is_string($map->source) ? $map->source : ''
+      isset($map->source) && is_string($map->source) ? $map->source : '',
+      isset($map->coverage) && is_array($map->coverage) ? $map->coverage : []
     );
   }
 
