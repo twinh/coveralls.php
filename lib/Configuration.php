@@ -54,10 +54,11 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
     if ($value = getenv('CI_JOB_ID')) $config['service_job_id'] = $value;
     if ($value = getenv('CI_NAME')) $config['service_name'] = $value;
 
+    /* TODO
     if ($value = getenv('CI_PULL_REQUEST')) {
       preg_match_all('/(\d+)$/', $value, $matches);
-      if (count($matches) >= 2) $params['service_pull_request'] = $matches[1];
-    }
+      if (count($matches) >= 2) $config['service_pull_request'] = $matches[1];
+    }*/
 
     // Coveralls.
     if ($value = getenv('COVERALLS_COMMIT_SHA')) $config['commit_sha'] = $value;
@@ -99,7 +100,7 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
 
   /**
    * Creates a new configuration from the specified JSON map.
-   * @param mixed $map A JSON map representing a branch data.
+   * @param mixed $map A JSON map representing configuration parameters.
    * @return Configuration The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJSON($map) {
@@ -155,11 +156,9 @@ class Configuration implements \ArrayAccess, \IteratorAggregate, \JsonSerializab
   /**
    * Adds all key-value pairs of the specified configuration to this one.
    * @param Configuration $config The configuration to be merged.
-   * @return Configuration This instance.
    */
   public function merge(self $config): self {
     foreach ($config as $key => $value) $this[$key] = $value;
-    return $this;
   }
 
   /**
