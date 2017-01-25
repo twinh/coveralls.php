@@ -39,12 +39,12 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @param array $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
    * @return Configuration The newly created configuration.
    */
-  public static function fromEnvironment(array $env = []): self {
+  public static function fromEnvironment(array $env = null): self {
     $config = new static();
-    if (!$env) $env = $_ENV ?: $_SERVER;
+    if (!is_array($env)) $env = $_ENV ?: $_SERVER;
 
     // Standard.
-    $serviceName = $env['CI_NAME'] ?: '';
+    $serviceName = $env['CI_NAME'] ?? '';
     if (mb_strlen($serviceName)) $config['service_name'] = $serviceName;
 
     if (isset($env['CI_BRANCH'])) $config['service_branch'] = $env['CI_BRANCH'];
@@ -59,7 +59,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
     // Coveralls.
     if (isset($env['COVERALLS_REPO_TOKEN']) || isset($env['COVERALLS_TOKEN']))
-      $config['repo_token'] = $env['COVERALLS_REPO_TOKEN'] ?: $env['COVERALLS_TOKEN'];
+      $config['repo_token'] = $env['COVERALLS_REPO_TOKEN'] ?? $env['COVERALLS_TOKEN'];
 
     if (isset($env['COVERALLS_COMMIT_SHA'])) $config['commit_sha'] = $env['COVERALLS_COMMIT_SHA'];
     if (isset($env['COVERALLS_PARALLEL'])) $config['parallel'] = $env['COVERALLS_PARALLEL'];
@@ -103,8 +103,16 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @return Configuration The instance corresponding to the specified YAML document, or `null` if a parsing error occurred.
    */
   public static function fromYAML(string $document) {
-    try { return mb_strlen($document) ? new static(Yaml::parse($document)) : null; }
-    catch (ParseException $e) { return null; }
+    if (!mb_strlen($document)) return null;
+
+    try {
+      $yaml = Yaml::parse($document);
+      return is_array($yaml) ? new static($yaml) : null;
+    }
+
+    catch (ParseException $e) {
+      return null;
+    }
   }
 
   /**

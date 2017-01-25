@@ -39,6 +39,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
    * Tests the `Configuration::fromEnvironment()` method.
    */
   public function testFromEnvironment() {
+    $config = Configuration::fromEnvironment([]);
+    $this->assertCount(0, $config);
     // TODO
   }
 
@@ -46,6 +48,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
    * Tests the `Configuration::fromYAML()` method.
    */
   public function testFromYAML() {
+    $this->assertNull(Configuration::fromYAML('foo'));
     // TODO
   }
 
@@ -74,7 +77,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
    * Tests the `SourceFile::jsonSerialize()` method.
    */
   public function testJsonSerialize() {
-    $this->assertCount(0, get_object_vars((new Configuration())->jsonSerialize()));
+    $map = (new Configuration())->jsonSerialize();
+    $this->assertCount(0, get_object_vars($map));
 
     $map = (new Configuration(['foo' => 'bar', 'bar' => 'baz']))->jsonSerialize();
     $this->assertCount(2, get_object_vars($map));
