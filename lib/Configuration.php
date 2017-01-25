@@ -35,43 +35,47 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   }
 
   /**
-   * Creates a new configuration from the environment variables.
+   * Creates a new configuration from the variables of the specified environment.
+   * @param array $environment An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
    * @return Configuration The newly created configuration.
    */
-  public static function fromEnvironment(): self {
+  public static function fromEnvironment(array $environment = []): self {
     $config = new static();
+    if (!$environment) $environment = $_ENV ?: $_SERVER;
 
     // Standard.
-    $serviceName = getenv('CI_NAME') ?: '';
+    $serviceName = $environment['CI_NAME'] ?: '';
     if (mb_strlen($serviceName)) $config['service_name'] = $serviceName;
 
-    if ($value = getenv('CI_BRANCH')) $config['service_branch'] = $value;
-    if ($value = getenv('CI_BUILD_NUMBER')) $config['service_number'] = $value;
-    if ($value = getenv('CI_BUILD_URL')) $config['service_build_url'] = $value;
-    if ($value = getenv('CI_COMMIT')) $config['commit_sha'] = $value;
-    if ($value = getenv('CI_JOB_ID')) $config['service_job_id'] = $value;
+    if (isset($environment['CI_BRANCH'])) $config['service_branch'] = $environment['CI_BRANCH'];
+    if (isset($environment['CI_BUILD_NUMBER'])) $config['service_number'] = $environment['CI_BUILD_NUMBER'];
+    if (isset($environment['CI_BUILD_URL'])) $config['service_build_url'] = $environment['CI_BUILD_URL'];
+    if (isset($environment['CI_COMMIT'])) $config['commit_sha'] = $environment['CI_COMMIT'];
+    if (isset($environment['CI_JOB_ID'])) $config['service_job_id'] = $environment['CI_JOB_ID'];
 
-    if (($value = getenv('CI_PULL_REQUEST')) && preg_match('/(\d+)$/', $value, $matches)) {
+    if (isset($environment['CI_PULL_REQUEST']) && preg_match('/(\d+)$/', $environment['CI_PULL_REQUEST'], $matches)) {
       if (count($matches) >= 2) $config['service_pull_request'] = $matches[1];
     }
 
     // Coveralls.
-    if ($value = getenv('COVERALLS_COMMIT_SHA')) $config['commit_sha'] = $value;
-    if ($value = getenv('COVERALLS_PARALLEL')) $config['parallel'] = $value;
-    if ($value = getenv('COVERALLS_REPO_TOKEN')) $config['repo_token'] = $value;
-    if ($value = getenv('COVERALLS_RUN_AT')) $config['run_at'] = $value;
-    if ($value = getenv('COVERALLS_SERVICE_BRANCH')) $config['service_branch'] = $value;
-    if ($value = getenv('COVERALLS_SERVICE_JOB_ID')) $config['service_job_id'] = $value;
-    if ($value = getenv('COVERALLS_SERVICE_NAME')) $config['service_name'] = $value;
+    if (isset($environment['COVERALLS_REPO_TOKEN']) || isset($environment['COVERALLS_TOKEN']))
+      $config['repo_token'] = $environment['COVERALLS_REPO_TOKEN'] ?: $environment['COVERALLS_TOKEN'];
+
+    if (isset($environment['COVERALLS_COMMIT_SHA'])) $config['commit_sha'] = $environment['COVERALLS_COMMIT_SHA'];
+    if (isset($environment['COVERALLS_PARALLEL'])) $config['parallel'] = $environment['COVERALLS_PARALLEL'];
+    if (isset($environment['COVERALLS_RUN_AT'])) $config['run_at'] = $environment['COVERALLS_RUN_AT'];
+    if (isset($environment['COVERALLS_SERVICE_BRANCH'])) $config['service_branch'] = $environment['COVERALLS_SERVICE_BRANCH'];
+    if (isset($environment['COVERALLS_SERVICE_JOB_ID'])) $config['service_job_id'] = $environment['COVERALLS_SERVICE_JOB_ID'];
+    if (isset($environment['COVERALLS_SERVICE_NAME'])) $config['service_name'] = $environment['COVERALLS_SERVICE_NAME'];
 
     // Git.
-    if ($value = getenv('GIT_AUTHOR_EMAIL')) $config['git_author_email'] = $value;
-    if ($value = getenv('GIT_AUTHOR_NAME')) $config['git_author_name'] = $value;
-    if ($value = getenv('GIT_BRANCH')) $config['service_branch'] = $value;
-    if ($value = getenv('GIT_COMMITTER_EMAIL')) $config['git_committer_email'] = $value;
-    if ($value = getenv('GIT_COMMITTER_NAME')) $config['git_committer_name'] = $value;
-    if ($value = getenv('GIT_ID')) $config['commit_sha'] = $value;
-    if ($value = getenv('GIT_MESSAGE')) $config['git_message'] = $value;
+    if (isset($environment['GIT_AUTHOR_EMAIL'])) $config['git_author_email'] = $environment['GIT_AUTHOR_EMAIL'];
+    if (isset($environment['GIT_AUTHOR_NAME'])) $config['git_author_name'] = $environment['GIT_AUTHOR_NAME'];
+    if (isset($environment['GIT_BRANCH'])) $config['service_branch'] = $environment['GIT_BRANCH'];
+    if (isset($environment['GIT_COMMITTER_EMAIL'])) $config['git_committer_email'] = $environment['GIT_COMMITTER_EMAIL'];
+    if (isset($environment['GIT_COMMITTER_NAME'])) $config['git_committer_name'] = $environment['GIT_COMMITTER_NAME'];
+    if (isset($environment['GIT_ID'])) $config['commit_sha'] = $environment['GIT_ID'];
+    if (isset($environment['GIT_MESSAGE'])) $config['git_message'] = $environment['GIT_MESSAGE'];
 
     // CI services.
     $merge = function($service) use ($config) {
@@ -79,16 +83,16 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
       $config->merge(call_user_func("coveralls\\services\\$service\\getConfiguration"));
     };
 
-    if (getenv('TRAVIS') !== false) $merge('travis_ci');
-    else if (getenv('APPVEYOR') !== false) $merge('appveyor');
-    else if (getenv('CIRCLECI') !== false) $merge('circleci');
+    if (isset($environment['TRAVIS'])) $merge('travis_ci');
+    else if (isset($environment['APPVEYOR'])) $merge('appveyor');
+    else if (isset($environment['CIRCLECI'])) $merge('circleci');
     else if ($serviceName == 'codeship') $merge('codeship');
-    else if (getenv('GITLAB_CI') !== false) $merge('gitlab_ci');
-    else if (getenv('JENKINS_URL') !== false) $merge('jenkins');
-    else if (getenv('SEMAPHORE') !== false) $merge('semaphore');
-    else if (getenv('SURF_SHA1') !== false) $merge('surf');
-    else if (getenv('TDDIUM') !== false) $merge('solano_ci');
-    else if (getenv('WERCKER') !== false) $merge('wercker');
+    else if (isset($environment['GITLAB_CI'])) $merge('gitlab_ci');
+    else if (isset($environment['JENKINS_URL'])) $merge('jenkins');
+    else if (isset($environment['SEMAPHORE'])) $merge('semaphore');
+    else if (isset($environment['SURF_SHA1'])) $merge('surf');
+    else if (isset($environment['TDDIUM'])) $merge('solano_ci');
+    else if (isset($environment['WERCKER'])) $merge('wercker');
 
     return $config;
   }
