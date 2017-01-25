@@ -132,6 +132,14 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   }
 
   /**
+   * Gets the keys of this configuration.
+   * @return string[] The keys of this configuration.
+   */
+  public function getKeys(): array {
+    return array_keys($this->params);
+  }
+
+  /**
    * Converts this object to a map in JSON format.
    * @return \stdClass The map in JSON format corresponding to this object.
    */
