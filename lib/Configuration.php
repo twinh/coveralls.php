@@ -167,37 +167,37 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   }
 
   /**
-   * Gets a value indicating whether this configuration contains the specified offset.
-   * @param string $offset The offset to seek for.
-   * @return bool `true` if this configuration contains the specified offset, otherwiser `false`.
+   * Gets a value indicating whether this configuration contains the specified key.
+   * @param string $key The key to seek for.
+   * @return bool `true` if this configuration contains the specified key, otherwiser `false`.
    */
-  public function offsetExists($offset): bool {
-    return isset($this->params[$offset]);
+  public function offsetExists($key): bool {
+    return isset($this->params[$key]);
   }
 
   /**
-   * Gets the value located at the specified offset.
-   * @param string $offset The offset to seek for.
-   * @return mixed The value, or a `null` reference is the offset is not found.
+   * Gets the value associated to the specified key.
+   * @param string $key The key to seek for.
+   * @return string The value, or a `null` reference is the key is not found.
    */
-  public function offsetGet($offset) {
-    return $this->params[$offset] ?? null;
+  public function offsetGet($key) {
+    return $this->params[$key] ?? null;
   }
 
   /**
-   * Associates an offset with the given value.
-   * @param string $offset The offset to seek for.
-   * @param mixed $value The new value.
+   * Associates a given value to the specified key.
+   * @param string $key The key to seek for.
+   * @param string $value The new value.
    */
-  public function offsetSet($offset, $value) {
-    $this->params[$offset] = $value;
+  public function offsetSet($key, $value) {
+    $this->params[$key] = $value;
   }
 
   /**
-   * Removes the value located at the specified offset.
-   * @param string $offset The offset to seek for.
+   * Removes the value associated to the specified key.
+   * @param string $key The key to seek for.
    */
-  public function offsetUnset($offset) {
-    unset($this->params[$offset]);
+  public function offsetUnset($key) {
+    unset($this->params[$key]);
   }
 }
