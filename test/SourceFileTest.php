@@ -23,7 +23,13 @@ class SourceFileTest extends \PHPUnit_Framework_TestCase {
     $this->assertEmpty($file->getSource());
     $this->assertEmpty($file->getSourceDigest());
 
-    $file = SourceFile::fromJSON(['coverage' => [null, 2, 0, null, 4, 15, null], 'name' => 'coveralls.php', 'source' => 'function main() {}', 'source_digest' => 'e23fb141da9a7b438479a48eac7b7249']);
+    $file = SourceFile::fromJSON([
+      'coverage' => [null, 2, 0, null, 4, 15, null],
+      'name' => 'coveralls.php',
+      'source' => 'function main() {}',
+      'source_digest' => 'e23fb141da9a7b438479a48eac7b7249'
+    ]);
+
     $this->assertInstanceOf(SourceFile::class, $file);
 
     $coverage = $file->getCoverage();
@@ -46,7 +52,13 @@ class SourceFileTest extends \PHPUnit_Framework_TestCase {
     $this->assertEmpty($map->name);
     $this->assertEmpty($map->source_digest);
 
-    $map = (new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', 'function main() {}', [null, 2, 0, null, 4, 15, null]))->jsonSerialize();
+    $map = (new SourceFile(
+      'coveralls.php',
+      'e23fb141da9a7b438479a48eac7b7249',
+      'function main() {}',
+      [null, 2, 0, null, 4, 15, null]
+    ))->jsonSerialize();
+
     $this->assertCount(4, get_object_vars($map));
     $this->assertCount(7, $map->coverage);
     $this->assertNull($map->coverage[0]);
