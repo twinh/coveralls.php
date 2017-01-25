@@ -59,9 +59,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
     $iterator = (new Configuration(['foo' => 'bar', 'bar' => 'baz']))->getIterator();
     $this->assertTrue($iterator->valid());
 
+    $this->assertEquals('foo', $iterator->key());
     $this->assertEquals('bar', $iterator->current());
     $iterator->next();
 
+    $this->assertEquals('bar', $iterator->key());
     $this->assertEquals('baz', $iterator->current());
     $iterator->next();
 

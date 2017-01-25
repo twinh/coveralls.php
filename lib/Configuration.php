@@ -108,8 +108,8 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   }
 
   /**
-   * Gets the number of key-value pairs in this configuration.
-   * @return int The number of key-value pairs in this configuration.
+   * Gets the number of entries in this configuration.
+   * @return int The number of entries in this configuration.
    */
   public function count(): int {
     return count($this->params);
@@ -151,7 +151,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   }
 
   /**
-   * Adds all key-value pairs of the specified configuration to this one.
+   * Adds all entries of the specified configuration to this one.
    * @param Configuration $config The configuration to be merged.
    */
   public function merge(self $config) {
