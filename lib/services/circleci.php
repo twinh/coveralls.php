@@ -7,16 +7,18 @@ use coveralls\Configuration;
 
 /**
  * Gets the configuration parameters from the environment.
+ * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */
-function getConfiguration(): Configuration {
+function getConfiguration(array $env): Configuration {
+  $nodes = (int) ($env['CIRCLE_NODE_TOTAL'] ?? '0');
   return new Configuration([
-    'commit_sha' => getenv('CIRCLE_SHA1'),
-    'parallel' => ((int) getenv('CIRCLE_NODE_TOTAL')) > 1 ? 'true' : 'false',
-    'service_branch' => getenv('CIRCLE_BRANCH'),
-    'service_build_url' => getenv('CIRCLE_BUILD_URL'),
-    'service_job_number' => getenv('CIRCLE_NODE_INDEX'),
+    'commit_sha' => $env['CIRCLE_SHA1'] ?? null,
+    'parallel' => $nodes > 1 ? 'true' : 'false',
+    'service_branch' => $env['CIRCLE_BRANCH'] ?? null,
+    'service_build_url' => $env['CIRCLE_BUILD_URL'] ?? null,
+    'service_job_number' => $env['CIRCLE_NODE_INDEX'] ?? null,
     'service_name' => 'circleci',
-    'service_number' => getenv('CIRCLE_BUILD_NUM')
+    'service_number' => $env['CIRCLE_BUILD_NUM'] ?? null
   ]);
 }

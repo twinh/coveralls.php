@@ -7,14 +7,15 @@ use coveralls\Configuration;
 
 /**
  * Gets the configuration parameters from the environment.
+ * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */
-function getConfiguration(): Configuration {
+function getConfiguration(array $env): Configuration {
   return new Configuration([
-    'commit_sha' => getenv('REVISION'),
-    'service_branch' => getenv('BRANCH_NAME'),
+    'commit_sha' => $env['REVISION'] ?? null,
+    'service_branch' => $env['BRANCH_NAME'] ?? null,
     'service_name' => 'semaphore',
-    'service_number' => getenv('SEMAPHORE_BUILD_NUMBER'),
-    'service_pull_request' => getenv('PULL_REQUEST_NUMBER')
+    'service_number' => $env['SEMAPHORE_BUILD_NUMBER'] ?? null,
+    'service_pull_request' => $env['PULL_REQUEST_NUMBER'] ?? null
   ]);
 }

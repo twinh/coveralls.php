@@ -7,21 +7,22 @@ use coveralls\Configuration;
 
 /**
  * Gets the configuration parameters from the environment.
+ * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */
-function getConfiguration(): Configuration {
-  $repoName = getenv('APPVEYOR_REPO_NAME');
-  $serviceNumber = getenv('APPVEYOR_BUILD_VERSION');
+function getConfiguration(array $env): Configuration {
+  $repoName = $env['APPVEYOR_REPO_NAME'] ?? null;
+  $serviceNumber = $env['APPVEYOR_BUILD_VERSION'] ?? null;
 
   return new Configuration([
-    'commit_sha' => getenv('APPVEYOR_REPO_COMMIT'),
-    'git_author_email' => getenv('APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL'),
-    'git_author_name' => getenv('APPVEYOR_REPO_COMMIT_AUTHOR'),
-    'git_message' => getenv('APPVEYOR_REPO_COMMIT_MESSAGE'),
-    'service_branch' => getenv('APPVEYOR_REPO_BRANCH'),
-    'service_build_url' => "https://ci.appveyor.com/project/$repoName/build/$serviceNumber",
-    'service_job_id' => getenv('APPVEYOR_BUILD_ID'),
-    'service_job_number' => getenv('APPVEYOR_BUILD_NUMBER'),
+    'commit_sha' => $env['APPVEYOR_REPO_COMMIT'] ?? null,
+    'git_author_email' => $env['APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL'] ?? null,
+    'git_author_name' => $env['APPVEYOR_REPO_COMMIT_AUTHOR'] ?? null,
+    'git_message' => $env['APPVEYOR_REPO_COMMIT_MESSAGE'] ?? null,
+    'service_branch' => $env['APPVEYOR_REPO_BRANCH'] ?? null,
+    'service_build_url' => $repoName && $serviceNumber ? "https://ci.appveyor.com/project/$repoName/build/$serviceNumber" : null,
+    'service_job_id' => $env['APPVEYOR_BUILD_ID'] ?? null,
+    'service_job_number' => $env['APPVEYOR_BUILD_NUMBER'] ?? null,
     'service_name' => 'appveyor',
     'service_number' => $serviceNumber
   ]);
