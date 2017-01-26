@@ -127,7 +127,10 @@ EOT;
    * Tests the `Configuration::loadDefaults()` method.
    */
   public function testLoadDefaults() {
-    // TODO
+    $config = Configuration::loadDefaults(__DIR__.'/.coveralls.yml');
+    $this->assertTrue(count($config) >= 2);
+    $this->assertEquals('bar', $config['foo']);
+    $this->assertEquals('baz', $config['bar']);
   }
 
   /**
