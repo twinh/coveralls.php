@@ -116,6 +116,25 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   }
 
   /**
+   * Loads the default configuration.
+   * The default values are read from the `.coveralls.yml` file and the environment variables.
+   * @param string $coverallsFile The path to an optional `.coveralls.yml` file. Defaults to the file found in the current directory.
+   * @return Configuration The default configuration.
+   */
+  public static function loadDefaults(string $coverallsFile = ''): self {
+    if (!mb_strlen($coverallsFile)) $coverallsFile = getcwd().'/.coveralls.yml';
+
+    $defaults = new static();
+    if (is_file($coverallsFile)) {
+      $config = static::fromYAML(@file_get_contents($coverallsFile));
+      if ($config) $defaults->merge($config);
+    }
+
+    $defaults->merge(static::fromEnvironment());
+    return $defaults;
+  }
+
+  /**
    * Gets the number of entries in this configuration.
    * @return int The number of entries in this configuration.
    */
@@ -145,25 +164,6 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    */
   public function jsonSerialize(): \stdClass {
     return (object) $this->params;
-  }
-
-  /**
-   * Loads the default configuration.
-   * The default values are read from the `.coveralls.yml` file and the environment variables.
-   * @param string $coverallsFile The path to an optional `.coveralls.yml` file. Defaults to the file found in the current directory.
-   * @return Configuration The default configuration.
-   */
-  public static function loadDefaults(string $coverallsFile = ''): self {
-    if (!mb_strlen($coverallsFile)) $coverallsFile = getcwd().'/.coveralls.yml';
-
-    $defaults = new static();
-    if (is_file($coverallsFile)) {
-      $config = static::fromYAML(@file_get_contents($coverallsFile));
-      if ($config) $defaults->merge($config);
-    }
-
-    $defaults->merge(static::fromEnvironment());
-    return $defaults;
   }
 
   /**

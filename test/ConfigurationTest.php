@@ -65,12 +65,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
   public function testFromYAML() {
     $this->assertNull(Configuration::fromYAML('foo'));
 
-    $yaml = <<<EOT
-repo_token: 0123456789abcdef
-service_name: travis-ci
-EOT;
-
-    $config = Configuration::fromYAML($yaml);
+    $config = Configuration::fromYAML("repo_token: 0123456789abcdef\nservice_name: travis-ci");
     $this->assertInstanceOf(Configuration::class, $config);
     $this->assertCount(2, $config);
     $this->assertEquals('0123456789abcdef', $config['repo_token']);
