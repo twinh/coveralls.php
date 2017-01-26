@@ -7,16 +7,17 @@ use coveralls\Configuration;
 
 /**
  * Gets the configuration parameters from the environment.
+ * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */
-function getConfiguration(): Configuration {
+function getConfiguration(array $env): Configuration {
   return new Configuration([
-    'commit_sha' => getenv('GIT_COMMIT'),
-    'service_branch' => getenv('GIT_BRANCH'),
-    'service_build_url' => getenv('BUILD_URL'),
-    'service_job_id' => getenv('BUILD_ID'),
+    'commit_sha' => $env['GIT_COMMIT'] ?? null,
+    'service_branch' => $env['GIT_BRANCH'] ?? null,
+    'service_build_url' => $env['BUILD_URL'] ?? null,
+    'service_job_id' => $env['BUILD_ID'] ?? null,
     'service_name' => 'jenkins',
-    'service_number' => getenv('BUILD_NUMBER'),
-    'service_pull_request' => getenv('ghprbPullId')
+    'service_number' => $env['BUILD_NUMBER'] ?? null,
+    'service_pull_request' => $env['ghprbPullId'] ?? null
   ]);
 }

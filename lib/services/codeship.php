@@ -7,15 +7,16 @@ use coveralls\Configuration;
 
 /**
  * Gets the configuration parameters from the environment.
+ * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */
-function getConfiguration(): Configuration {
+function getConfiguration(array $env): Configuration {
   return new Configuration([
-    'commit_sha' => getenv('CI_COMMIT_ID'),
-    'git_committer_email' => getenv('CI_COMMITTER_EMAIL'),
-    'git_committer_name' => getenv('CI_COMMITTER_NAME'),
-    'git_message' => getenv('CI_COMMIT_MESSAGE'),
-    'service_job_id' => getenv('CI_BUILD_NUMBER'),
+    'commit_sha' => $env['CI_COMMIT_ID'] ?? null,
+    'git_committer_email' => $env['CI_COMMITTER_EMAIL'] ?? null,
+    'git_committer_name' => $env['CI_COMMITTER_NAME'] ?? null,
+    'git_message' => $env['CI_COMMIT_MESSAGE'] ?? null,
+    'service_job_id' => $env['CI_BUILD_NUMBER'] ?? null,
     'service_name' => 'codeship'
   ]);
 }

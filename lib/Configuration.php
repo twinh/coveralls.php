@@ -78,9 +78,9 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     if (isset($env['GIT_MESSAGE'])) $config['git_message'] = $env['GIT_MESSAGE'];
 
     // CI services.
-    $merge = function($service) use ($config) {
+    $merge = function($service) use ($config, $env) {
       require_once __DIR__."/services/$service.php";
-      $config->merge(call_user_func("coveralls\\services\\$service\\getConfiguration"));
+      $config->merge(call_user_func("coveralls\\services\\$service\\getConfiguration", $env));
     };
 
     if (isset($env['TRAVIS'])) $merge('travis_ci');

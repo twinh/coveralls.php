@@ -51,9 +51,6 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
       'TRAVIS_BRANCH' => 'develop'
     ]);
 
-    print_r($config->getKeys());
-    var_dump($config['service_job_id']);
-    $this->assertCount(7, $config);
     $this->assertEquals('HEAD', $config['commit_sha']);
     $this->assertEquals('Hello World!', $config['git_message']);
     $this->assertEquals('0123456789abcdef', $config['repo_token']);

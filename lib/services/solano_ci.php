@@ -7,16 +7,17 @@ use coveralls\Configuration;
 
 /**
  * Gets the configuration parameters from the environment.
+ * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */
-function getConfiguration(): Configuration {
-  $serviceNumber = getenv('TDDIUM_SESSION_ID');
+function getConfiguration(array $env): Configuration {
+  $serviceNumber = $env['TDDIUM_SESSION_ID'] ?? null;
   return new Configuration([
-    'service_branch' => getenv('TDDIUM_CURRENT_BRANCH'),
-    'service_build_url' => "https://ci.solanolabs.com/reports/$serviceNumber",
-    'service_job_number' => getenv('TDDIUM_TID'),
+    'service_branch' => $env['TDDIUM_CURRENT_BRANCH'] ?? null,
+    'service_build_url' => $serviceNumber ? "https://ci.solanolabs.com/reports/$serviceNumber" : null,
+    'service_job_number' => $env['TDDIUM_TID'] ?? null,
     'service_name' => 'tddium',
     'service_number' => $serviceNumber,
-    'service_pull_request' => getenv('TDDIUM_PR_ID')
+    'service_pull_request' => $env['TDDIUM_PR_ID'] ?? null
   ]);
 }
