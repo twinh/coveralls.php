@@ -65,10 +65,16 @@ class GitCommit {
    */
   public static function fromJSON($map) {
     if (is_array($map)) $map = (object) $map;
-    return !is_object($map) ? null : new static(
-      isset($map->name) && is_string($map->name) ? $map->name : '',
-      isset($map->url) && is_string($map->url) ? $map->url : ''
-    );
+    if (!is_object($map)) return null;
+
+    return (new static(
+        isset($map->id) && is_string($map->id) ? $map->id : '',
+        isset($map->message) && is_string($map->message) ? $map->message : ''
+      ))
+      ->setAuthorEmail(isset($map->author_email) && is_string($map->author_email) ? $map->author_email : '')
+      ->setAuthorName(isset($map->author_name) && is_string($map->author_name) ? $map->author_name : '')
+      ->setCommitterEmail(isset($map->committer_email) && is_string($map->committer_email) ? $map->committer_email : '')
+      ->setCommitterName(isset($map->committer_name) && is_string($map->committer_name) ? $map->committer_name : '');
   }
 
   /**
@@ -124,14 +130,14 @@ class GitCommit {
    * @return \stdClass The map in JSON format corresponding to this object.
    */
   public function jsonSerialize(): \stdClass {
-    return (object) [
-      'id' => $this->getId(),
-      'author_email' => $this->getAuthorEmail(),
-      'author_name' => $this->getAuthorName(),
-      'committer_email' => $this->getCommitterEmail(),
-      'commiter_name' => $this->getCommitterName(),
-      'message' => $this->getMessage()
-    ];
+    $map = new \stdClass();
+    $map->id = $this->getId();
+    if (mb_strlen($authorEmail = $this->getAuthorEmail())) $map->author_email = $authorEmail;
+    if (mb_strlen($authorName = $this->getAuthorName())) $map->author_name = $authorName;
+    if (mb_strlen($committerEmail = $this->getCommitterEmail())) $map->committer_email = $committerEmail;
+    if (mb_strlen($committerName = $this->getCommitterName())) $map->committer_name = $committerName;
+    if (mb_strlen($message = $this->getMessage())) $map->message = $message;
+    return $map;
   }
 
   /**
