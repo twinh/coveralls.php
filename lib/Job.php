@@ -10,9 +10,39 @@ namespace coveralls;
 class Job implements \JsonSerializable {
 
   /**
-   * @var Configuration The job configuration.
+   * @var GitData The Git data.
    */
-  private $configuration;
+  private $gitData;
+
+  /**
+   * @var bool Value indicating whether the build will not be considered done until a webhook has been sent to Coveralls.
+   */
+  private $isParallel = false;
+
+  /**
+   * @var string The secret token for the repository.
+   */
+  private $repoToken = '';
+
+  /**
+   * @var string The unique identifier of the job on the CI service.
+   */
+  private $serviceJobId = '';
+
+  /**
+   * @var string The CI service or other environment in which the test suite was run.
+   */
+  private $serviceName = '';
+
+  /**
+   * @var string The build number.
+   */
+  private $serviceNumber = '';
+
+  /**
+   * @var string The associated pull request identifier of the build.
+   */
+  private $servicePullRequest = '';
 
   /**
    * @var \ArrayObject The list of source files.
@@ -21,12 +51,45 @@ class Job implements \JsonSerializable {
 
   /**
    * Initializes a new instance of the class.
-   * @param Configuration $configuration The job configuration.
+   * @param Configuration $config The job configuration.
    * @param array $sourceFiles The list of source files.
    */
-  public function __construct(Configuration $configuration = null, array $sourceFiles = []) {
-    $this->configuration = $configuration ?: new Configuration();
+  public function __construct(Configuration $config = null, array $sourceFiles = []) {
     $this->sourceFiles = new \ArrayObject($sourceFiles);
+
+    if ($config) {
+      $this->setParallel(mb_strtolower($config['parallel']) == 'true');
+      $this->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
+      $this->setServiceJobId($config['service_job_id'] ?: '');
+      $this->setServiceName($config['service_name'] ?: '');
+      $this->setServiceNumber($config['service_number'] ?: '');
+      $this->setServicePullRequest($config['service_pull_request'] ?: '');
+    }
+  }
+
+  /**
+   * Returns a string representation of this object.
+   * @return string The string representation of this object.
+   */
+  public function __toString(): string {
+    $json = json_encode($this, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    return static::class." $json";
+  }
+
+  /**
+   * Creates a new job from the specified JSON map.
+   * @param mixed $map A JSON map representing a job.
+   * @return Job The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
+   */
+  public static function fromJSON($map) {
+    if (is_array($map)) $map = (object) $map;
+    if (!is_object($map)) return null;
+
+    $transform = function(array $files) {
+      return array_filter(array_map(function($item) { return SourceFile::fromJSON($item); }, $files));
+    };
+
+    return null;
   }
 
   /**
@@ -34,7 +97,7 @@ class Job implements \JsonSerializable {
    * @return string The secret token for the repository.
    */
   public function getRepoToken(): string {
-    return $this->configuration['repo_token'] ?: ($this->configuration['repo_secret_token'] ?: '');
+    return $this->repoToken;
   }
 
   /**
@@ -42,7 +105,7 @@ class Job implements \JsonSerializable {
    * @return string The unique identifier of the job on the CI service.
    */
   public function getServiceJobId(): string {
-    return $this->configuration['service_job_id'] ?: '';
+    return $this->serviceJobId;
   }
 
   /**
@@ -50,7 +113,7 @@ class Job implements \JsonSerializable {
    * @return string The CI service or other environment in which the test suite was run.
    */
   public function getServiceName(): string {
-    return $this->configuration['service_name'] ?: '';
+    return $this->serviceName;
   }
 
   /**
@@ -58,7 +121,7 @@ class Job implements \JsonSerializable {
    * @return string The build number.
    */
   public function getServiceNumber(): string {
-    return $this->configuration['service_number'] ?: '';
+    return $this->serviceNumber;
   }
 
   /**
@@ -66,7 +129,7 @@ class Job implements \JsonSerializable {
    * @return string The associated pull request identifier of the build.
    */
   public function getServicePullRequest(): string {
-    return $this->configuration['service_pull_request'] ?: '';
+    return $this->servicePullRequest;
   }
 
   /**
@@ -82,8 +145,7 @@ class Job implements \JsonSerializable {
    * @return bool `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
    */
   public function isParallel(): bool {
-    $parallel = $this->configuration['parallel'];
-    return is_string($parallel) ? mb_strtolower($parallel) == 'true' : (bool) $parallel;
+    return $this->isParallel;
   }
 
   /**
@@ -101,8 +163,8 @@ class Job implements \JsonSerializable {
    * @param bool $value `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
    * @return Job This instance.
    */
-  public function setParallel(bool $value) {
-    $this->configuration['parallel'] = $value ? 'true' : 'false';
+  public function setParallel(bool $value): self {
+    $this->isParallel = $value;
     return $this;
   }
 
@@ -112,7 +174,17 @@ class Job implements \JsonSerializable {
    * @return Job This instance.
    */
   public function setRepoToken(string $value): self {
-    $this->configuration['repo_token'] = $value;
+    $this->repoToken = $value;
+    return $this;
+  }
+
+  /**
+   * Gets the unique identifier of the job on the CI service.
+   * @param string $value The new unique identifier of the job on the CI service.
+   * @return Job This instance.
+   */
+  public function setServiceJobId(string $value): self {
+    $this->serviceJobId = $value;
     return $this;
   }
 
@@ -122,7 +194,27 @@ class Job implements \JsonSerializable {
    * @return Job This instance.
    */
   public function setServiceName(string $value): self {
-    $this->configuration['service_name'] = $value;
+    $this->serviceName = $value;
+    return $this;
+  }
+
+  /**
+   * Gets the build number.
+   * @param string $value The new build number.
+   * @return Job This instance.
+   */
+  public function setServiceNumber(string $value): self {
+    $this->serviceNumber = $value;
+    return $this;
+  }
+
+  /**
+   * Gets the associated pull request identifier of the build.
+   * @param string $value The new pull request identifier.
+   * @return Job This instance.
+   */
+  public function setServicePullRequest(string $value): self {
+    $this->servicePullRequest = $value;
     return $this;
   }
 
