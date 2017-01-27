@@ -38,11 +38,35 @@ class Job implements \JsonSerializable {
   }
 
   /**
+   * Gets the unique identifier of the job on the CI service.
+   * @return string The unique identifier of the job on the CI service.
+   */
+  public function getServiceJobId(): string {
+    return $this->configuration['service_job_id'] ?: '';
+  }
+
+  /**
    * Gets the CI service or other environment in which the test suite was run.
    * @return string The CI service or other environment in which the test suite was run.
    */
   public function getServiceName(): string {
     return $this->configuration['service_name'] ?: '';
+  }
+
+  /**
+   * Gets the build number.
+   * @return string The build number.
+   */
+  public function getServiceNumber(): string {
+    return $this->configuration['service_number'] ?: '';
+  }
+
+  /**
+   * Gets the associated pull request identifier of the build.
+   * @return string The associated pull request identifier of the build.
+   */
+  public function getServicePullRequest(): string {
+    return $this->configuration['service_pull_request'] ?: '';
   }
 
   /**
