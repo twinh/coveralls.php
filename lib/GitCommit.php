@@ -10,39 +10,43 @@ namespace coveralls;
 class GitCommit {
 
   /**
-   * @var string TODO
-   */
-  private $id = '';
-
-  /**
-   * @var string TODO
+   * @var string The author mail address.
    */
   private $authorEmail = '';
 
   /**
-   * @var string TODO
+   * @var string The author name.
    */
   private $authorName = '';
 
   /**
-   * @var string TODO
+   * @var string The committer mail address.
    */
   private $committerEmail = '';
 
   /**
-   * @var string TODO
+   * @var string The committer name.
    */
   private $committerName = '';
 
   /**
-   * @var string TODO
+   * @var string The commit identifier.
    */
-  private $message = '';
+  private $id;
+
+  /**
+   * @var string The commit message.
+   */
+  private $message;
 
   /**
    * Initializes a new instance of the class.
+   * @param string $id The commit identifier.
+   * @param string $message The commit message.
    */
   public function __construct(string $id = '', string $message = '') {
+    $this->setId($id);
+    $this->setMessage($message);
   }
 
   /**
@@ -68,19 +72,51 @@ class GitCommit {
   }
 
   /**
-   * Gets the name of this remote.
-   * @return string The remote's name.
+   * Gets the author mail address.
+   * @return string The author mail address.
    */
-  public function getName(): string {
-    return $this->name;
+  public function getAuthorEmail(): string {
+    return $this->authorEmail;
   }
 
   /**
-   * Gets the URL of this remote.
-   * @return string The remote's URL.
+   * Gets the author name.
+   * @return string The author name.
    */
-  public function getURL(): string {
-    return $this->url;
+  public function getAuthorName(): string {
+    return $this->authorName;
+  }
+
+  /**
+   * Gets the committer mail address.
+   * @return string The committer mail address.
+   */
+  public function getCommitterEmail(): string {
+    return $this->committerEmail;
+  }
+
+  /**
+   * Gets the committer name.
+   * @return string The committer name.
+   */
+  public function getCommitterName(): string {
+    return $this->committerName;
+  }
+
+  /**
+   * Gets the commit identifier.
+   * @return string The commit identifier.
+   */
+  public function getId(): string {
+    return $this->id;
+  }
+
+  /**
+   * Gets the commit message.
+   * @return string The commit message.
+   */
+  public function getMessage(): string {
+    return $this->message;
   }
 
   /**
@@ -89,28 +125,72 @@ class GitCommit {
    */
   public function jsonSerialize(): \stdClass {
     return (object) [
-      'name' => $this->getName(),
-      'url' => $this->getURL()
+      'id' => $this->getId(),
+      'author_email' => $this->getAuthorEmail(),
+      'author_name' => $this->getAuthorName(),
+      'committer_email' => $this->getCommitterEmail(),
+      'commiter_name' => $this->getCommitterName(),
+      'message' => $this->getMessage()
     ];
   }
 
   /**
-   * Sets the name of this remote.
-   * @param string $value The new name.
+   * Sets the author mail address.
+   * @param string $value The new mail address.
    * @return GitCommit This instance.
    */
-  public function setName(string $value): self {
-    $this->name = $value;
+  public function setAuthorEmail(string $value): self {
+    $this->authorEmail = $value;
     return $this;
   }
 
   /**
-   * Sets the URL of this remote.
-   * @param string $value The new URL.
+   * Sets the author name.
+   * @param string $value The new name.
    * @return GitCommit This instance.
    */
-  public function setURL(string $value): self {
-    $this->url = $value;
+  public function setAuthorName(string $value): self {
+    $this->authorName = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the committer mail address.
+   * @param string $value The new mail address.
+   * @return GitCommit This instance.
+   */
+  public function setCommitterEmail(string $value): self {
+    $this->committerEmail = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the committer name.
+   * @param string $value The new name.
+   * @return GitCommit This instance.
+   */
+  public function setCommitterName(string $value): self {
+    $this->committerName = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the commit identifier.
+   * @param string $value The new identifier.
+   * @return GitCommit This instance.
+   */
+  public function setId(string $value): self {
+    $this->id = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the commit message.
+   * @param string $value The new message.
+   * @return GitCommit This instance.
+   */
+  public function setMessage(string $value): self {
+    $this->message = $value;
     return $this;
   }
 }
