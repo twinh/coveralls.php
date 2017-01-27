@@ -198,7 +198,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @param string $value The new value.
    */
   public function offsetSet($key, $value) {
-    $this->params[$key] = $value;
+    $this->params[$key] = (string) $value;
   }
 
   /**
