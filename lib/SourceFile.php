@@ -54,7 +54,7 @@ class SourceFile implements \JsonSerializable {
 
   /**
    * Creates a new source file from the specified JSON map.
-   * @param mixed $map A JSON map representing a branch data.
+   * @param mixed $map A JSON map representing a source file.
    * @return SourceFile The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJSON($map) {

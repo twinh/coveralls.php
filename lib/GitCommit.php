@@ -59,8 +59,8 @@ class GitCommit {
   }
 
   /**
-   * Creates a new remote from the specified JSON map.
-   * @param mixed $map A JSON map representing a branch data.
+   * Creates a new Git commit from the specified JSON map.
+   * @param mixed $map A JSON map representing a Git commit.
    * @return GitCommit The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJSON($map) {
