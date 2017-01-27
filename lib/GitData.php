@@ -51,11 +51,15 @@ class GitData {
    * @return GitData The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJSON($map) {
+    $transform = function(array $remotes) {
+      return array_filter(array_map(function($item) { return GitRemote::fromJSON($item); }, $remotes));
+    };
+
     if (is_array($map)) $map = (object) $map;
     return !is_object($map) ? null : new static(
       isset($map->head) ? GitCommit::fromJSON($map->head) : null,
       isset($map->branch) && is_string($map->branch) ? $map->branch : '',
-      isset($map->remotes) && is_array($map->remotes) ? $map->remotes : []
+      isset($map->remotes) && is_array($map->remotes) ? $transform($map->remotes) : []
     );
   }
 
@@ -90,8 +94,8 @@ class GitData {
   public function jsonSerialize(): \stdClass {
     return (object) [
       'branch' => $this->getBranch(),
-      'head' => $this->getCommit(),
-      'remotes' => $this->getRemotes()->getArrayCopy()
+      'head' => ($commit = $this->getCommit()) ? $commit->jsonSerialize() : null,
+      'remotes' => array_map(function(GitRemote $item) { return $item->jsonSerialize(); }, $this->getRemotes()->getArrayCopy())
     ];
   }
 
