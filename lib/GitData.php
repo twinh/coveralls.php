@@ -57,7 +57,7 @@ class GitData {
 
     if (is_array($map)) $map = (object) $map;
     return !is_object($map) ? null : new static(
-      isset($map->head) ? GitCommit::fromJSON($map->head) : null,
+      GitCommit::fromJSON($map->head ?? null),
       isset($map->branch) && is_string($map->branch) ? $map->branch : '',
       isset($map->remotes) && is_array($map->remotes) ? $transform($map->remotes) : []
     );
