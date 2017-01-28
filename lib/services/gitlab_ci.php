@@ -3,7 +3,7 @@
  * Provides a connector for the [GitLab CI](https://gitlab.com) service.
  */
 namespace coveralls\services\gitlab_ci;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.

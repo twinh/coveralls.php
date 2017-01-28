@@ -3,7 +3,7 @@
  * Provides a connector for the [Codeship](https://codeship.com) service.
  */
 namespace coveralls\services\codeship;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.

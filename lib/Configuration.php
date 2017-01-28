@@ -4,8 +4,8 @@
  */
 namespace coveralls;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\{Yaml};
+use Symfony\Component\Yaml\Exception\{ParseException};
 
 /**
  * Provides access to the coverage settings.

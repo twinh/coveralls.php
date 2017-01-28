@@ -3,7 +3,7 @@
  * Provides a connector for the [Surf](https://github.com/surf-build/surf) service.
  */
 namespace coveralls\services\surf;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.

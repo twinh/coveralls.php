@@ -3,7 +3,7 @@
  * Provides a connector for the [Solano CI](https://ci.solanolabs.com) service.
  */
 namespace coveralls\services\solano_ci;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.

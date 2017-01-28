@@ -3,7 +3,7 @@
  * Provides a connector for the [Wercker](http://www.wercker.com) service.
  */
 namespace coveralls\services\wercker;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.
