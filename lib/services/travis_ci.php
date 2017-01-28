@@ -3,7 +3,7 @@
  * Provides a connector for the [Travis CI](https://travis-ci.com) service.
  */
 namespace coveralls\services\travis_ci;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.

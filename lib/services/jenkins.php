@@ -3,7 +3,7 @@
  * Provides a connector for the [Jenkins](https://jenkins.io) service.
  */
 namespace coveralls\services\jenkins;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.

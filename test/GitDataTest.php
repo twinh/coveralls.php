@@ -3,9 +3,7 @@
  * Implementation of the `coveralls\test\GitDataTest` class.
  */
 namespace coveralls\test;
-use coveralls\{
-  GitCommit, GitData, GitRemote
-};
+use coveralls\{GitCommit, GitData, GitRemote};
 
 /**
  * Tests the features of the `coveralls\GitData` class.

@@ -7,7 +7,7 @@ namespace coveralls;
 /**
  * Represents Git data that can be used to display more information to users.
  */
-class GitData {
+class GitData implements \JsonSerializable {
 
   /**
    * @var string The branch name.
@@ -57,7 +57,7 @@ class GitData {
 
     if (is_array($map)) $map = (object) $map;
     return !is_object($map) ? null : new static(
-      isset($map->head) ? GitCommit::fromJSON($map->head) : null,
+      GitCommit::fromJSON($map->head ?? null),
       isset($map->branch) && is_string($map->branch) ? $map->branch : '',
       isset($map->remotes) && is_array($map->remotes) ? $transform($map->remotes) : []
     );

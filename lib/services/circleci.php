@@ -3,7 +3,7 @@
  * Provides a connector for the [CircleCI](https://circleci.com) service.
  */
 namespace coveralls\services\circleci;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.

@@ -4,8 +4,8 @@
  */
 namespace coveralls;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\{Yaml};
+use Symfony\Component\Yaml\Exception\{ParseException};
 
 /**
  * Provides access to the coverage settings.
@@ -83,7 +83,10 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
       $config->merge(call_user_func("coveralls\\services\\$service\\getConfiguration", $env));
     };
 
-    if (isset($env['TRAVIS'])) $merge('travis_ci');
+    if (isset($env['TRAVIS'])) {
+      $merge('travis_ci');
+      if ($serviceName != 'travis-ci') $config['service_name'] = $serviceName;
+    }
     else if (isset($env['APPVEYOR'])) $merge('appveyor');
     else if (isset($env['CIRCLECI'])) $merge('circleci');
     else if ($serviceName == 'codeship') $merge('codeship');
@@ -186,7 +189,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   /**
    * Gets the value associated to the specified key.
    * @param string $key The key to seek for.
-   * @return string The value, or a `null` reference is the key is not found.
+   * @return mixed The value, or a `null` reference is the key is not found.
    */
   public function offsetGet($key) {
     return $this->params[$key] ?? null;
@@ -195,10 +198,10 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   /**
    * Associates a given value to the specified key.
    * @param string $key The key to seek for.
-   * @param string $value The new value.
+   * @param mixed $value The new value.
    */
   public function offsetSet($key, $value) {
-    $this->params[$key] = (string) $value;
+    $this->params[$key] = $value;
   }
 
   /**

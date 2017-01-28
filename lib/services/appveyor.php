@@ -3,7 +3,7 @@
  * Provides a connector for the [AppVeyor](https://www.appveyor.com) service.
  */
 namespace coveralls\services\appveyor;
-use coveralls\Configuration;
+use coveralls\{Configuration};
 
 /**
  * Gets the configuration parameters from the environment.

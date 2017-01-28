@@ -43,7 +43,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
     $this->assertCount(0, $config);
 
     $config = Configuration::fromEnvironment([
-      'CI_NAME' => 'travis-ci',
+      'CI_NAME' => 'travis-pro',
       'CI_PULL_REQUEST' => 'PR #123',
       'COVERALLS_REPO_TOKEN' => '0123456789abcdef',
       'GIT_MESSAGE' => 'Hello World!',
@@ -55,7 +55,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals('Hello World!', $config['git_message']);
     $this->assertEquals('0123456789abcdef', $config['repo_token']);
     $this->assertEquals('develop', $config['service_branch']);
-    $this->assertEquals('travis-ci', $config['service_name']);
+    $this->assertEquals('travis-pro', $config['service_name']);
     $this->assertEquals('123', $config['service_pull_request']);
   }
 
