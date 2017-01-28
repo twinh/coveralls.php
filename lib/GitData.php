@@ -7,7 +7,7 @@ namespace coveralls;
 /**
  * Represents Git data that can be used to display more information to users.
  */
-class GitData {
+class GitData implements \JsonSerializable {
 
   /**
    * @var string The branch name.

@@ -7,7 +7,7 @@ namespace coveralls;
 /**
  * Represents a Git remote repository.
  */
-class GitRemote {
+class GitRemote implements \JsonSerializable {
 
   /**
    * @var string The remote's name.

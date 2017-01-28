@@ -7,7 +7,7 @@ namespace coveralls;
 /**
  * Represents a Git commit.
  */
-class GitCommit {
+class GitCommit implements \JsonSerializable {
 
   /**
    * @var string The author mail address.
