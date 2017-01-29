@@ -120,20 +120,19 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
   /**
    * Loads the default configuration.
-   * The default values are read from the `.coveralls.yml` file and the environment variables.
-   * @param string $coverallsFile The path to an optional `.coveralls.yml` file. Defaults to the file found in the current directory.
+   * The default values are read from the environment variables and an optional `.coveralls.yml` file.
+   * @param string $coverallsFile The path to the `.coveralls.yml` file. Defaults to the file found in the current directory.
    * @return Configuration The default configuration.
    */
   public static function loadDefaults(string $coverallsFile = ''): self {
     if (!mb_strlen($coverallsFile)) $coverallsFile = getcwd().'/.coveralls.yml';
 
-    $defaults = new static();
+    $defaults = static::fromEnvironment();
     if (is_file($coverallsFile)) {
       $config = static::fromYAML(@file_get_contents($coverallsFile));
       if ($config) $defaults->merge($config);
     }
 
-    $defaults->merge(static::fromEnvironment());
     return $defaults;
   }
 

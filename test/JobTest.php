@@ -3,9 +3,7 @@
  * Implementation of the `coveralls\test\JobTest` class.
  */
 namespace coveralls\test;
-use coveralls\{
-  Configuration, GitData, Job, SourceFile
-};
+use coveralls\{Configuration, GitData, Job, SourceFile};
 
 /**
  * Tests the features of the `coveralls\Job` class.
