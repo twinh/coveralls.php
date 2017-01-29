@@ -83,7 +83,7 @@ class Job implements \JsonSerializable {
         $this->setGit(new GitData($commit, $config['service_branch'] ?: ''));
       }
 
-      $this->setParallel(mb_strtolower($config['parallel']) == 'true');
+      $this->setParallel($config['parallel'] == 'true');
       $this->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
       $this->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);
       $this->setServiceJobId($config['service_job_id'] ?: '');
@@ -108,16 +108,15 @@ class Job implements \JsonSerializable {
    * @return Job The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJSON($map) {
-    if (is_array($map)) $map = (object) $map;
-    if (!is_object($map)) return null;
-
     $transform = function(array $files) {
       return array_filter(array_map(function($item) { return SourceFile::fromJSON($item); }, $files));
     };
 
-    $sources = isset($map->source_files) && is_array($map->source_files) ? $transform($map->source_files) : [];
-    unset($map->source_files);
-    return new static(new Configuration(get_object_vars($map)), $sources);
+    if (is_array($map)) $map = (object) $map;
+    return !is_object($map) ? null : new static(
+      new Configuration(get_object_vars($map)),
+      isset($map->source_files) && is_array($map->source_files) ? $transform($map->source_files) : []
+    );
   }
 
   /**
