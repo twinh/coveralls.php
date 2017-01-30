@@ -87,21 +87,22 @@ class Client {
    * @throws \InvalidArgumentException The specified coverage format is not supported.
    */
   public function upload(string $coverage, Configuration $config = null): bool {
-    $coverage = trim($coverage);
-
     // Parse the coverage.
+    $coverage = trim($coverage);
     $job = null;
 
     $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-    if ($isClover) $job = $this->parseClover($coverage);
+    if ($isClover) $job = $this->parseCloverReport($coverage);
     else {
       $token = mb_substr($coverage, 0, 3);
-      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $job = $this->parseLCOV($coverage);
+      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $job = $this->parseLcovReport($coverage);
     }
 
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
 
     // Apply the configuration settings.
+    if (!$config) $config = Configuration::loadDefaults();
+
     $hasGitData = count(array_filter($config->getKeys(), function($key) {
       return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
     })) > 0;
@@ -153,10 +154,10 @@ class Client {
    * @param string $coverage A coverage report in LCOV format.
    * @return Job The job corresponding to the specified coverage report.
    */
-  private function parseClover(string $coverage): Job {
+  private function parseCloverReport(string $coverage): Job {
     $sourceFiles = [];
     // TODO
-    return (new Job())->setSourceFiles($sourceFiles);
+    return new Job($sourceFiles);
   }
 
   /**
@@ -164,10 +165,10 @@ class Client {
    * @param string $coverage A coverage report in LCOV format.
    * @return Job The job corresponding to the specified coverage report.
    */
-  private function parseLCOV(string $coverage): Job {
-    $report = Report::parse($coverage);
-    $sourceFiles = [];
-    // TODO
-    return (new Job())->setSourceFiles($sourceFiles);
+  private function parseLcovReport(string $coverage): Job {
+    $records = Report::parse($coverage)->getRecords()->getArrayCopy();
+    return new Job(array_map(function($record) {
+      // TODO
+    }, $records));
   }
 }
