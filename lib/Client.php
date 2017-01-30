@@ -21,11 +21,6 @@ class Client {
   const DEFAULT_ENDPOINT = 'https://coveralls.io/api/v1/jobs';
 
   /**
-   * @var Configuration The client settings.
-   */
-  private $configuration;
-
-  /**
    * @var string The URL of the API end point.
    */
   private $endPoint = '';
@@ -42,21 +37,12 @@ class Client {
 
   /**
    * Initializes a new instance of the class.
-   * @param Configuration $config The client settings.
    * @param string $endPoint The URL of the API end point.
    */
-  public function __construct(Configuration $config = null, string $endPoint = '') {
+  public function __construct(string $endPoint = '') {
     $this->onRequest = new Subject();
     $this->onResponse = new Subject();
     $this->setEndPoint(mb_strlen($endPoint) ? $endPoint : static::DEFAULT_ENDPOINT);
-  }
-
-  /**
-   * Gets the client settings.
-   * @return Configuration The client settings.
-   */
-  public function getConfiguration() {
-    return $this->configuration;
   }
 
   /**
@@ -84,16 +70,6 @@ class Client {
   }
 
   /**
-   * Sets the client settings.
-   * @param Configuration $value The new settings.
-   * @return Client This instance.
-   */
-  public function setConfiguration(Configuration $value = null) {
-    $this->configuration = $value;
-    return $this;
-  }
-
-  /**
    * Sets the URL of the API end point.
    * @param string $value The new URL of the API end point.
    * @return Client This instance.
@@ -106,10 +82,11 @@ class Client {
   /**
    * Uploads the specified code coverage report to the Coveralls service.
    * @param string $coverage A coverage report.
+   * @param Configuration $config The environment settings.
    * @return bool `true` if the operation succeeds, otherwise `false`.
    * @throws \InvalidArgumentException The specified coverage format is not supported.
    */
-  public function upload(string $coverage): bool {
+  public function upload(string $coverage, Configuration $config = null): bool {
     $coverage = trim($coverage);
 
     $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
