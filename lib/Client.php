@@ -23,7 +23,7 @@ class Client {
   /**
    * @var string The URL of the API end point.
    */
-  private $endPoint = '';
+  private $endPoint;
 
   /**
    * @var Subject The handler of "request" events.
@@ -89,14 +89,43 @@ class Client {
   public function upload(string $coverage, Configuration $config = null): bool {
     $coverage = trim($coverage);
 
+    // Parse the coverage.
+    $job = null;
+
     $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-    if ($isClover) return $this->uploadJob($this->parseClover($coverage));
+    if ($isClover) $job = $this->parseClover($coverage);
+    else {
+      $token = mb_substr($coverage, 0, 3);
+      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $job = $this->parseLCOV($coverage);
+    }
 
-    $lcovToken = mb_substr($coverage, 0, 3);
-    if ($lcovToken == Token::TEST_NAME.':' || $lcovToken == Token::SOURCE_FILE.':')
-      return $this->uploadJob($this->parseLCOV($coverage));
+    if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
 
-    throw new \InvalidArgumentException('The specified coverage format is not supported.');
+    // Apply the configuration settings.
+    $hasGitData = count(array_filter($config->getKeys(), function($key) {
+      return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
+    })) > 0;
+
+    if (!$hasGitData) $job->setCommitSha($config['commit_sha'] ?: '');
+    else {
+      $commit = new GitCommit($config['commit_sha'] ?: '', $config['git_message'] ?: '');
+      $commit->setAuthorEmail($config['git_author_email'] ?: '');
+      $commit->setAuthorName($config['git_author_name'] ?: '');
+      $commit->setCommitterEmail($config['git_committer_email'] ?: '');
+      $commit->setCommitterName($config['git_committer_email'] ?: '');
+
+      $job->setGit(new GitData($commit, $config['service_branch'] ?: ''));
+    }
+
+    $job->setParallel($config['parallel'] == 'true');
+    $job->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
+    $job->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);
+    $job->setServiceJobId($config['service_job_id'] ?: '');
+    $job->setServiceName($config['service_name'] ?: '');
+    $job->setServiceNumber($config['service_number'] ?: '');
+    $job->setServicePullRequest($config['service_pull_request'] ?: '');
+
+    return $this->uploadJob($job);
   }
 
   /**
@@ -110,22 +139,35 @@ class Client {
       'name' => 'json_file'
     ];
 
-    $request = (new ServerRequest('POST', $this->getEndPoint()))->withBody(new MultipartStream($jsonFile));
+    $request = (new ServerRequest('POST', $this->getEndPoint()))->withBody(new MultipartStream([$jsonFile]));
     $this->onRequest->onNext($request);
 
-    $response = (new HTTPClient())->send($request, ['multipart' => $jsonFile]);
+    $response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
     $this->onResponse->onNext($response);
 
     return $response->getStatusCode() == 200;
   }
 
-  // TODO
-  private function parseClover($coverage): Job {
-
+  /**
+   * Parses the specified [Clover](https://www.atlassian.com/software/clover) coverage report.
+   * @param string $coverage A coverage report in LCOV format.
+   * @return Job The job corresponding to the specified coverage report.
+   */
+  private function parseClover(string $coverage): Job {
+    $sourceFiles = [];
+    // TODO
+    return (new Job())->setSourceFiles($sourceFiles);
   }
 
-  // TODO
-  private function parseLCOV($coverage): Job {
-
+  /**
+   * Parses the specified [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage report.
+   * @param string $coverage A coverage report in LCOV format.
+   * @return Job The job corresponding to the specified coverage report.
+   */
+  private function parseLCOV(string $coverage): Job {
+    $report = Report::parse($coverage);
+    $sourceFiles = [];
+    // TODO
+    return (new Job())->setSourceFiles($sourceFiles);
   }
 }

@@ -12,12 +12,12 @@ class GitRemote implements \JsonSerializable {
   /**
    * @var string The remote's name.
    */
-  private $name = '';
+  private $name;
 
   /**
    * @var string The remote's URL.
    */
-  private $url = '';
+  private $url;
 
   /**
    * Initializes a new instance of the class.

@@ -61,36 +61,10 @@ class Job implements \JsonSerializable {
 
   /**
    * Initializes a new instance of the class.
-   * @param Configuration $config The job configuration.
    * @param SourceFile[] $sourceFiles The list of source files.
    */
-  public function __construct(Configuration $config = null, array $sourceFiles = []) {
+  public function __construct(array $sourceFiles = []) {
     $this->sourceFiles = new \ArrayObject($sourceFiles);
-
-    if ($config) {
-      $hasGitData = count(array_filter($config->getKeys(), function($key) {
-        return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
-      })) > 0;
-
-      if (!$hasGitData) $this->setCommitSha($config['commit_sha'] ?: '');
-      else {
-        $commit = new GitCommit($config['commit_sha'] ?: '', $config['git_message'] ?: '');
-        $commit->setAuthorEmail($config['git_author_email'] ?: '');
-        $commit->setAuthorName($config['git_author_name'] ?: '');
-        $commit->setCommitterEmail($config['git_committer_email'] ?: '');
-        $commit->setCommitterName($config['git_committer_email'] ?: '');
-
-        $this->setGit(new GitData($commit, $config['service_branch'] ?: ''));
-      }
-
-      $this->setParallel($config['parallel'] == 'true');
-      $this->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
-      $this->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);
-      $this->setServiceJobId($config['service_job_id'] ?: '');
-      $this->setServiceName($config['service_name'] ?: '');
-      $this->setServiceNumber($config['service_number'] ?: '');
-      $this->setServicePullRequest($config['service_pull_request'] ?: '');
-    }
   }
 
   /**
