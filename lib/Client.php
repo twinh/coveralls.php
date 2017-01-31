@@ -132,9 +132,9 @@ class Client {
   /**
    * Parses the specified coverage report.
    * @param string $coverage A coverage report.
-   * @return Job The job corresponding to the specified coverage report.
+   * @return Job The job corresponding to the specified coverage report, or a `null` reference if an error occurred.
    */
-  private function parseCoverage(string $coverage): Job {
+  private function parseCoverage(string $coverage) {
     $coverage = trim($coverage);
     if (!mb_strlen($coverage)) return null;
 
