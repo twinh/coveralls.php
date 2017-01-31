@@ -39,10 +39,10 @@ class Client {
    * Initializes a new instance of the class.
    * @param string $endPoint The URL of the API end point.
    */
-  public function __construct(string $endPoint = '') {
+  public function __construct(string $endPoint = self::DEFAULT_ENDPOINT) {
     $this->onRequest = new Subject();
     $this->onResponse = new Subject();
-    $this->setEndPoint(mb_strlen($endPoint) ? $endPoint : static::DEFAULT_ENDPOINT);
+    $this->setEndPoint($endPoint);
   }
 
   /**
