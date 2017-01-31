@@ -87,45 +87,10 @@ class Client {
    * @throws \InvalidArgumentException The specified coverage format is not supported.
    */
   public function upload(string $coverage, Configuration $config = null): bool {
-    // Parse the coverage.
-    $coverage = trim($coverage);
-    $job = null;
-
-    $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-    if ($isClover) $job = $this->parseCloverReport($coverage);
-    else {
-      $token = mb_substr($coverage, 0, 3);
-      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $job = $this->parseLcovReport($coverage);
-    }
-
+    $job = $this->parseCoverage($coverage);
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
 
-    // Apply the configuration settings.
-    if (!$config) $config = Configuration::loadDefaults();
-
-    $hasGitData = count(array_filter($config->getKeys(), function($key) {
-      return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
-    })) > 0;
-
-    if (!$hasGitData) $job->setCommitSha($config['commit_sha'] ?: '');
-    else {
-      $commit = new GitCommit($config['commit_sha'] ?: '', $config['git_message'] ?: '');
-      $commit->setAuthorEmail($config['git_author_email'] ?: '');
-      $commit->setAuthorName($config['git_author_name'] ?: '');
-      $commit->setCommitterEmail($config['git_committer_email'] ?: '');
-      $commit->setCommitterName($config['git_committer_email'] ?: '');
-
-      $job->setGit(new GitData($commit, $config['service_branch'] ?: ''));
-    }
-
-    $job->setParallel($config['parallel'] == 'true');
-    $job->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
-    $job->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);
-    $job->setServiceJobId($config['service_job_id'] ?: '');
-    $job->setServiceName($config['service_name'] ?: '');
-    $job->setServiceNumber($config['service_number'] ?: '');
-    $job->setServicePullRequest($config['service_pull_request'] ?: '');
-
+    $this->updateJob($job, $config ?: Configuration::loadDefaults());
     return $this->uploadJob($job);
   }
 
@@ -133,8 +98,12 @@ class Client {
    * Uploads the specified job to the Coveralls service.
    * @param Job $job The job to be uploaded.
    * @return bool `true` if the operation succeeds, otherwise `false`.
+   * @throws \InvalidArgumentException The job does not meet the requirements.
    */
   public function uploadJob(Job $job): bool {
+    if (!$job->getRepoToken() && !$job->getServiceName())
+      throw new \InvalidArgumentException('The job does not meet the requirements.');
+
     $jsonFile = [
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
       'name' => 'json_file'
@@ -161,6 +130,24 @@ class Client {
   }
 
   /**
+   * Parses the specified coverage report.
+   * @param string $coverage A coverage report.
+   * @return Job The job corresponding to the specified coverage report.
+   */
+  private function parseCoverage(string $coverage): Job {
+    $coverage = trim($coverage);
+    if (!mb_strlen($coverage)) return null;
+
+    $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
+    if ($isClover) return $this->parseCloverReport($coverage);
+
+    $token = mb_substr($coverage, 0, 3);
+    if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') return $this->parseLcovReport($coverage);
+
+    return null;
+  }
+
+  /**
    * Parses the specified [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage report.
    * @param string $coverage A coverage report in LCOV format.
    * @return Job The job corresponding to the specified coverage report.
@@ -170,5 +157,35 @@ class Client {
     return new Job(array_map(function($record) {
       // TODO
     }, $records));
+  }
+
+  /**
+   * Updates the properties of the specified job using the given configuration parameters.
+   * @param Job $job The job to update.
+   * @param Configuration $config The parameters to define.
+   */
+  private function updateJob(Job $job, Configuration $config) {
+    $hasGitData = count(array_filter($config->getKeys(), function($key) {
+        return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
+      })) > 0;
+
+    if (!$hasGitData) $job->setCommitSha($config['commit_sha'] ?: '');
+    else {
+      $commit = new GitCommit($config['commit_sha'] ?: '', $config['git_message'] ?: '');
+      $commit->setAuthorEmail($config['git_author_email'] ?: '');
+      $commit->setAuthorName($config['git_author_name'] ?: '');
+      $commit->setCommitterEmail($config['git_committer_email'] ?: '');
+      $commit->setCommitterName($config['git_committer_email'] ?: '');
+
+      $job->setGit(new GitData($commit, $config['service_branch'] ?: ''));
+    }
+
+    $job->setParallel($config['parallel'] == 'true');
+    $job->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
+    $job->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);
+    $job->setServiceJobId($config['service_job_id'] ?: '');
+    $job->setServiceName($config['service_name'] ?: '');
+    $job->setServiceNumber($config['service_number'] ?: '');
+    $job->setServicePullRequest($config['service_pull_request'] ?: '');
   }
 }

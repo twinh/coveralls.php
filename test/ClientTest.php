@@ -3,7 +3,7 @@
  * Implementation of the `coveralls\test\ClientTest` class.
  */
 namespace coveralls\test;
-use coveralls\{Client};
+use coveralls\{Client, Job};
 
 /**
  * Tests the features of the `coveralls\Client` class.
@@ -11,38 +11,40 @@ use coveralls\{Client};
 class ClientTest extends \PHPUnit_Framework_TestCase {
 
   /**
-   * Tests the constructor.
+   * Tests the `Client::parseCloverReport()` method.
    */
-  /*
-  public function testConstruct() {
-    $job = new Client();
-    $this->assertNull($job->getGit());
-    $this->assertFalse($job->isParallel());
-    $this->assertEmpty($job->getRepoToken());
-    $this->assertNull($job->getRunAt());
-    $this->assertCount(0, $job->getSourceFiles());
+  public function testParseCloverReport() {
+    $parseCloverReport = function(string $coverage) {
+      return $this->parseCloverReport($coverage);
+    };
 
-    $job = new Client(new Configuration([
-      'parallel' => 'true',
-      'repo_token' => 'yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt',
-      'run_at' => '2017-01-29T03:43:30+01:00',
-      'service_branch' => 'develop'
-    ]), [new SourceFile('/home/cedx/coveralls.php')]);
+    // TODO: $job = $parseCloverReport->call(new Client());
+  }
 
-    $this->assertTrue($job->isParallel());
-    $this->assertEquals('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt', $job->getRepoToken());
+  /**
+   * Tests the `Client::parseLcovReport()` method.
+   */
+  public function testParseLcovReport() {
+    $parseLcovReport = function(string $coverage) {
+      return $this->parseLcovReport($coverage);
+    };
 
-    $git = $job->getGit();
-    $this->assertInstanceOf(GitData::class, $git);
-    $this->assertEquals('develop', $git->getBranch());
+    // TODO: $job = $parseLcovReport->call(new Client());
+  }
 
-    $runAt = $job->getRunAt();
-    $this->assertInstanceOf(\DateTime::class, $runAt);
-    $this->assertEquals('2017-01-29T03:43:30+01:00', $runAt->format('c'));
+  /**
+   * Tests the `Client::upload()` method.
+   */
+  public function testUpload() {
+    $this->expectException(\InvalidArgumentException::class);
+    (new Client())->upload('');
+  }
 
-    $sourceFiles = $job->getSourceFiles();
-    $this->assertCount(1, $sourceFiles);
-    $this->assertInstanceOf(SourceFile::class, $sourceFiles[0]);
-    $this->assertEquals('/home/cedx/coveralls.php', $sourceFiles[0]->getName());
-  }*/
+  /**
+   * Tests the `Client::uploadJob()` method.
+   */
+  public function testUploadJob() {
+    $this->expectException(\InvalidArgumentException::class);
+    (new Client())->uploadJob(new Job());
+  }
 }
