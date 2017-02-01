@@ -122,7 +122,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
    * Tests the `Configuration::loadDefaults()` method.
    */
   public function testLoadDefaults() {
-    $config = Configuration::loadDefaults(__DIR__.'/.coveralls.yml');
+    $config = Configuration::loadDefaults(__DIR__.'/fixtures/.coveralls.yml');
     $this->assertTrue(count($config) >= 2);
     $this->assertEquals('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt', $config['repo_token']);
     $this->assertEquals('travis-pro', $config['service_name']);

@@ -6,7 +6,9 @@ namespace coveralls;
 
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, ServerRequest};
-use lcov\{Report, Token};
+use lcov\{
+  LineData, Record, Report, Token
+};
 use Rx\{Observable};
 use Rx\Subject\{Subject};
 
@@ -120,10 +122,10 @@ class Client {
 
   /**
    * Parses the specified [Clover](https://www.atlassian.com/software/clover) coverage report.
-   * @param string $coverage A coverage report in LCOV format.
+   * @param string $report A coverage report in LCOV format.
    * @return Job The job corresponding to the specified coverage report.
    */
-  private function parseCloverReport(string $coverage): Job {
+  private function parseCloverReport(string $report): Job {
     $sourceFiles = [];
     // TODO
     return new Job($sourceFiles);
@@ -149,13 +151,22 @@ class Client {
 
   /**
    * Parses the specified [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage report.
-   * @param string $coverage A coverage report in LCOV format.
+   * @param string $report A coverage report in LCOV format.
    * @return Job The job corresponding to the specified coverage report.
+   * @throws \RuntimeException A source file was not found.
    */
-  private function parseLcovReport(string $coverage): Job {
-    $records = Report::parse($coverage)->getRecords()->getArrayCopy();
-    return new Job(array_map(function($record) {
-      // TODO
+  private function parseLcovReport(string $report): Job {
+    $records = Report::parse($report)->getRecords()->getArrayCopy();
+    return new Job(array_map(function(Record $record) {
+      $path = $record->getSourceFile();
+      $source = @file_get_contents($path);
+      if (!$source) throw new \RuntimeException("Source file not found: $path");
+
+      $lines = preg_split('/\r?\n/', $source);
+      $coverage = array_fill(0, count($lines), null);
+      foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
+
+      return new SourceFile($path, md5($source), $source, $coverage);
     }, $records));
   }
 
@@ -166,8 +177,8 @@ class Client {
    */
   private function updateJob(Job $job, Configuration $config) {
     $hasGitData = count(array_filter($config->getKeys(), function($key) {
-        return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
-      })) > 0;
+      return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
+    })) > 0;
 
     if (!$hasGitData) $job->setCommitSha($config['commit_sha'] ?: '');
     else {

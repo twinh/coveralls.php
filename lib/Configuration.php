@@ -128,9 +128,8 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     if (!mb_strlen($coverallsFile)) $coverallsFile = getcwd().'/.coveralls.yml';
 
     $defaults = static::fromEnvironment();
-    if (is_file($coverallsFile)) {
-      $config = static::fromYAML(@file_get_contents($coverallsFile));
-      if ($config) $defaults->merge($config);
+    if ($yaml = @file_get_contents($coverallsFile)) {
+      if ($config = static::fromYAML($yaml)) $defaults->merge($config);
     }
 
     return $defaults;
