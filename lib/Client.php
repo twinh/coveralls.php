@@ -6,11 +6,10 @@ namespace coveralls;
 
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, ServerRequest};
-use lcov\{
-  LineData, Record, Report, Token
-};
+use lcov\{Record, Report, Token};
 use Rx\{Observable};
 use Rx\Subject\{Subject};
+use Webmozart\PathUtil\{Path};
 
 /**
  * Uploads code coverage reports to the [Coveralls](https://coveralls.io) service.
@@ -124,11 +123,17 @@ class Client {
    * Parses the specified [Clover](https://www.atlassian.com/software/clover) coverage report.
    * @param string $report A coverage report in LCOV format.
    * @return Job The job corresponding to the specified coverage report.
+   * @throws \InvalidArgumentException The specified Clover report has an invalid format.
    */
   private function parseCloverReport(string $report): Job {
+    $xml = @simplexml_load_string($report);
+    if (!$xml || !count($xml->project)) throw new \InvalidArgumentException('The specified Clover report is invalid.');
+
     $sourceFiles = [];
     // TODO
-    return new Job($sourceFiles);
+
+    $runAt = $xml->project['timestamp'];
+    return (new Job($sourceFiles))->setRunAt(new \DateTime("@$runAt"));
   }
 
   /**
@@ -140,13 +145,19 @@ class Client {
     $coverage = trim($coverage);
     if (!mb_strlen($coverage)) return null;
 
-    $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-    if ($isClover) return $this->parseCloverReport($coverage);
+    try {
+      $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
+      if ($isClover) return $this->parseCloverReport($coverage);
 
-    $token = mb_substr($coverage, 0, 3);
-    if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') return $this->parseLcovReport($coverage);
+      $token = mb_substr($coverage, 0, 3);
+      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') return $this->parseLcovReport($coverage);
 
-    return null;
+      return null;
+    }
+
+    catch (\Throwable $e) {
+      return null;
+    }
   }
 
   /**
@@ -166,7 +177,8 @@ class Client {
       $coverage = array_fill(0, count($lines), null);
       foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
-      return new SourceFile($path, md5($source), $source, $coverage);
+      $filename = Path::makeRelative($path, getcwd());
+      return new SourceFile($filename, md5($source), $source, $coverage);
     }, $records));
   }
 

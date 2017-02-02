@@ -14,8 +14,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
    * Tests the `Client::parseCloverReport()` method.
    */
   public function testParseCloverReport() {
-    $parseCloverReport = function(string $coverage) {
-      return $this->parseCloverReport($coverage);
+    $parseCloverReport = function(string $report) {
+      return $this->parseCloverReport($report);
     };
 
     // TODO: $job = $parseCloverReport->call(new Client());
@@ -25,8 +25,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
    * Tests the `Client::parseCoverage()` method.
    */
   public function testParseCoverage() {
-    $parseCoverage = function(string $coverage) {
-      return $this->parseCoverage($coverage);
+    $parseCoverage = function(string $report) {
+      return $this->parseCoverage($report);
     };
 
     // TODO: $job = $parseCoverage->call(new Client());
@@ -36,8 +36,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
    * Tests the `Client::parseLcovReport()` method.
    */
   public function testParseLcovReport() {
-    $parseLcovReport = function(string $coverage): Job {
-      return $this->parseLcovReport($coverage);
+    $parseLcovReport = function(string $report): Job {
+      return $this->parseLcovReport($report);
     };
 
     $job = $parseLcovReport->call(new Client(), file_get_contents(__DIR__.'/fixtures/coverage.lcov'));
