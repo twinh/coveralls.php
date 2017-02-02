@@ -18,7 +18,28 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
       return $this->parseCloverReport($report);
     };
 
-    // TODO: $job = $parseCloverReport->call(new Client());
+    $job = $parseCloverReport->call(new Client(), file_get_contents(__DIR__.'/fixtures/clover.xml'));
+    $files = $job->getSourceFiles();
+    $this->assertCount(3, $files);
+
+    $this->assertInstanceOf(SourceFile::class, $files[0]);
+    $this->assertEquals('lib/Client.php', $files[0]->getName());
+    $this->assertNotEmpty($files[0]->getSourceDigest());
+
+    $subset = [null, 2, 2, 2, 2, null];
+    $this->assertEquals($subset, array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()));
+
+    $this->assertEquals('lib/Configuration.php', $files[1]->getName());
+    $this->assertNotEmpty($files[1]->getSourceDigest());
+
+    $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
+    $this->assertEquals($subset, array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()));
+
+    $this->assertEquals('lib/GitCommit.php', $files[2]->getName());
+    $this->assertNotEmpty($files[2]->getSourceDigest());
+
+    $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
+    $this->assertEquals($subset, array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()));
   }
 
   /**
@@ -40,7 +61,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
       return $this->parseLcovReport($report);
     };
 
-    $job = $parseLcovReport->call(new Client(), file_get_contents(__DIR__.'/fixtures/coverage.lcov'));
+    $job = $parseLcovReport->call(new Client(), file_get_contents(__DIR__.'/fixtures/lcov.info'));
     $files = $job->getSourceFiles();
     $this->assertCount(3, $files);
 

@@ -124,13 +124,29 @@ class Client {
    * @param string $report A coverage report in LCOV format.
    * @return Job The job corresponding to the specified coverage report.
    * @throws \InvalidArgumentException The specified Clover report has an invalid format.
+   * @throws \RuntimeException A source file was not found.
    */
   private function parseCloverReport(string $report): Job {
     $xml = @simplexml_load_string($report);
     if (!$xml || !count($xml->project)) throw new \InvalidArgumentException('The specified Clover report is invalid.');
 
     $sourceFiles = [];
-    // TODO
+    foreach (['/coverage/project/file', '/coverage/project/package/file'] as $xpath) {
+      foreach ($xml->xpath($xpath) as $file) {
+        $path = (string) $file['name'];
+        $source = @file_get_contents($path);
+        if (!$source) throw new \RuntimeException("Source file not found: $path");
+
+        $lines = preg_split('/\r?\n/', $source);
+        $coverage = array_fill(0, count($lines), null);
+        foreach ($file->line as $line) {
+          if ((string) $line['type'] == 'stmt') $coverage[((int) $line['num']) - 1] = (int) $line['count'];
+        }
+
+        $filename = Path::makeRelative($path, getcwd());
+        $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage);
+      }
+    }
 
     $runAt = $xml->project['timestamp'];
     return (new Job($sourceFiles))->setRunAt(new \DateTime("@$runAt"));
