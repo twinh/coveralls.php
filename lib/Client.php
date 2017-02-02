@@ -127,8 +127,8 @@ class Client {
    * @throws \RuntimeException A source file was not found.
    */
   private function parseCloverReport(string $report): Job {
-    $xml = @simplexml_load_string($report);
-    if (!$xml || !count($xml->project)) throw new \InvalidArgumentException('The specified Clover report is invalid.');
+    $xml = simplexml_load_string($report);
+    if (!$xml || !$xml->count() || !$xml->project->count()) throw new \InvalidArgumentException('The specified Clover report is invalid.'.$report);
 
     $sourceFiles = [];
     foreach (['/coverage/project/file', '/coverage/project/package/file'] as $xpath) {

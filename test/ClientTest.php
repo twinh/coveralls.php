@@ -46,11 +46,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
    * Tests the `Client::parseCoverage()` method.
    */
   public function testParseCoverage() {
+    $client = new Client();
     $parseCoverage = function(string $report) {
       return $this->parseCoverage($report);
     };
 
-    // TODO: $job = $parseCoverage->call(new Client());
+    $job = $parseCoverage->call($client, "TN:A sample LCOV report\nSF:lib/Client.php\nend_of_record");
+    $this->assertInstanceOf(Job::class, $job);
+
+    $job = $parseCoverage->call($client, '<?xml version="1.0"?>'."\n<coverage>\n<project timestamp=\"1486026064\"></project>\n</coverage>");
+    $this->assertInstanceOf(Job::class, $job);
+
+    $this->assertNull($parseCoverage->call($client, ''));
+    $this->assertNull($parseCoverage->call($client, 'FooBar'));
   }
 
   /**
