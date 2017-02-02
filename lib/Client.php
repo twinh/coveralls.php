@@ -85,12 +85,21 @@ class Client {
    * @param string $coverage A coverage report.
    * @param Configuration $config The environment settings.
    * @return bool `true` if the operation succeeds, otherwise `false`.
-   * @throws \InvalidArgumentException The specified coverage format is not supported.
+   * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
   public function upload(string $coverage, Configuration $config = null): bool {
-    $job = $this->parseCoverage($coverage);
-    if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
+    $coverage = trim($coverage);
+    if (!mb_strlen($coverage)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
+    $job = null;
+    $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
+    if ($isClover) $job = $this->parseCloverReport($coverage);
+    else {
+      $token = mb_substr($coverage, 0, 3);
+      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $job = $this->parseLcovReport($coverage);
+    }
+
+    if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
     $this->updateJob($job, $config ?: Configuration::loadDefaults());
     return $this->uploadJob($job);
   }
@@ -128,7 +137,8 @@ class Client {
    */
   private function parseCloverReport(string $report): Job {
     $xml = simplexml_load_string($report);
-    if (!$xml || !$xml->count() || !$xml->project->count()) throw new \InvalidArgumentException('The specified Clover report is invalid.'.$report);
+    if (!$xml || !$xml->count() || !$xml->project->count())
+      throw new \InvalidArgumentException('The specified Clover report is invalid.'.$report);
 
     $sourceFiles = [];
     foreach (['/coverage/project/file', '/coverage/project/package/file'] as $xpath) {
@@ -150,30 +160,6 @@ class Client {
 
     $runAt = $xml->project['timestamp'];
     return (new Job($sourceFiles))->setRunAt(new \DateTime("@$runAt"));
-  }
-
-  /**
-   * Parses the specified coverage report.
-   * @param string $coverage A coverage report.
-   * @return Job The job corresponding to the specified coverage report, or a `null` reference if an error occurred.
-   */
-  private function parseCoverage(string $coverage) {
-    $coverage = trim($coverage);
-    if (!mb_strlen($coverage)) return null;
-
-    try {
-      $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-      if ($isClover) return $this->parseCloverReport($coverage);
-
-      $token = mb_substr($coverage, 0, 3);
-      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') return $this->parseLcovReport($coverage);
-
-      return null;
-    }
-
-    catch (\Throwable $e) {
-      return null;
-    }
   }
 
   /**
