@@ -32,7 +32,7 @@
     "cedx/lcov": "^0.2.0",
     "guzzlehttp/guzzle": "^6.2.2",
     "reactivex/rxphp": "^1.5.1",
-    "symfony/yaml": "^3.2.2",
+    "symfony/yaml": "^3.2.3",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
