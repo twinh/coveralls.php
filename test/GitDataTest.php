@@ -44,6 +44,13 @@ class GitDataTest extends \PHPUnit_Framework_TestCase {
   }
 
   /**
+   * Tests the `GitData::fromRepository()` method.
+   */
+  public function testFromRepository() {
+    // TODO
+  }
+
+  /**
    * Tests the `GitData::jsonSerialize()` method.
    */
   public function testJsonSerialize() {

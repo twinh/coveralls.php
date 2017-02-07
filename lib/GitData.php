@@ -46,6 +46,35 @@ class GitData implements \JsonSerializable {
   }
 
   /**
+   * Creates a new Git data from a local repository.
+   * This method relies on the availability of the Git executable in the system path.
+   * @param string $path The path to the repository folder. Defaults to the current working directory.
+   * @return GitData The newly created data.
+   */
+  public static function fromRepository(string $path = ''): self {
+    $hasPath = mb_strlen($path) > 0;
+    $previousDir = $hasPath ? getcwd() : null;
+    if ($hasPath) chdir($path);
+
+    $branch = trim(`git rev-parse --abbrev-ref HEAD`);
+    $commit = (new GitCommit())
+      ->setAuthorEmail(trim(`git log -1 --pretty=format:'%ae'`))
+      ->setAuthorName(trim(`git log -1 --pretty=format:'%aN'`))
+      ->setCommitterEmail(trim(`git log -1 --pretty=format:'%ce'`))
+      ->setCommitterName(trim(`git log -1 --pretty=format:'%cN'`))
+      ->setId(trim(`git log -1 --pretty=format:'%H'`))
+      ->setMessage(trim(`git log -1 --pretty=format:'%s'`));
+
+    $remotes = array_map(function($remote) {
+      $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
+      return new GitRemote($parts[0], $parts[1]);
+    }, preg_split('/\r?\n/', trim(`git remote -v`)));
+
+    if ($hasPath) chdir($previousDir);
+    return new static($commit, $branch, $remotes);
+  }
+
+  /**
    * Creates a new Git data from the specified JSON map.
    * @param mixed $map A JSON map representing a Git data.
    * @return GitData The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
