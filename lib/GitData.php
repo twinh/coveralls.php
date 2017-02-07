@@ -67,7 +67,7 @@ class GitData implements \JsonSerializable {
 
     $remotes = array_map(function($remote) {
       $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
-      return new GitRemote($parts[0], $parts[1]);
+      return new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
     }, preg_split('/\r?\n/', trim(`git remote -v`)));
 
     if ($hasPath) chdir($previousDir);
