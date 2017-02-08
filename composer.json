@@ -31,7 +31,7 @@
     "ext-curl": "*",
     "cedx/lcov": "^0.2.0",
     "guzzlehttp/guzzle": "^6.2.2",
-    "reactivex/rxphp": "^1.5.1",
+    "reactivex/rxphp": "^1.5.2",
     "symfony/yaml": "^3.2.3",
     "webmozart/path-util": "^2.3.0"
   },
@@ -39,7 +39,7 @@
     "phing/phing": "^2.16.0",
     "phpdocumentor/phpdocumentor": "^2.9.0",
     "phpmd/phpmd": "^2.6.0",
-    "phpunit/phpunit": "^5.7.11",
+    "phpunit/phpunit": "^5.7.12",
     "satooshi/php-coveralls": "^1.0.1"
   },
   "scripts": {
