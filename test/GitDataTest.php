@@ -47,7 +47,23 @@ class GitDataTest extends \PHPUnit_Framework_TestCase {
    * Tests the `GitData::fromRepository()` method.
    */
   public function testFromRepository() {
-    // TODO
+    $data = GitData::fromRepository(__DIR__.'/..');
+    $this->assertNotEmpty($data->getBranch());
+
+    $commit = $data->getCommit();
+    $this->assertInstanceOf(GitCommit::class, $commit);
+    $this->assertRegExp('/^[a-f\d]{40}$/', $commit->getId());
+
+    $remotes = $data->getRemotes();
+    $this->assertGreaterThanOrEqual(1, count($remotes));
+    $this->assertInstanceOf(GitRemote::class, $remotes[0]);
+
+    $origin = array_filter($remotes->getArrayCopy(), function(GitRemote $remote) {
+      return $remote->getName() == 'origin';
+    });
+
+    $this->assertCount(1, $origin);
+    $this->assertEquals('https://github.com/cedx/coveralls.php.git', $origin[0]->getURL());
   }
 
   /**

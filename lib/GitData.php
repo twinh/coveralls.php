@@ -58,17 +58,22 @@ class GitData implements \JsonSerializable {
 
     $branch = trim(`git rev-parse --abbrev-ref HEAD`);
     $commit = (new GitCommit())
-      ->setAuthorEmail(trim(`git log -1 --pretty=format:'%ae'`))
-      ->setAuthorName(trim(`git log -1 --pretty=format:'%aN'`))
-      ->setCommitterEmail(trim(`git log -1 --pretty=format:'%ce'`))
-      ->setCommitterName(trim(`git log -1 --pretty=format:'%cN'`))
-      ->setId(trim(`git log -1 --pretty=format:'%H'`))
-      ->setMessage(trim(`git log -1 --pretty=format:'%s'`));
+      ->setAuthorEmail(trim(trim(`git log -1 --pretty=format:'%ae'`), "'"))
+      ->setAuthorName(trim(trim(`git log -1 --pretty=format:'%aN'`), "'"))
+      ->setCommitterEmail(trim(trim(`git log -1 --pretty=format:'%ce'`), "'"))
+      ->setCommitterName(trim(trim(`git log -1 --pretty=format:'%cN'`), "'"))
+      ->setId(trim(trim(`git log -1 --pretty=format:'%H'`), "'"))
+      ->setMessage(trim(trim(`git log -1 --pretty=format:'%s'`), "'"));
 
-    $remotes = array_map(function($remote) {
+    $names = [];
+    $remotes = [];
+    foreach (preg_split('/\r?\n/', trim(`git remote -v`)) as $remote) {
       $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
-      return new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
-    }, preg_split('/\r?\n/', trim(`git remote -v`)));
+      if (!in_array($parts[0], $names)) {
+        $names[] = $parts[0];
+        $remotes[] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
+      }
+    }
 
     if ($hasPath) chdir($previousDir);
     return new static($commit, $branch, $remotes);
