@@ -145,6 +145,8 @@ class Client {
       throw new \InvalidArgumentException('The specified Clover report is invalid.'.$report);
 
     $sourceFiles = [];
+    $workingDir = getcwd();
+
     foreach (['/coverage/project/file', '/coverage/project/package/file'] as $xpath) {
       foreach ($xml->xpath($xpath) as $file) {
         $path = (string) $file['name'];
@@ -157,7 +159,7 @@ class Client {
           if ((string) $line['type'] == 'stmt') $coverage[((int) $line['num']) - 1] = (int) $line['count'];
         }
 
-        $filename = Path::makeRelative($path, getcwd());
+        $filename = Path::makeRelative($path, $workingDir);
         $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage);
       }
     }
@@ -174,7 +176,9 @@ class Client {
    */
   private function parseLcovReport(string $report): Job {
     $records = Report::parse($report)->getRecords()->getArrayCopy();
-    return new Job(array_map(function(Record $record) {
+    $workingDir = getcwd();
+
+    return new Job(array_map(function(Record $record) use ($workingDir) {
       $path = $record->getSourceFile();
       $source = @file_get_contents($path);
       if (!$source) throw new \RuntimeException("Source file not found: $path");
@@ -183,7 +187,7 @@ class Client {
       $coverage = array_fill(0, count($lines), null);
       foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
-      $filename = Path::makeRelative($path, getcwd());
+      $filename = Path::makeRelative($path, $workingDir);
       return new SourceFile($filename, md5($source), $source, $coverage);
     }, $records));
   }
