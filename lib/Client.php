@@ -190,6 +190,14 @@ class Client {
    * @param Configuration $config The parameters to define.
    */
   private function updateJob(Job $job, Configuration $config) {
+    $job->setParallel($config['parallel'] == 'true');
+    $job->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
+    $job->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);
+    $job->setServiceJobId($config['service_job_id'] ?: '');
+    $job->setServiceName($config['service_name'] ?: '');
+    $job->setServiceNumber($config['service_number'] ?: '');
+    $job->setServicePullRequest($config['service_pull_request'] ?: '');
+
     $hasGitData = count(array_filter($config->getKeys(), function($key) {
       return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
     })) > 0;
@@ -205,12 +213,7 @@ class Client {
       $job->setGit(new GitData($commit, $config['service_branch'] ?: ''));
     }
 
-    $job->setParallel($config['parallel'] == 'true');
-    $job->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
-    $job->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);
-    $job->setServiceJobId($config['service_job_id'] ?: '');
-    $job->setServiceName($config['service_name'] ?: '');
-    $job->setServiceNumber($config['service_number'] ?: '');
-    $job->setServicePullRequest($config['service_pull_request'] ?: '');
+    $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
+    if (mb_strlen(trim(`$command`))) $job->setGit(GitData::fromRepository());
   }
 }

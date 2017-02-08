@@ -187,16 +187,16 @@ class Job implements \JsonSerializable {
   public function jsonSerialize(): \stdClass {
     $map = new \stdClass();
 
-    if ($repoToken = $this->getRepoToken()) $map->repo_token = $repoToken;
-    if ($serviceName = $this->getServiceName()) $map->service_name = $serviceName;
-    if ($serviceNumber = $this->getServiceNumber()) $map->service_number = $serviceNumber;
-    if ($serviceJobId = $this->getServiceJobId()) $map->service_job_id = $serviceJobId;
-    if ($servicePullRequest = $this->getServicePullRequest()) $map->service_pull_request = $servicePullRequest;
+    if (mb_strlen($repoToken = $this->getRepoToken())) $map->repo_token = $repoToken;
+    if (mb_strlen($serviceName = $this->getServiceName())) $map->service_name = $serviceName;
+    if (mb_strlen($serviceNumber = $this->getServiceNumber())) $map->service_number = $serviceNumber;
+    if (mb_strlen($serviceJobId = $this->getServiceJobId())) $map->service_job_id = $serviceJobId;
+    if (mb_strlen($servicePullRequest = $this->getServicePullRequest())) $map->service_pull_request = $servicePullRequest;
 
     $map->source_files = array_map(function(SourceFile $item) { return $item->jsonSerialize(); }, $this->getSourceFiles()->getArrayCopy());
     if ($this->isParallel()) $map->parallel = true;
     if ($git = $this->getGit()) $map->git = $git->jsonSerialize();
-    if ($commitSha = $this->getCommitSha()) $map->commit_sha = $commitSha;
+    if (mb_strlen($commitSha = $this->getCommitSha())) $map->commit_sha = $commitSha;
     if ($runAt = $this->getRunAt()) $map->run_at = $runAt->format('c');
 
     return $map;

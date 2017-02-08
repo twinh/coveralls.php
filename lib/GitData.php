@@ -46,6 +46,24 @@ class GitData implements \JsonSerializable {
   }
 
   /**
+   * Creates a new Git data from the specified JSON map.
+   * @param mixed $map A JSON map representing a Git data.
+   * @return GitData The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
+   */
+  public static function fromJSON($map) {
+    $transform = function(array $remotes) {
+      return array_filter(array_map(function($item) { return GitRemote::fromJSON($item); }, $remotes));
+    };
+
+    if (is_array($map)) $map = (object) $map;
+    return !is_object($map) ? null : new static(
+      GitCommit::fromJSON($map->head ?? null),
+      isset($map->branch) && is_string($map->branch) ? $map->branch : '',
+      isset($map->remotes) && is_array($map->remotes) ? $transform($map->remotes) : []
+    );
+  }
+
+  /**
    * Creates a new Git data from a local repository.
    * This method relies on the availability of the Git executable in the system path.
    * @param string $path The path to the repository folder. Defaults to the current working directory.
@@ -77,24 +95,6 @@ class GitData implements \JsonSerializable {
 
     if ($hasPath) chdir($previousDir);
     return new static($commit, $branch, $remotes);
-  }
-
-  /**
-   * Creates a new Git data from the specified JSON map.
-   * @param mixed $map A JSON map representing a Git data.
-   * @return GitData The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
-   */
-  public static function fromJSON($map) {
-    $transform = function(array $remotes) {
-      return array_filter(array_map(function($item) { return GitRemote::fromJSON($item); }, $remotes));
-    };
-
-    if (is_array($map)) $map = (object) $map;
-    return !is_object($map) ? null : new static(
-      GitCommit::fromJSON($map->head ?? null),
-      isset($map->branch) && is_string($map->branch) ? $map->branch : '',
-      isset($map->remotes) && is_array($map->remotes) ? $transform($map->remotes) : []
-    );
   }
 
   /**
