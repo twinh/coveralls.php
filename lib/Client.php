@@ -101,6 +101,10 @@ class Client {
 
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
     $this->updateJob($job, $config ?: Configuration::loadDefaults());
+
+    $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
+    if (mb_strlen(trim(`$command`))) $job->setGit(GitData::fromRepository());
+
     return $this->uploadJob($job);
   }
 
@@ -212,8 +216,5 @@ class Client {
 
       $job->setGit(new GitData($commit, $config['service_branch'] ?: ''));
     }
-
-    $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
-    if (mb_strlen(trim(`$command`))) $job->setGit(GitData::fromRepository());
   }
 }
