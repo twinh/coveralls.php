@@ -4,6 +4,7 @@
  * Command line interface.
  */
 namespace coveralls\cli;
+use coveralls\{Client};
 
 /**
  * @var string The version number of this package.
@@ -20,7 +21,7 @@ function printUsage() {
   echo 'coveralls -f <file>', PHP_EOL;
   echo PHP_EOL;
   echo 'Options:', PHP_EOL;
-  echo '-f, --file       path to the LCOV coverage report', PHP_EOL;
+  echo '-f, --file       path to the LCOV file', PHP_EOL;
   echo '-h, --help       output usage information', PHP_EOL;
   echo '-v, --version    output the version number', PHP_EOL;
 }
@@ -30,15 +31,30 @@ $options = getopt('f:hv', ['file:', 'help', 'version']);
 
 if (isset($options['h']) || isset($options['help'])) {
   printUsage();
-  exit();
+  exit(0);
 }
 
 if (isset($options['v']) || isset($options['version'])) {
   echo 'v', VERSION, PHP_EOL;
-  exit();
+  exit(0);
 }
 
-if (!isset($options['p']) && !isset($options['path'])){
+if (!isset($options['f']) && !isset($options['file'])) {
   printUsage();
   exit(1);
+}
+
+// Upload the coverage report.
+try {
+  $file = $options['f'] ?? $options['file'];
+  if (!is_file($file)) throw new \RuntimeException('The specified file is not found.');
+
+  $client = new Client();
+  $coverage = @file_get_contents($file);
+  if (!$client->upload($coverage)) throw new \RuntimeException('An error occurred while uploading the report.');
+}
+
+catch(\Throwable $e) {
+  echo $e->getMessage(), PHP_EOL;
+  exit(2);
 }
