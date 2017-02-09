@@ -13,7 +13,7 @@ use PHPUnit\Framework\{TestCase};
 class GitDataTest extends TestCase {
 
   /**
-   * @covers ::fromJSON
+   * @test ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(GitData::fromJSON('foo'));
@@ -46,7 +46,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * @covers ::fromRepository
+   * @test ::fromRepository
    */
   public function testFromRepository() {
     $data = GitData::fromRepository(__DIR__.'/..');
@@ -69,7 +69,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * @covers ::jsonSerialize
+   * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new GitData())->jsonSerialize();
@@ -91,7 +91,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * @covers ::__toString
+   * @test ::__toString
    */
   public function testToString() {
     $data = (string) new GitData(null, 'develop');

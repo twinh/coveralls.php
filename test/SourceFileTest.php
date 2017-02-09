@@ -13,7 +13,7 @@ use PHPUnit\Framework\{TestCase};
 class SourceFileTest extends TestCase {
 
   /**
-   * @covers ::fromJSON
+   * @test ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(SourceFile::fromJSON('foo'));
@@ -45,7 +45,7 @@ class SourceFileTest extends TestCase {
   }
 
   /**
-   * @covers ::jsonSerialize
+   * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new SourceFile())->jsonSerialize();
@@ -71,7 +71,7 @@ class SourceFileTest extends TestCase {
   }
 
   /**
-   * @covers ::__toString
+   * @test ::__toString
    */
   public function testToString() {
     $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249');

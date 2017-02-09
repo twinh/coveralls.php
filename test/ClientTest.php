@@ -13,7 +13,7 @@ use PHPUnit\Framework\{TestCase};
 class ClientTest extends TestCase {
 
   /**
-   * @covers ::parseCloverReport
+   * @test ::parseCloverReport
    */
   public function testParseCloverReport() {
     $parseCloverReport = function(string $report) {
@@ -48,7 +48,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @covers ::parseLcovReport
+   * @test ::parseLcovReport
    */
   public function testParseLcovReport() {
     $parseLcovReport = function(string $report): Job {
@@ -80,7 +80,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @covers ::updateJob
+   * @test ::updateJob
    */
   public function testUpdateJob() {
     $client = new Client();
@@ -115,7 +115,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @covers ::upload
+   * @test ::upload
    */
   public function testUpload() {
     $this->expectException(\InvalidArgumentException::class);
@@ -123,7 +123,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @covers ::uploadJob
+   * @test ::uploadJob
    */
   public function testUploadJob() {
     $this->expectException(\InvalidArgumentException::class);

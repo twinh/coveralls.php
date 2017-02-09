@@ -13,10 +13,10 @@ use PHPUnit\Framework\{TestCase};
 class ConfigurationTest extends TestCase {
 
   /**
-   * @covers ::offsetExists
-   * @covers ::offsetGet
-   * @covers ::offsetSet
-   * @covers ::offsetUnset
+   * @test ::offsetExists
+   * @test ::offsetGet
+   * @test ::offsetSet
+   * @test ::offsetUnset
    */
   public function testArrayAccess() {
     $config = new Configuration();
@@ -33,7 +33,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::count
+   * @test ::count
    */
   public function testCount() {
     $this->assertEquals(0, (new Configuration())->count());
@@ -41,7 +41,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::fromEnvironment
+   * @test ::fromEnvironment
    */
   public function testFromEnvironment() {
     $config = Configuration::fromEnvironment([]);
@@ -65,7 +65,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::fromYAML
+   * @test ::fromYAML
    */
   public function testFromYAML() {
     $this->assertNull(Configuration::fromYAML('**123/456**'));
@@ -79,7 +79,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::getIterator
+   * @test ::getIterator
    */
   public function testGetIterator() {
     $iterator = (new Configuration())->getIterator();
@@ -100,7 +100,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::getKeys
+   * @test ::getKeys
    */
   public function testGetKeys() {
     $this->assertCount(0, (new Configuration())->getKeys());
@@ -112,7 +112,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::jsonSerialize
+   * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new Configuration())->jsonSerialize();
@@ -125,7 +125,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::loadDefaults
+   * @test ::loadDefaults
    */
   public function testLoadDefaults() {
     $config = Configuration::loadDefaults(__DIR__.'/fixtures/.coveralls.yml');
@@ -135,7 +135,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::merge
+   * @test ::merge
    */
   public function testMerge() {
     $config = new Configuration();
@@ -148,7 +148,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @covers ::__toString
+   * @test ::__toString
    */
   public function testToString() {
     $config = (string) new Configuration(['foo' => 'bar', 'bar' => 'baz']);

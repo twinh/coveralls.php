@@ -13,7 +13,7 @@ use PHPUnit\Framework\{TestCase};
 class GitCommitTest extends TestCase {
 
   /**
-   * @covers ::fromJSON
+   * @test ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(GitCommit::fromJSON('foo'));
@@ -37,7 +37,7 @@ class GitCommitTest extends TestCase {
   }
 
   /**
-   * @covers ::jsonSerialize
+   * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new GitCommit())->jsonSerialize();
@@ -57,7 +57,7 @@ class GitCommitTest extends TestCase {
   }
 
   /**
-   * @covers ::__toString
+   * @test ::__toString
    */
   public function testToString() {
     $commit = (string) new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871');

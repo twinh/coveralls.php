@@ -13,7 +13,7 @@ use PHPUnit\Framework\{TestCase};
 class JobTest extends TestCase {
 
   /**
-   * @covers ::fromJSON
+   * @test ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(Job::fromJSON('foo'));
@@ -55,7 +55,7 @@ class JobTest extends TestCase {
   }
 
   /**
-   * @covers ::jsonSerialize
+   * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new Job())->jsonSerialize();
@@ -84,7 +84,7 @@ class JobTest extends TestCase {
   }
 
   /**
-   * @covers ::__toString
+   * @test ::__toString
    */
   public function testToString() {
     $job = (string) new Job();

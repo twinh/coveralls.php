@@ -170,11 +170,7 @@ class Client {
         $lines = preg_split('/\r?\n/', $source);
         $coverage = new \SplFixedArray(count($lines));
         foreach ($file->line as $line) {
-          $type = (string) $line['type'];
-          if ($type == 'stmt') {
-            $number = (int) $line['num'];
-            $coverage[$number - 1] = (int) $line['count'];
-          }
+          if ((string) $line['type'] == 'stmt') $coverage[(int) $line['num'] - 1] = (int) $line['count'];
         }
 
         $filename = Path::makeRelative($path, $workingDir);
