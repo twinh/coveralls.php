@@ -11,7 +11,7 @@ If you plan to play with the sources, you will also need the latest [Phing](http
 From a command prompt, run:
 
 ```shell
-$ composer require cedx/coveralls
+$ composer global require cedx/coveralls
 ```
 
 ## Usage
