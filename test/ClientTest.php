@@ -20,7 +20,7 @@ class ClientTest extends TestCase {
       return $this->parseCloverReport($report);
     };
 
-    $job = $parseCloverReport->call(new Client(), file_get_contents(__DIR__.'/fixtures/clover.xml'));
+    $job = $parseCloverReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/clover.xml'));
     $files = $job->getSourceFiles();
     $this->assertCount(3, $files);
 
@@ -55,7 +55,7 @@ class ClientTest extends TestCase {
       return $this->parseLcovReport($report);
     };
 
-    $job = $parseLcovReport->call(new Client(), file_get_contents(__DIR__.'/fixtures/lcov.info'));
+    $job = $parseLcovReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/lcov.info'));
     $files = $job->getSourceFiles();
     $this->assertCount(3, $files);
 

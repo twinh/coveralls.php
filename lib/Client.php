@@ -168,13 +168,17 @@ class Client {
         if (!$source) throw new \RuntimeException("Source file not found: $path");
 
         $lines = preg_split('/\r?\n/', $source);
-        $coverage = array_fill(0, count($lines), null);
+        $coverage = new \SplFixedArray(count($lines));
         foreach ($file->line as $line) {
-          if ((string) $line['type'] == 'stmt') $coverage[(int) $line['num'] - 1] = (int) $line['count'];
+          $type = (string) $line['type'];
+          if ($type == 'stmt') {
+            $number = (int) $line['num'];
+            $coverage[$number - 1] = (int) $line['count'];
+          }
         }
 
         $filename = Path::makeRelative($path, $workingDir);
-        $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage);
+        $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage->toArray());
       }
     }
 
@@ -197,11 +201,11 @@ class Client {
       if (!$source) throw new \RuntimeException("Source file not found: $path");
 
       $lines = preg_split('/\r?\n/', $source);
-      $coverage = array_fill(0, count($lines), null);
+      $coverage = new \SplFixedArray(count($lines));
       foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
       $filename = Path::makeRelative($path, $workingDir);
-      return new SourceFile($filename, md5($source), $source, $coverage);
+      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
     }, $records));
   }
 
