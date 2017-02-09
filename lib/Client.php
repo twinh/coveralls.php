@@ -113,7 +113,7 @@ class Client {
 
     echo 'Job AFTER:', PHP_EOL;
     $data = $job->jsonSerialize();
-    unset($data->source_files);
+    foreach ($data->source_files as $file) unset($file->source);
     echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), PHP_EOL;
 
     if (!$job->getRunAt()) $job->setRunAt(time());
