@@ -8,12 +8,12 @@ use coveralls\{GitCommit, GitData, GitRemote};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\GitData` class.
+ * @coversDefaultClass \coveralls\GitData
  */
 class GitDataTest extends TestCase {
 
   /**
-   * Tests the `GitData::fromJSON()` method.
+   * @covers ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(GitData::fromJSON('foo'));
@@ -46,7 +46,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * Tests the `GitData::fromRepository()` method.
+   * @covers ::fromRepository
    */
   public function testFromRepository() {
     $data = GitData::fromRepository(__DIR__.'/..');
@@ -69,7 +69,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * Tests the `GitData::jsonSerialize()` method.
+   * @covers ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new GitData())->jsonSerialize();
@@ -91,7 +91,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * Tests the `GitData::__toString()` method.
+   * @covers ::__toString
    */
   public function testToString() {
     $data = (string) new GitData(null, 'develop');

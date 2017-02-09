@@ -8,12 +8,12 @@ use coveralls\{GitData, Job, SourceFile};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\Job` class.
+ * @coversDefaultClass \coveralls\Job
  */
 class JobTest extends TestCase {
 
   /**
-   * Tests the `Job::fromJSON()` method.
+   * @covers ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(Job::fromJSON('foo'));
@@ -55,7 +55,7 @@ class JobTest extends TestCase {
   }
 
   /**
-   * Tests the `Job::jsonSerialize()` method.
+   * @covers ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new Job())->jsonSerialize();
@@ -84,7 +84,7 @@ class JobTest extends TestCase {
   }
 
   /**
-   * Tests the `Job::__toString()` method.
+   * @covers ::__toString
    */
   public function testToString() {
     $job = (string) new Job();

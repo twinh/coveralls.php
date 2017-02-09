@@ -8,12 +8,12 @@ use coveralls\{GitRemote};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\GitRemote` class.
+ * @coversDefaultClass \coveralls\GitRemote
  */
 class GitRemoteTest extends TestCase {
 
   /**
-   * Tests the `GitRemote::fromJSON()` method.
+   * @covers ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(GitRemote::fromJSON('foo'));
@@ -30,7 +30,7 @@ class GitRemoteTest extends TestCase {
   }
 
   /**
-   * Tests the `GitRemote::jsonSerialize()` method.
+   * @covers ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new GitRemote())->jsonSerialize();
@@ -45,7 +45,7 @@ class GitRemoteTest extends TestCase {
   }
 
   /**
-   * Tests the `GitData::__toString()` method.
+   * @covers ::__toString
    */
   public function testToString() {
     $remote = (string) new GitRemote('origin', 'https://github.com/cedx/coveralls.php.git');

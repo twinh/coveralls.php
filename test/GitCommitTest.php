@@ -8,12 +8,12 @@ use coveralls\{GitCommit};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\GitCommit` class.
+ * @coversDefaultClass \coveralls\GitCommit
  */
 class GitCommitTest extends TestCase {
 
   /**
-   * Tests the `GitCommit::fromJSON()` method.
+   * @covers ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(GitCommit::fromJSON('foo'));
@@ -37,7 +37,7 @@ class GitCommitTest extends TestCase {
   }
 
   /**
-   * Tests the `GitCommit::jsonSerialize()` method.
+   * @covers ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new GitCommit())->jsonSerialize();
@@ -57,7 +57,7 @@ class GitCommitTest extends TestCase {
   }
 
   /**
-   * Tests the `GitCommit::__toString()` method.
+   * @covers ::__toString
    */
   public function testToString() {
     $commit = (string) new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871');

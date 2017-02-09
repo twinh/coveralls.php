@@ -8,12 +8,12 @@ use coveralls\{Client, Configuration, GitData, Job, SourceFile};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\Client` class.
+ * @coversDefaultClass \coveralls\Client
  */
 class ClientTest extends TestCase {
 
   /**
-   * Tests the `Client::parseCloverReport()` method.
+   * @covers ::parseCloverReport
    */
   public function testParseCloverReport() {
     $parseCloverReport = function(string $report) {
@@ -48,7 +48,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * Tests the `Client::parseLcovReport()` method.
+   * @covers ::parseLcovReport
    */
   public function testParseLcovReport() {
     $parseLcovReport = function(string $report): Job {
@@ -80,7 +80,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * Tests the `Client::updateJob()` method.
+   * @covers ::updateJob
    */
   public function testUpdateJob() {
     $client = new Client();
@@ -115,7 +115,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * Tests the `Client::upload()` method.
+   * @covers ::upload
    */
   public function testUpload() {
     $this->expectException(\InvalidArgumentException::class);
@@ -123,7 +123,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * Tests the `Client::uploadJob()` method.
+   * @covers ::uploadJob
    */
   public function testUploadJob() {
     $this->expectException(\InvalidArgumentException::class);

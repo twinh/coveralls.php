@@ -8,12 +8,15 @@ use coveralls\{Configuration};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\Configuration` class.
+ * @coversDefaultClass \coveralls\Configuration
  */
 class ConfigurationTest extends TestCase {
 
   /**
-   * Tests the implementation of the `ArrayAccess` interface.
+   * @covers ::offsetExists
+   * @covers ::offsetGet
+   * @covers ::offsetSet
+   * @covers ::offsetUnset
    */
   public function testArrayAccess() {
     $config = new Configuration();
@@ -30,7 +33,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `Configuration::count()` method.
+   * @covers ::count
    */
   public function testCount() {
     $this->assertEquals(0, (new Configuration())->count());
@@ -38,7 +41,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `Configuration::fromEnvironment()` method.
+   * @covers ::fromEnvironment
    */
   public function testFromEnvironment() {
     $config = Configuration::fromEnvironment([]);
@@ -62,7 +65,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `Configuration::fromYAML()` method.
+   * @covers ::fromYAML
    */
   public function testFromYAML() {
     $this->assertNull(Configuration::fromYAML('**123/456**'));
@@ -76,7 +79,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `Configuration::getIterator()` method.
+   * @covers ::getIterator
    */
   public function testGetIterator() {
     $iterator = (new Configuration())->getIterator();
@@ -97,7 +100,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `Configuration::getKeys()` method.
+   * @covers ::getKeys
    */
   public function testGetKeys() {
     $this->assertCount(0, (new Configuration())->getKeys());
@@ -109,7 +112,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `SourceFile::jsonSerialize()` method.
+   * @covers ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new Configuration())->jsonSerialize();
@@ -122,7 +125,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `Configuration::loadDefaults()` method.
+   * @covers ::loadDefaults
    */
   public function testLoadDefaults() {
     $config = Configuration::loadDefaults(__DIR__.'/fixtures/.coveralls.yml');
@@ -132,7 +135,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `Configuration::merge()` method.
+   * @covers ::merge
    */
   public function testMerge() {
     $config = new Configuration();
@@ -145,7 +148,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * Tests the `Configuration::__toString()` method.
+   * @covers ::__toString
    */
   public function testToString() {
     $config = (string) new Configuration(['foo' => 'bar', 'bar' => 'baz']);

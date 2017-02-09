@@ -8,12 +8,12 @@ use coveralls\{SourceFile};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\SourceFile` class.
+ * @coversDefaultClass \coveralls\SourceFile
  */
 class SourceFileTest extends TestCase {
 
   /**
-   * Tests the `SourceFile::fromJSON()` method.
+   * @covers ::fromJSON
    */
   public function testFromJSON() {
     $this->assertNull(SourceFile::fromJSON('foo'));
@@ -45,7 +45,7 @@ class SourceFileTest extends TestCase {
   }
 
   /**
-   * Tests the `SourceFile::jsonSerialize()` method.
+   * @covers ::jsonSerialize
    */
   public function testJsonSerialize() {
     $map = (new SourceFile())->jsonSerialize();
@@ -71,7 +71,7 @@ class SourceFileTest extends TestCase {
   }
 
   /**
-   * Tests the `GitData::__toString()` method.
+   * @covers ::__toString
    */
   public function testToString() {
     $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249');
