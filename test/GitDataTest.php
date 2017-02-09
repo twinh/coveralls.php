@@ -87,4 +87,15 @@ class GitDataTest extends \PHPUnit_Framework_TestCase {
     $this->assertInstanceOf(\stdClass::class, $map->remotes[0]);
     $this->assertEquals('origin', $map->remotes[0]->name);
   }
+
+  /**
+   * Tests the `GitData::__toString()` method.
+   */
+  public function testToString() {
+    $data = (string) new GitData(null, 'develop');
+    $this->assertStringStartsWith('coveralls\GitData {', $data);
+    $this->assertContains('"branch":"develop"', $data);
+    $this->assertContains('"head":null', $data);
+    $this->assertContains('"remotes":[]', $data);
+  }
 }

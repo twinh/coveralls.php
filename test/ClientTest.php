@@ -40,6 +40,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 
     $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
     $this->assertEquals($subset, array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()));
+
+    $this->expectException(\InvalidArgumentException::class);
+    $parseCloverReport->call(new Client(), '<project></project>');
   }
 
   /**

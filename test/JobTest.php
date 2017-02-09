@@ -80,4 +80,13 @@ class JobTest extends \PHPUnit_Framework_TestCase {
     $this->assertInstanceOf(\stdClass::class, $map->source_files[0]);
     $this->assertEquals('/home/cedx/coveralls.php', $map->source_files[0]->name);
   }
+
+  /**
+   * Tests the `Job::__toString()` method.
+   */
+  public function testToString() {
+    $job = (string) new Job();
+    $this->assertStringStartsWith('coveralls\Job {', $job);
+    $this->assertContains('"source_files":[]', $job);
+  }
 }

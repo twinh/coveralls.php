@@ -63,6 +63,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
    * Tests the `Configuration::fromYAML()` method.
    */
   public function testFromYAML() {
+    $this->assertNull(Configuration::fromYAML('**123/456**'));
     $this->assertNull(Configuration::fromYAML('foo'));
 
     $config = Configuration::fromYAML("repo_token: 0123456789abcdef\nservice_name: travis-ci");
@@ -139,5 +140,15 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
     $this->assertCount(2, $config);
     $this->assertEquals('bar', $config['foo']);
     $this->assertEquals('baz', $config['bar']);
+  }
+
+  /**
+   * Tests the `Configuration::__toString()` method.
+   */
+  public function testToString() {
+    $config = (string) new Configuration(['foo' => 'bar', 'bar' => 'baz']);
+    $this->assertStringStartsWith('coveralls\Configuration {', $config);
+    $this->assertContains('"foo":"bar"', $config);
+    $this->assertContains('"bar":"baz"', $config);
   }
 }

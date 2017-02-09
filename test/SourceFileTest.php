@@ -67,4 +67,14 @@ class SourceFileTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals('function main() {}', $map->source);
     $this->assertEquals('e23fb141da9a7b438479a48eac7b7249', $map->source_digest);
   }
+
+  /**
+   * Tests the `GitData::__toString()` method.
+   */
+  public function testToString() {
+    $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249');
+    $this->assertStringStartsWith('coveralls\SourceFile {', $remote);
+    $this->assertContains('"name":"coveralls.php"', $remote);
+    $this->assertContains('"source_digest":"e23fb141da9a7b438479a48eac7b7249"', $remote);
+  }
 }

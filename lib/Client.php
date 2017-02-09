@@ -111,11 +111,6 @@ class Client {
       $job->setGit($git);
     }
 
-    echo 'Job AFTER:', PHP_EOL;
-    $data = $job->jsonSerialize();
-    foreach ($data->source_files as $file) unset($file->source);
-    echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), PHP_EOL;
-
     if (!$job->getRunAt()) $job->setRunAt(time());
     return $this->uploadJob($job);
   }
@@ -132,7 +127,7 @@ class Client {
 
     $jsonFile = [
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-      'filename' => 'coverage.json',
+      'filename' => 'coveralls.json',
       'name' => 'json_file'
     ];
 
@@ -140,20 +135,13 @@ class Client {
       $request = (new ServerRequest('POST', $this->getEndPoint()))->withBody(new MultipartStream([$jsonFile]));
       $this->onRequest->onNext($request);
 
-      //$response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
-      $response = (new HTTPClient())->post($this->getEndPoint(), ['multipart' => [$jsonFile]]);
+      $response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
       $this->onResponse->onNext($response);
-
-      echo 'Response:', PHP_EOL;
-      echo $response->getStatusCode(), PHP_EOL;
-      echo $response->getReasonPhrase(), PHP_EOL;
-      echo (string) $response->getBody(), PHP_EOL;
 
       return $response->getStatusCode() == 200;
     }
 
     catch (\Throwable $e) {
-      echo $e->getMessage(), PHP_EOL;
       return false;
     }
   }

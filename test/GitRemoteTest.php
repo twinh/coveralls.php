@@ -41,4 +41,14 @@ class GitRemoteTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals('origin', $map->name);
     $this->assertEquals('https://github.com/cedx/coveralls.php.git', $map->url);
   }
+
+  /**
+   * Tests the `GitData::__toString()` method.
+   */
+  public function testToString() {
+    $remote = (string) new GitRemote('origin', 'https://github.com/cedx/coveralls.php.git');
+    $this->assertStringStartsWith('coveralls\GitRemote {', $remote);
+    $this->assertContains('"name":"origin"', $remote);
+    $this->assertContains('"url":"https://github.com/cedx/coveralls.php.git"', $remote);
+  }
 }

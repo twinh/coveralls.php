@@ -53,4 +53,13 @@ class GitCommitTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals('2ef7bde608ce5404e97d5f042f95f89f1c232871', $map->id);
     $this->assertEquals('Hello World!', $map->message);
   }
+
+  /**
+   * Tests the `GitCommit::__toString()` method.
+   */
+  public function testToString() {
+    $commit = (string) new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871');
+    $this->assertStringStartsWith('coveralls\GitCommit {', $commit);
+    $this->assertContains('"id":"2ef7bde608ce5404e97d5f042f95f89f1c232871"', $commit);
+  }
 }
