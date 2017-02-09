@@ -211,8 +211,10 @@ class Client {
    * @param Configuration $config The parameters to define.
    */
   private function updateJob(Job $job, Configuration $config) {
+    if (mb_strlen($config['repo_token']) || mb_strlen($config['repo_secret_token']))
+      $job->setRepoToken($config['repo_token'] ?: $config['repo_secret_token']);
+
     if (mb_strlen($config['parallel'])) $job->setParallel($config['parallel'] == 'true');
-    if (mb_strlen($config['repo_token']) || mb_strlen($config['repo_secret_token'])) $job->setRepoToken($config['repo_token'] ?: $config['repo_secret_token']);
     if (mb_strlen($config['service_job_id'])) $job->setServiceJobId($config['service_job_id']);
     if (mb_strlen($config['service_name'])) $job->setServiceName($config['service_name']);
     if (mb_strlen($config['service_number'])) $job->setServiceNumber($config['service_number']);
