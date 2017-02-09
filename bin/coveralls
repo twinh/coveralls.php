@@ -26,8 +26,9 @@ function printUsage() {
   echo '-v, --version    output the version number', PHP_EOL;
 }
 
-// Update the environment.
+// Initialize the application.
 @cli_set_process_title('Coveralls.php');
+require_once __DIR__.'/../vendor/autoload.php';
 
 // Parse the command line arguments.
 $options = getopt('f:hv', ['file:', 'help', 'version']);
