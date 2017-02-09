@@ -30,6 +30,9 @@ function printUsage() {
 @cli_set_process_title('Coveralls.php');
 require_once __DIR__.'/../vendor/autoload.php';
 
+print_r($_ENV);
+print_r($_SERVER);
+
 // Parse the command line arguments.
 $options = getopt('f:hv', ['file:', 'help', 'version']);
 
