@@ -64,7 +64,7 @@ class JobTest extends \PHPUnit_Framework_TestCase {
       ->setGit(new GitData(null, 'develop'))
       ->setParallel(true)
       ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
-      ->setRunAt(new \DateTime('2017-01-29T03:43:30+01:00'))
+      ->setRunAt('2017-01-29T03:43:30+01:00')
       ->setSourceFiles([new SourceFile('/home/cedx/coveralls.php')])
       ->jsonSerialize();
 

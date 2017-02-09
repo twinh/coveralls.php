@@ -102,8 +102,18 @@ class Client {
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
     $this->updateJob($job, $config ?: Configuration::loadDefaults());
 
+    echo 'Job AFTER:', PHP_EOL;
+    $data = $job->jsonSerialize();
+    unset($data->source_files);
+    print_r($data);
+
     $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
     if (mb_strlen(trim(`$command`))) $job->setGit(GitData::fromRepository());
+
+    echo 'Git AFTER:', PHP_EOL;
+    $data = $job->jsonSerialize();
+    unset($data->source_files);
+    print_r($data);
 
     return $this->uploadJob($job);
   }
@@ -125,6 +135,8 @@ class Client {
 
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
+
+    if (!$job->getRunAt()) $job->setRunAt();
 
     $jsonFile = [
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
@@ -177,8 +189,7 @@ class Client {
       }
     }
 
-    $runAt = $xml->project['timestamp'];
-    return (new Job($sourceFiles))->setRunAt(new \DateTime("@$runAt"));
+    return (new Job($sourceFiles))->setRunAt((int) $xml->project['timestamp']);
   }
 
   /**
@@ -211,19 +222,16 @@ class Client {
    * @param Configuration $config The parameters to define.
    */
   private function updateJob(Job $job, Configuration $config) {
-    echo 'Job BEFORE:', PHP_EOL;
-    print_r($job->jsonSerialize());
-
     echo 'Configuration:', PHP_EOL;
     print_r($config->jsonSerialize());
 
-    $job->setParallel($config['parallel'] == 'true');
-    $job->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
-    $job->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);
-    $job->setServiceJobId($config['service_job_id'] ?: '');
-    $job->setServiceName($config['service_name'] ?: '');
-    $job->setServiceNumber($config['service_number'] ?: '');
-    $job->setServicePullRequest($config['service_pull_request'] ?: '');
+    if (mb_strlen($config['parallel'])) $job->setParallel($config['parallel'] == 'true');
+    if (mb_strlen($config['repo_token']) || mb_strlen($config['repo_secret_token'])) $job->setRepoToken($config['repo_token'] ?: $config['repo_secret_token']);
+    if (mb_strlen($config['service_job_id'])) $job->setServiceJobId($config['service_job_id']);
+    if (mb_strlen($config['service_name'])) $job->setServiceName($config['service_name']);
+    if (mb_strlen($config['service_number'])) $job->setServiceNumber($config['service_number']);
+    if (mb_strlen($config['service_pull_request'])) $job->setServicePullRequest($config['service_pull_request']);
+    if (mb_strlen($config['run_at'])) $job->setRunAt($config['run_at']);
 
     $hasGitData = count(array_filter($config->getKeys(), function($key) {
       return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
