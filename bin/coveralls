@@ -28,10 +28,7 @@ function printUsage() {
 
 // Initialize the application.
 @cli_set_process_title('Coveralls.php');
-require_once __DIR__.'/../vendor/autoload.php';
-
-print_r($_ENV);
-print_r($_SERVER);
+require_once is_file($path = __DIR__.'/../vendor/autoload.php') ? $path : __DIR__.'/../../../autoload.php';
 
 // Parse the command line arguments.
 $options = getopt('f:hv', ['file:', 'help', 'version']);

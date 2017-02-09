@@ -102,25 +102,21 @@ class Client {
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
     $this->updateJob($job, $config ?: Configuration::loadDefaults());
 
+    $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
+    if (mb_strlen(trim(`$command`))) {
+      $branch = ($git = $job->getGit()) ? $git->getBranch() : '';
+
+      $git = GitData::fromRepository();
+      if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+      $job->setGit($git);
+    }
+
     echo 'Job AFTER:', PHP_EOL;
     $data = $job->jsonSerialize();
     unset($data->source_files);
     print_r($data);
 
-    $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
-    if (mb_strlen(trim(`$command`))) {
-      $branch = ($git = $job->getGit()) ? $git->getBranch() : '';
-      $job->setGit(GitData::fromRepository());
-
-      $git = $job->getGit();
-      if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-    }
-
-    echo 'Git AFTER:', PHP_EOL;
-    $data = $job->jsonSerialize();
-    unset($data->source_files);
-    print_r($data);
-
+    if (!$job->getRunAt()) $job->setRunAt(time());
     return $this->uploadJob($job);
   }
 
@@ -134,8 +130,6 @@ class Client {
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
-    if (!$job->getRunAt()) $job->setRunAt(time());
-
     $jsonFile = [
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
       'name' => 'json_file'
@@ -144,7 +138,8 @@ class Client {
     $request = (new ServerRequest('POST', $this->getEndPoint()))->withBody(new MultipartStream([$jsonFile]));
     $this->onRequest->onNext($request);
 
-    $response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
+    //$response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
+    $response = (new HTTPClient())->post($this->getEndPoint(), ['multipart' => [$jsonFile]]);
     $this->onResponse->onNext($response);
 
     echo 'Response:', PHP_EOL;
