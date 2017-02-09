@@ -9,8 +9,9 @@
   </target>
 
   <target name="coverage" depends="test" description="Sends the results of the code coverage.">
-    <exec executable="vendor/bin/coveralls" passthru="true">
-      <arg value="--coverage_clover=var/coverage.xml"/>
+    <exec executable="php" passthru="true">
+      <arg value="bin/coveralls"/>
+      <arg value="--file=var/coverage.xml"/>
     </exec>
   </target>
 

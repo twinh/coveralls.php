@@ -15,16 +15,19 @@ const VERSION = '0.1.0';
  * Prints the usage information.
  */
 function printUsage() {
-  echo 'Send a LCOV coverage report to the Coveralls service.', PHP_EOL;
+  echo 'Send a Clover or LCOV coverage report to the Coveralls service.', PHP_EOL;
   echo PHP_EOL;
   echo 'Usage:', PHP_EOL;
   echo 'coveralls -f <file>', PHP_EOL;
   echo PHP_EOL;
   echo 'Options:', PHP_EOL;
-  echo '-f, --file       path to the LCOV file', PHP_EOL;
+  echo '-f, --file       path to the coverage report', PHP_EOL;
   echo '-h, --help       output usage information', PHP_EOL;
   echo '-v, --version    output the version number', PHP_EOL;
 }
+
+// Update the environment.
+@cli_set_process_title('Coveralls.php');
 
 // Parse the command line arguments.
 $options = getopt('f:hv', ['file:', 'help', 'version']);

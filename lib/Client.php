@@ -88,6 +88,9 @@ class Client {
    * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
   public function upload(string $coverage, Configuration $config = null): bool {
+    echo 'Coverage:', PHP_EOL;
+    echo $coverage, PHP_EOL;
+
     $coverage = trim($coverage);
     if (!mb_strlen($coverage)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
@@ -115,6 +118,9 @@ class Client {
    * @throws \InvalidArgumentException The job does not meet the requirements.
    */
   public function uploadJob(Job $job): bool {
+    echo 'Job:', PHP_EOL;
+    print_r($job->jsonSerialize());
+
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
@@ -128,6 +134,11 @@ class Client {
 
     $response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
     $this->onResponse->onNext($response);
+
+    echo 'Response:', PHP_EOL;
+    echo $response->getStatusCode(), PHP_EOL;
+    echo $response->getReasonPhrase(), PHP_EOL;
+    echo (string) $response->getBody(), PHP_EOL;
 
     return $response->getStatusCode() == 200;
   }
