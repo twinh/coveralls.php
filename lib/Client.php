@@ -114,7 +114,7 @@ class Client {
     echo 'Job AFTER:', PHP_EOL;
     $data = $job->jsonSerialize();
     unset($data->source_files);
-    print_r($data);
+    echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), PHP_EOL;
 
     if (!$job->getRunAt()) $job->setRunAt(time());
     return $this->uploadJob($job);
@@ -215,9 +215,6 @@ class Client {
    * @param Configuration $config The parameters to define.
    */
   private function updateJob(Job $job, Configuration $config) {
-    echo 'Configuration:', PHP_EOL;
-    print_r($config->jsonSerialize());
-
     if (mb_strlen($config['parallel'])) $job->setParallel($config['parallel'] == 'true');
     if (mb_strlen($config['repo_token']) || mb_strlen($config['repo_secret_token'])) $job->setRepoToken($config['repo_token'] ?: $config['repo_secret_token']);
     if (mb_strlen($config['service_job_id'])) $job->setServiceJobId($config['service_job_id']);
