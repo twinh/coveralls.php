@@ -3,12 +3,14 @@
  * Implementation of the `coveralls\test\GitDataTest` class.
  */
 namespace coveralls\test;
+
 use coveralls\{GitCommit, GitData, GitRemote};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `coveralls\GitData` class.
  */
-class GitDataTest extends \PHPUnit_Framework_TestCase {
+class GitDataTest extends TestCase {
 
   /**
    * Tests the `GitData::fromJSON()` method.

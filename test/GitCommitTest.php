@@ -3,12 +3,14 @@
  * Implementation of the `coveralls\test\GitCommitTest` class.
  */
 namespace coveralls\test;
+
 use coveralls\{GitCommit};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `coveralls\GitCommit` class.
  */
-class GitCommitTest extends \PHPUnit_Framework_TestCase {
+class GitCommitTest extends TestCase {
 
   /**
    * Tests the `GitCommit::fromJSON()` method.

@@ -3,12 +3,14 @@
  * Implementation of the `coveralls\test\JobTest` class.
  */
 namespace coveralls\test;
-use coveralls\{Configuration, GitData, Job, SourceFile};
+
+use coveralls\{GitData, Job, SourceFile};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `coveralls\Job` class.
  */
-class JobTest extends \PHPUnit_Framework_TestCase {
+class JobTest extends TestCase {
 
   /**
    * Tests the `Job::fromJSON()` method.

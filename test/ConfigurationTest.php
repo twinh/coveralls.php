@@ -3,12 +3,14 @@
  * Implementation of the `coveralls\test\ConfigurationTest` class.
  */
 namespace coveralls\test;
+
 use coveralls\{Configuration};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `coveralls\Configuration` class.
  */
-class ConfigurationTest extends \PHPUnit_Framework_TestCase {
+class ConfigurationTest extends TestCase {
 
   /**
    * Tests the implementation of the `ArrayAccess` interface.

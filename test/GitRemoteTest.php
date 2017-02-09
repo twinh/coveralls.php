@@ -3,12 +3,14 @@
  * Implementation of the `coveralls\test\GitRemoteTest` class.
  */
 namespace coveralls\test;
+
 use coveralls\{GitRemote};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `coveralls\GitRemote` class.
  */
-class GitRemoteTest extends \PHPUnit_Framework_TestCase {
+class GitRemoteTest extends TestCase {
 
   /**
    * Tests the `GitRemote::fromJSON()` method.

@@ -3,12 +3,14 @@
  * Implementation of the `coveralls\test\ClientTest` class.
  */
 namespace coveralls\test;
+
 use coveralls\{Client, Configuration, GitData, Job, SourceFile};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `coveralls\Client` class.
  */
-class ClientTest extends \PHPUnit_Framework_TestCase {
+class ClientTest extends TestCase {
 
   /**
    * Tests the `Client::parseCloverReport()` method.

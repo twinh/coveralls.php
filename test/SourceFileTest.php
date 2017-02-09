@@ -3,12 +3,14 @@
  * Implementation of the `coveralls\test\SourceFileTest` class.
  */
 namespace coveralls\test;
+
 use coveralls\{SourceFile};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `coveralls\SourceFile` class.
  */
-class SourceFileTest extends \PHPUnit_Framework_TestCase {
+class SourceFileTest extends TestCase {
 
   /**
    * Tests the `SourceFile::fromJSON()` method.
