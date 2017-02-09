@@ -53,8 +53,11 @@ try {
   $file = $options['f'] ?? $options['file'];
   if (!is_file($file)) throw new \RuntimeException('The specified file is not found.');
 
-  $client = new Client();
+  $env = $_ENV ?: $_SERVER;
+  $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
   $coverage = @file_get_contents($file);
+
+  echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
   if (!$client->upload($coverage)) throw new \RuntimeException('An error occurred while uploading the report.');
 }
 

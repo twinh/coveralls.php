@@ -37,6 +37,7 @@
     "ext-mbstring": "*",
     "ext-pcre": "*",
     "ext-simplexml": "*",
+    "ext-spl": "*",
     "cedx/lcov": "^0.2.0",
     "guzzlehttp/guzzle": "^6.2.2",
     "reactivex/rxphp": "^1.5.2",

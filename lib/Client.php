@@ -17,9 +17,9 @@ use Webmozart\PathUtil\{Path};
 class Client {
 
   /**
-   * @var string The URL of the default end point.
+   * @var string The URL of the default API end point.
    */
-  const DEFAULT_ENDPOINT = 'https://coveralls.io/api/v1/jobs';
+  const DEFAULT_ENDPOINT = 'https://coveralls.io';
 
   /**
    * @var string The URL of the API end point.
@@ -132,7 +132,8 @@ class Client {
     ];
 
     try {
-      $request = (new ServerRequest('POST', $this->getEndPoint()))->withBody(new MultipartStream([$jsonFile]));
+      $body = new MultipartStream([$jsonFile]);
+      $request = (new ServerRequest('POST', $this->getEndPoint().'/api/v1/jobs'))->withBody($body);
       $this->onRequest->onNext($request);
 
       $response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
@@ -168,13 +169,13 @@ class Client {
         if (!$source) throw new \RuntimeException("Source file not found: $path");
 
         $lines = preg_split('/\r?\n/', $source);
-        $coverage = array_fill(0, count($lines), null);
+        $coverage = new \SplFixedArray(count($lines));
         foreach ($file->line as $line) {
-          if ((string) $line['type'] == 'stmt') $coverage[((int) $line['num']) - 1] = (int) $line['count'];
+          if ((string) $line['type'] == 'stmt') $coverage[(int) $line['num'] - 1] = (int) $line['count'];
         }
 
         $filename = Path::makeRelative($path, $workingDir);
-        $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage);
+        $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage->toArray());
       }
     }
 
@@ -197,11 +198,11 @@ class Client {
       if (!$source) throw new \RuntimeException("Source file not found: $path");
 
       $lines = preg_split('/\r?\n/', $source);
-      $coverage = array_fill(0, count($lines), null);
+      $coverage = new \SplFixedArray(count($lines));
       foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
       $filename = Path::makeRelative($path, $workingDir);
-      return new SourceFile($filename, md5($source), $source, $coverage);
+      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
     }, $records));
   }
 
