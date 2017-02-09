@@ -132,6 +132,7 @@ class Client {
 
     $jsonFile = [
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+      'filename' => 'coverage.json',
       'name' => 'json_file'
     ];
 
