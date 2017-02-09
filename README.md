@@ -53,10 +53,9 @@ Now, in your [PHP](https://secure.php.net) code, you can use the `coveralls\Clie
 use coveralls\{Client};
 
 try {
-  $client = new Client();
   $coverage = @file_get_contents('/path/to/coverage.report');
-  if ($client->upload($coverage)) echo 'The report was sent successfully.';
-  else echo 'An error occurred while uploading the report.';
+  (new Client())->upload($coverage);
+  echo 'The report was sent successfully.';
 }
 
 catch(\Throwable $e) {

@@ -84,10 +84,9 @@ class Client {
    * Uploads the specified code coverage report to the Coveralls service.
    * @param string $coverage A coverage report.
    * @param Configuration $config The environment settings.
-   * @return bool `true` if the operation succeeds, otherwise `false`.
    * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
-  public function upload(string $coverage, Configuration $config = null): bool {
+  public function upload(string $coverage, Configuration $config = null) {
     $coverage = trim($coverage);
     if (!mb_strlen($coverage)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
@@ -112,16 +111,16 @@ class Client {
     }
 
     if (!$job->getRunAt()) $job->setRunAt(time());
-    return $this->uploadJob($job);
+    $this->uploadJob($job);
   }
 
   /**
    * Uploads the specified job to the Coveralls service.
    * @param Job $job The job to be uploaded.
-   * @return bool `true` if the operation succeeds, otherwise `false`.
    * @throws \InvalidArgumentException The job does not meet the requirements.
+   * @throws \RuntimeException An error occurred while uploading the report.
    */
-  public function uploadJob(Job $job): bool {
+  public function uploadJob(Job $job) {
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
@@ -139,11 +138,11 @@ class Client {
       $response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
       $this->onResponse->onNext($response);
 
-      return $response->getStatusCode() == 200;
+      if (($code = $response->getStatusCode()) != 200) throw new \DomainException("Status code: $code");
     }
 
     catch (\Throwable $e) {
-      return false;
+      throw new \RuntimeException('An error occurred while uploading the report.');
     }
   }
 
