@@ -168,13 +168,13 @@ class Client {
         if (!$source) throw new \RuntimeException("Source file not found: $path");
 
         $lines = preg_split('/\r?\n/', $source);
-        $coverage = new \SplFixedArray(count($lines));
+        $coverage = array_fill(0, count($lines), null);
         foreach ($file->line as $line) {
           if ((string) $line['type'] == 'stmt') $coverage[(int) $line['num'] - 1] = (int) $line['count'];
         }
 
         $filename = Path::makeRelative($path, $workingDir);
-        $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage->toArray());
+        $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage);
       }
     }
 
@@ -197,11 +197,11 @@ class Client {
       if (!$source) throw new \RuntimeException("Source file not found: $path");
 
       $lines = preg_split('/\r?\n/', $source);
-      $coverage = new \SplFixedArray(count($lines));
+      $coverage = array_fill(0, count($lines), null);
       foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
       $filename = Path::makeRelative($path, $workingDir);
-      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
+      return new SourceFile($filename, md5($source), $source, $coverage);
     }, $records));
   }
 
