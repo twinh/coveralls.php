@@ -58,7 +58,7 @@ try {
   $coverage = @file_get_contents($file);
 
   echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
-  if (!$client->upload($coverage)) throw new \RuntimeException('An error occurred while uploading the report.');
+  $client->upload($coverage);
 }
 
 catch(\Throwable $e) {
