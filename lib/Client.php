@@ -116,7 +116,12 @@ class Client {
    */
   public function uploadJob(Job $job): bool {
     echo 'Job AFTER:', PHP_EOL;
-    print_r($job->jsonSerialize());
+    $data = $job->jsonSerialize();
+    unset($data->source_files);
+    print_r($data);
+
+    echo 'Job JSON:', PHP_EOL;
+    echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), PHP_EOL;
 
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
