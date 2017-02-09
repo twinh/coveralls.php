@@ -108,7 +108,13 @@ class Client {
     print_r($data);
 
     $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
-    if (mb_strlen(trim(`$command`))) $job->setGit(GitData::fromRepository());
+    if (mb_strlen(trim(`$command`))) {
+      $branch = ($git = $job->getGit()) ? $git->getBranch() : '';
+      $job->setGit(GitData::fromRepository());
+
+      $git = $job->getGit();
+      if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+    }
 
     echo 'Git AFTER:', PHP_EOL;
     $data = $job->jsonSerialize();
@@ -125,9 +131,6 @@ class Client {
    * @throws \InvalidArgumentException The job does not meet the requirements.
    */
   public function uploadJob(Job $job): bool {
-    echo 'Job JSON:', PHP_EOL;
-    echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), PHP_EOL;
-
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
