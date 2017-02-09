@@ -135,19 +135,26 @@ class Client {
       'name' => 'json_file'
     ];
 
-    $request = (new ServerRequest('POST', $this->getEndPoint()))->withBody(new MultipartStream([$jsonFile]));
-    $this->onRequest->onNext($request);
+    try {
+      $request = (new ServerRequest('POST', $this->getEndPoint()))->withBody(new MultipartStream([$jsonFile]));
+      $this->onRequest->onNext($request);
 
-    //$response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
-    $response = (new HTTPClient())->post($this->getEndPoint(), ['multipart' => [$jsonFile]]);
-    $this->onResponse->onNext($response);
+      //$response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
+      $response = (new HTTPClient())->post($this->getEndPoint(), ['multipart' => [$jsonFile]]);
+      $this->onResponse->onNext($response);
 
-    echo 'Response:', PHP_EOL;
-    echo $response->getStatusCode(), PHP_EOL;
-    echo $response->getReasonPhrase(), PHP_EOL;
-    echo (string) $response->getBody(), PHP_EOL;
+      echo 'Response:', PHP_EOL;
+      echo $response->getStatusCode(), PHP_EOL;
+      echo $response->getReasonPhrase(), PHP_EOL;
+      echo (string) $response->getBody(), PHP_EOL;
 
-    return $response->getStatusCode() == 200;
+      return $response->getStatusCode() == 200;
+    }
+
+    catch (\Throwable $e) {
+      echo $e->getMessage(), PHP_EOL;
+      return false;
+    }
   }
 
   /**
