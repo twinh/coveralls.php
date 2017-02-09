@@ -88,9 +88,6 @@ class Client {
    * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
   public function upload(string $coverage, Configuration $config = null): bool {
-    echo 'Coverage:', PHP_EOL;
-    echo $coverage, PHP_EOL;
-
     $coverage = trim($coverage);
     if (!mb_strlen($coverage)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
@@ -118,7 +115,7 @@ class Client {
    * @throws \InvalidArgumentException The job does not meet the requirements.
    */
   public function uploadJob(Job $job): bool {
-    echo 'Job:', PHP_EOL;
+    echo 'Job AFTER:', PHP_EOL;
     print_r($job->jsonSerialize());
 
     if (!$job->getRepoToken() && !$job->getServiceName())
@@ -209,6 +206,12 @@ class Client {
    * @param Configuration $config The parameters to define.
    */
   private function updateJob(Job $job, Configuration $config) {
+    echo 'Job BEFORE:', PHP_EOL;
+    print_r($job->jsonSerialize());
+
+    echo 'Configuration:', PHP_EOL;
+    print_r($config->jsonSerialize());
+
     $job->setParallel($config['parallel'] == 'true');
     $job->setRepoToken($config['repo_token'] ?: ($config['repo_secret_token'] ?: ''));
     $job->setRunAt($config['run_at'] ? new \DateTime($config['run_at']) : null);

@@ -32,6 +32,10 @@
   "require": {
     "php": ">=7.0.0",
     "ext-curl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-pcre": "*",
+    "ext-SimpleXML": "*",
     "cedx/lcov": "^0.2.0",
     "guzzlehttp/guzzle": "^6.2.2",
     "reactivex/rxphp": "^1.5.2",
