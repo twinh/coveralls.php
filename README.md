@@ -65,7 +65,7 @@ catch(\Throwable $e) {
 
 ## Supported coverage formats
 Currently, this package supports two formats of coverage reports:
-- [Clover](https://www.atlassian.com/software/clover): the main format used by [PHPUnit](https://phpunit.de).
+- [Clover](https://www.atlassian.com/software/clover): the main format used with [PHPUnit](https://phpunit.de).
 - [LCOV](http://ltp.sourceforge.net/coverage/lcov.php): the de facto standard.
 
 ## Supported CI services
