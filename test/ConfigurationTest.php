@@ -13,10 +13,7 @@ use PHPUnit\Framework\{TestCase};
 class ConfigurationTest extends TestCase {
 
   /**
-   * @test ::offsetExists
-   * @test ::offsetGet
-   * @test ::offsetSet
-   * @test ::offsetUnset
+   * @test \ArrayAccess
    */
   public function testArrayAccess() {
     $config = new Configuration();
