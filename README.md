@@ -49,7 +49,6 @@ $ composer require cedx/coveralls
 Now, in your [PHP](https://secure.php.net) code, you can use the `coveralls\Client` class to upload your coverage reports:
 
 ```php
-<?php
 use coveralls\{Client};
 
 try {
