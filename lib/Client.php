@@ -100,17 +100,17 @@ class Client {
 
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
     $this->updateJob($job, $config ?: Configuration::loadDefaults());
+    if (!$job->getRunAt()) $job->setRunAt(time());
 
     $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
     if (mb_strlen(trim(`$command`))) {
       $branch = ($git = $job->getGit()) ? $git->getBranch() : '';
+      $job->setGit(GitData::fromRepository());
 
-      $git = GitData::fromRepository();
+      $git = $job->getGit();
       if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-      $job->setGit($git);
     }
 
-    if (!$job->getRunAt()) $job->setRunAt(time());
     $this->uploadJob($job);
   }
 
@@ -215,11 +215,11 @@ class Client {
       $job->setRepoToken($config['repo_token'] ?: $config['repo_secret_token']);
 
     if (mb_strlen($config['parallel'])) $job->setParallel($config['parallel'] == 'true');
+    if (mb_strlen($config['run_at'])) $job->setRunAt($config['run_at']);
     if (mb_strlen($config['service_job_id'])) $job->setServiceJobId($config['service_job_id']);
     if (mb_strlen($config['service_name'])) $job->setServiceName($config['service_name']);
     if (mb_strlen($config['service_number'])) $job->setServiceNumber($config['service_number']);
     if (mb_strlen($config['service_pull_request'])) $job->setServicePullRequest($config['service_pull_request']);
-    if (mb_strlen($config['run_at'])) $job->setRunAt($config['run_at']);
 
     $hasGitData = count(array_filter($config->getKeys(), function($key) {
       return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
