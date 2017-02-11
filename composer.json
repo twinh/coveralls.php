@@ -38,7 +38,7 @@
     "ext-pcre": "*",
     "ext-simplexml": "*",
     "ext-spl": "*",
-    "cedx/lcov": "^0.4.0",
+    "cedx/lcov": "^0.4.1",
     "guzzlehttp/guzzle": "^6.2.2",
     "reactivex/rxphp": "^1.5.2",
     "symfony/yaml": "^3.2.3",
