@@ -28,7 +28,7 @@ class GitData implements \JsonSerializable {
    * Initializes a new instance of the class.
    * @param GitCommit $commit The Git commit.
    * @param string $branch The branch name.
-   * @param array $remotes The remote repositories.
+   * @param GitRemote[] $remotes The remote repositories.
    */
   public function __construct(GitCommit $commit = null, string $branch = '', array $remotes = []) {
     $this->setBranch($branch);
