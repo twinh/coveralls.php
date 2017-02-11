@@ -57,7 +57,7 @@ try {
   echo 'The report was sent successfully.';
 }
 
-catch(\Throwable $e) {
+catch (\Throwable $e) {
   echo 'An error occurred: ', $e->getMessage();
 }
 ```
