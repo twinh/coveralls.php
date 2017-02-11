@@ -39,7 +39,7 @@ if (isset($options['h']) || isset($options['help'])) {
 }
 
 if (isset($options['v']) || isset($options['version'])) {
-  echo 'v', VERSION, PHP_EOL;
+  echo VERSION, PHP_EOL;
   exit(0);
 }
 
