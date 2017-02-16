@@ -138,7 +138,8 @@ class Client {
       $response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
       $this->onResponse->onNext($response);
 
-      if (($code = $response->getStatusCode()) != 200) throw new \DomainException("Status code: $code");
+      if (($code = $response->getStatusCode()) != 200)
+        throw new \DomainException("$code {$response->getReasonPhrase()}");
     }
 
     catch (\Throwable $e) {
