@@ -16,14 +16,17 @@ class GitDataTest extends TestCase {
    * @test ::fromJSON
    */
   public function testFromJSON() {
+    // Should return a null reference with a non-object value.
     $this->assertNull(GitData::fromJSON('foo'));
 
+    // Should return an instance with default values for an empty map.
     $data = GitData::fromJSON([]);
     $this->assertInstanceOf(GitData::class, $data);
     $this->assertEmpty($data->getBranch());
     $this->assertNull($data->getCommit());
     $this->assertCount(0, $data->getRemotes());
 
+    // Should return an initialized instance for a non-empty map.
     $data = GitData::fromJSON([
       'branch' => 'develop',
       'head' => ['id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871'],
@@ -49,6 +52,7 @@ class GitDataTest extends TestCase {
    * @test ::fromRepository
    */
   public function testFromRepository() {
+    // Should retrieve the Git data from the executable output.
     $data = GitData::fromRepository(__DIR__.'/..');
     $this->assertNotEmpty($data->getBranch());
 
@@ -72,12 +76,14 @@ class GitDataTest extends TestCase {
    * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
+    // Should return a map with default values for a newly created instance.
     $map = (new GitData())->jsonSerialize();
     $this->assertCount(3, get_object_vars($map));
     $this->assertEmpty($map->branch);
     $this->assertNull($map->head);
     $this->assertCount(0, $map->remotes);
 
+    // Should return a non-empty map for an initialized instance.
     $map = (new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]))->jsonSerialize();
     $this->assertCount(3, get_object_vars($map));
     $this->assertEquals('develop', $map->branch);
@@ -95,7 +101,11 @@ class GitDataTest extends TestCase {
    */
   public function testToString() {
     $data = (string) new GitData(null, 'develop');
+
+    // Should start with the class name.
     $this->assertStringStartsWith('coveralls\GitData {', $data);
+
+    // Should contain the instance properties.
     $this->assertContains('"branch":"develop"', $data);
     $this->assertContains('"head":null', $data);
     $this->assertContains('"remotes":[]', $data);

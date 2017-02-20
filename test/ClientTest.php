@@ -16,6 +16,7 @@ class ClientTest extends TestCase {
    * @test ::parseCloverReport
    */
   public function testParseCloverReport() {
+    // Should properly parse Clover reports.
     $parseCloverReport = function(string $report) {
       return $this->parseCloverReport($report);
     };
@@ -51,6 +52,7 @@ class ClientTest extends TestCase {
    * @test ::parseLcovReport
    */
   public function testParseLcovReport() {
+    // Should properly parse LCOV reports.
     $parseLcovReport = function(string $report): Job {
       return $this->parseLcovReport($report);
     };
@@ -89,12 +91,14 @@ class ClientTest extends TestCase {
       $this->updateJob($job, $config);
     };
 
+    // Should not modify the job if the configuration is empty.
     $updateJob->call($client, $job, new Configuration());
     $this->assertNull($job->getGit());
     $this->assertFalse($job->isParallel());
     $this->assertEmpty($job->getRepoToken());
     $this->assertNull($job->getRunAt());
 
+    // Should modify the job if the configuration is not empty.
     $updateJob->call($client, $job, new Configuration([
       'parallel' => 'true',
       'repo_token' => 'yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt',
@@ -118,6 +122,7 @@ class ClientTest extends TestCase {
    * @test ::upload
    */
   public function testUpload() {
+    // Should throw an exception with an empty coverage report.
     $this->expectException(\InvalidArgumentException::class);
     (new Client())->upload('');
   }
@@ -126,6 +131,7 @@ class ClientTest extends TestCase {
    * @test ::uploadJob
    */
   public function testUploadJob() {
+    // Should throw an exception with an empty coverage job.
     $this->expectException(\InvalidArgumentException::class);
     (new Client())->uploadJob(new Job());
   }

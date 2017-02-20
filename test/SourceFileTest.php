@@ -16,8 +16,10 @@ class SourceFileTest extends TestCase {
    * @test ::fromJSON
    */
   public function testFromJSON() {
+    // Should return a null reference with a non-object value.
     $this->assertNull(SourceFile::fromJSON('foo'));
 
+    // Should return an instance with default values for an empty map.
     $file = SourceFile::fromJSON([]);
     $this->assertInstanceOf(SourceFile::class, $file);
     $this->assertCount(0, $file->getCoverage());
@@ -25,6 +27,7 @@ class SourceFileTest extends TestCase {
     $this->assertEmpty($file->getSource());
     $this->assertEmpty($file->getSourceDigest());
 
+    // Should return an initialized instance for a non-empty map.
     $file = SourceFile::fromJSON([
       'coverage' => [null, 2, 0, null, 4, 15, null],
       'name' => 'coveralls.php',
@@ -48,12 +51,14 @@ class SourceFileTest extends TestCase {
    * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
+    // Should return a map with default values for a newly created instance.
     $map = (new SourceFile())->jsonSerialize();
     $this->assertCount(3, get_object_vars($map));
     $this->assertCount(0, $map->coverage);
     $this->assertEmpty($map->name);
     $this->assertEmpty($map->source_digest);
 
+    // Should return a non-empty map for an initialized instance.
     $map = (new SourceFile(
       'coveralls.php',
       'e23fb141da9a7b438479a48eac7b7249',
@@ -75,7 +80,11 @@ class SourceFileTest extends TestCase {
    */
   public function testToString() {
     $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249');
+
+    // Should start with the class name.
     $this->assertStringStartsWith('coveralls\SourceFile {', $remote);
+
+    // Should contain the instance properties.
     $this->assertContains('"name":"coveralls.php"', $remote);
     $this->assertContains('"source_digest":"e23fb141da9a7b438479a48eac7b7249"', $remote);
   }
