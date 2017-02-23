@@ -19,16 +19,20 @@ class ConfigurationTest extends TestCase {
    */
   public function testArrayAccess() {
     $config = new Configuration();
-    $this->assertFalse($config->offsetExists('foo'));
-    $this->assertNull($config->offsetGet('foo'));
 
-    $config->offsetSet('foo', 'bar');
-    $this->assertTrue($config->offsetExists('foo'));
-    $this->assertEquals('bar', $config->offsetGet('foo'));
+    $this->specify('should handle the existence of an element', function() use ($config) {
+      $this->assertFalse($config->offsetExists('foo'));
+      $config->offsetSet('foo', 'bar');
+      $this->assertTrue($config->offsetExists('foo'));
+      $config->offsetUnset('foo');
+    });
 
-    $config->offsetUnset('foo');
-    $this->assertFalse($config->offsetExists('foo'));
-    $this->assertNull($config->offsetGet('foo'));
+    $this->specify('should handle the fetch of an element', function() use ($config) {
+      $this->assertNull($config->offsetGet('foo'));
+      $config->offsetSet('foo', 'bar');
+      $this->assertEquals('bar', $config->offsetGet('foo'));
+      $config->offsetUnset('foo');
+    });
   }
 
   /**
