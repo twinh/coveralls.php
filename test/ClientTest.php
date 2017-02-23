@@ -4,6 +4,7 @@
  */
 namespace coveralls\test;
 
+use Codeception\{Specify};
 use coveralls\{Client, Configuration, GitData, Job, SourceFile};
 use PHPUnit\Framework\{TestCase};
 
@@ -11,74 +12,77 @@ use PHPUnit\Framework\{TestCase};
  * @coversDefaultClass \coveralls\Client
  */
 class ClientTest extends TestCase {
+  use Specify;
 
   /**
    * @test ::parseCloverReport
    */
   public function testParseCloverReport() {
-    // Should properly parse Clover reports.
-    $parseCloverReport = function(string $report) {
-      return $this->parseCloverReport($report);
-    };
+    $this->specify('should properly parse Clover reports', function() {
+      $parseCloverReport = function(string $report) {
+        return $this->parseCloverReport($report);
+      };
 
-    $job = $parseCloverReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/clover.xml'));
-    $files = $job->getSourceFiles();
-    $this->assertCount(3, $files);
+      $job = $parseCloverReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/clover.xml'));
+      $files = $job->getSourceFiles();
+      $this->assertCount(3, $files);
 
-    $this->assertInstanceOf(SourceFile::class, $files[0]);
-    $this->assertEquals('lib/Client.php', $files[0]->getName());
-    $this->assertNotEmpty($files[0]->getSourceDigest());
+      $this->assertInstanceOf(SourceFile::class, $files[0]);
+      $this->assertEquals('lib/Client.php', $files[0]->getName());
+      $this->assertNotEmpty($files[0]->getSourceDigest());
 
-    $subset = [null, 2, 2, 2, 2, null];
-    $this->assertEquals($subset, array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()));
+      $subset = [null, 2, 2, 2, 2, null];
+      $this->assertEquals($subset, array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()));
 
-    $this->assertEquals('lib/Configuration.php', $files[1]->getName());
-    $this->assertNotEmpty($files[1]->getSourceDigest());
+      $this->assertEquals('lib/Configuration.php', $files[1]->getName());
+      $this->assertNotEmpty($files[1]->getSourceDigest());
 
-    $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-    $this->assertEquals($subset, array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()));
+      $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
+      $this->assertEquals($subset, array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()));
 
-    $this->assertEquals('lib/GitCommit.php', $files[2]->getName());
-    $this->assertNotEmpty($files[2]->getSourceDigest());
+      $this->assertEquals('lib/GitCommit.php', $files[2]->getName());
+      $this->assertNotEmpty($files[2]->getSourceDigest());
 
-    $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-    $this->assertEquals($subset, array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()));
+      $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
+      $this->assertEquals($subset, array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()));
 
-    $this->expectException(\InvalidArgumentException::class);
-    $parseCloverReport->call(new Client(), '<project></project>');
+      $this->expectException(\InvalidArgumentException::class);
+      $parseCloverReport->call(new Client(), '<project></project>');
+    });
   }
 
   /**
    * @test ::parseLcovReport
    */
   public function testParseLcovReport() {
-    // Should properly parse LCOV reports.
-    $parseLcovReport = function(string $report): Job {
-      return $this->parseLcovReport($report);
-    };
+    $this->specify('should properly parse LCOV reports', function() {
+      $parseLcovReport = function(string $report): Job {
+        return $this->parseLcovReport($report);
+      };
 
-    $job = $parseLcovReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/lcov.info'));
-    $files = $job->getSourceFiles();
-    $this->assertCount(3, $files);
+      $job = $parseLcovReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/lcov.info'));
+      $files = $job->getSourceFiles();
+      $this->assertCount(3, $files);
 
-    $this->assertInstanceOf(SourceFile::class, $files[0]);
-    $this->assertEquals('lib/Client.php', $files[0]->getName());
-    $this->assertNotEmpty($files[0]->getSourceDigest());
+      $this->assertInstanceOf(SourceFile::class, $files[0]);
+      $this->assertEquals('lib/Client.php', $files[0]->getName());
+      $this->assertNotEmpty($files[0]->getSourceDigest());
 
-    $subset = [null, 2, 2, 2, 2, null];
-    $this->assertEquals($subset, array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()));
+      $subset = [null, 2, 2, 2, 2, null];
+      $this->assertEquals($subset, array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()));
 
-    $this->assertEquals('lib/Configuration.php', $files[1]->getName());
-    $this->assertNotEmpty($files[1]->getSourceDigest());
+      $this->assertEquals('lib/Configuration.php', $files[1]->getName());
+      $this->assertNotEmpty($files[1]->getSourceDigest());
 
-    $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-    $this->assertEquals($subset, array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()));
+      $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
+      $this->assertEquals($subset, array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()));
 
-    $this->assertEquals('lib/GitCommit.php', $files[2]->getName());
-    $this->assertNotEmpty($files[2]->getSourceDigest());
+      $this->assertEquals('lib/GitCommit.php', $files[2]->getName());
+      $this->assertNotEmpty($files[2]->getSourceDigest());
 
-    $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-    $this->assertEquals($subset, array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()));
+      $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
+      $this->assertEquals($subset, array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()));
+    });
   }
 
   /**
@@ -91,48 +95,52 @@ class ClientTest extends TestCase {
       $this->updateJob($job, $config);
     };
 
-    // Should not modify the job if the configuration is empty.
-    $updateJob->call($client, $job, new Configuration());
-    $this->assertNull($job->getGit());
-    $this->assertFalse($job->isParallel());
-    $this->assertEmpty($job->getRepoToken());
-    $this->assertNull($job->getRunAt());
+    $this->specify('should not modify the job if the configuration is empty', function() use ($client, $job, $updateJob) {
+      $updateJob->call($client, $job, new Configuration());
+      $this->assertNull($job->getGit());
+      $this->assertFalse($job->isParallel());
+      $this->assertEmpty($job->getRepoToken());
+      $this->assertNull($job->getRunAt());
+    });
 
-    // Should modify the job if the configuration is not empty.
-    $updateJob->call($client, $job, new Configuration([
-      'parallel' => 'true',
-      'repo_token' => 'yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt',
-      'run_at' => '2017-01-29T03:43:30+01:00',
-      'service_branch' => 'develop'
-    ]));
+    $this->specify('should modify the job if the configuration is not empty', function() use ($client, $job, $updateJob) {
+      $updateJob->call($client, $job, new Configuration([
+        'parallel' => 'true',
+        'repo_token' => 'yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt',
+        'run_at' => '2017-01-29T03:43:30+01:00',
+        'service_branch' => 'develop'
+      ]));
 
-    $this->assertTrue($job->isParallel());
-    $this->assertEquals('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt', $job->getRepoToken());
+      $this->assertTrue($job->isParallel());
+      $this->assertEquals('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt', $job->getRepoToken());
 
-    $git = $job->getGit();
-    $this->assertInstanceOf(GitData::class, $git);
-    $this->assertEquals('develop', $git->getBranch());
+      $git = $job->getGit();
+      $this->assertInstanceOf(GitData::class, $git);
+      $this->assertEquals('develop', $git->getBranch());
 
-    $runAt = $job->getRunAt();
-    $this->assertInstanceOf(\DateTime::class, $runAt);
-    $this->assertEquals('2017-01-29T03:43:30+01:00', $runAt->format('c'));
+      $runAt = $job->getRunAt();
+      $this->assertInstanceOf(\DateTime::class, $runAt);
+      $this->assertEquals('2017-01-29T03:43:30+01:00', $runAt->format('c'));
+    });
   }
 
   /**
    * @test ::upload
    */
   public function testUpload() {
-    // Should throw an exception with an empty coverage report.
-    $this->expectException(\InvalidArgumentException::class);
-    (new Client())->upload('');
+    $this->specify('should throw an exception with an empty coverage report', function() {
+      $this->expectException(\InvalidArgumentException::class);
+      (new Client())->upload('');
+    });
   }
 
   /**
    * @test ::uploadJob
    */
   public function testUploadJob() {
-    // Should throw an exception with an empty coverage job.
-    $this->expectException(\InvalidArgumentException::class);
-    (new Client())->uploadJob(new Job());
+    $this->specify('should throw an exception with an empty coverage job', function() {
+      $this->expectException(\InvalidArgumentException::class);
+      (new Client())->uploadJob(new Job());
+    });
   }
 }
