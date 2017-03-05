@@ -4,7 +4,6 @@
  */
 namespace coveralls\test;
 
-use Codeception\{Specify};
 use coveralls\{GitCommit, GitData, GitRemote};
 use PHPUnit\Framework\{TestCase};
 
@@ -12,25 +11,24 @@ use PHPUnit\Framework\{TestCase};
  * @coversDefaultClass \coveralls\GitData
  */
 class GitDataTest extends TestCase {
-  use Specify;
 
   /**
    * @test ::fromJSON
    */
   public function testFromJSON() {
-    $this->specify('should return a null reference with a non-object value', function() {
-      $this->assertNull(GitData::fromJSON('foo'));
+    it('should return a null reference with a non-object value', function() {
+      expect(GitData::fromJSON('foo'))->to->be->null;
     });
 
-    $this->specify('should return an instance with default values for an empty map', function() {
+    it('should return an instance with default values for an empty map', function() {
       $data = GitData::fromJSON([]);
-      $this->assertInstanceOf(GitData::class, $data);
-      $this->assertEmpty($data->getBranch());
-      $this->assertNull($data->getCommit());
-      $this->assertCount(0, $data->getRemotes());
+      expect($data)->to->be->instanceOf(GitData::class);
+      expect($data->getBranch())->to->be->empty;
+      expect($data->getCommit())->to->be->null;
+      expect($data->getRemotes())->to->be->empty;
     });
 
-    $this->specify('should return an initialized instance for a non-empty map', function() {
+    it('should return an initialized instance for a non-empty map', function() {
       $data = GitData::fromJSON([
         'branch' => 'develop',
         'head' => ['id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871'],
@@ -39,17 +37,17 @@ class GitDataTest extends TestCase {
         ]
       ]);
 
-      $this->assertInstanceOf(GitData::class, $data);
-      $this->assertEquals('develop', $data->getBranch());
+      expect($data)->to->be->instanceOf(GitData::class);
+      expect($data->getBranch())->to->equal('develop');
 
       $commit = $data->getCommit();
-      $this->assertInstanceOf(GitCommit::class, $commit);
-      $this->assertEquals('2ef7bde608ce5404e97d5f042f95f89f1c232871', $commit->getId());
+      expect($commit)->to->be->instanceOf(GitCommit::class);
+      expect($commit->getId())->to->equal('2ef7bde608ce5404e97d5f042f95f89f1c232871');
 
       $remotes = $data->getRemotes();
-      $this->assertCount(1, $remotes);
-      $this->assertInstanceOf(GitRemote::class, $remotes[0]);
-      $this->assertEquals('origin', $remotes[0]->getName());
+      expect($remotes)->to->have->lengthOf(1);
+      expect($remotes[0])->to->be->instanceOf(GitRemote::class);
+      expect($remotes[0]->getName())->to->equal('origin');
     });
   }
 
@@ -57,24 +55,24 @@ class GitDataTest extends TestCase {
    * @test ::fromRepository
    */
   public function testFromRepository() {
-    $this->specify('should retrieve the Git data from the executable output', function() {
+    it('should retrieve the Git data from the executable output', function() {
       $data = GitData::fromRepository(__DIR__.'/..');
-      $this->assertNotEmpty($data->getBranch());
+      expect($data->getBranch())->to->not->be->empty;
 
       $commit = $data->getCommit();
-      $this->assertInstanceOf(GitCommit::class, $commit);
-      $this->assertRegExp('/^[a-f\d]{40}$/', $commit->getId());
+      expect($commit)->to->be->instanceOf(GitCommit::class);
+      expect($commit->getId())->to->match('/^[a-f\d]{40}$/');
 
       $remotes = $data->getRemotes();
-      $this->assertGreaterThanOrEqual(1, count($remotes));
-      $this->assertInstanceOf(GitRemote::class, $remotes[0]);
+      expect($remotes)->to->not->be->empty;
+      expect($remotes[0])->to->be->instanceOf(GitRemote::class);
 
       $origin = array_filter($remotes->getArrayCopy(), function(GitRemote $remote) {
         return $remote->getName() == 'origin';
       });
 
-      $this->assertCount(1, $origin);
-      $this->assertEquals('https://github.com/cedx/coveralls.php.git', $origin[0]->getURL());
+      expect($origin)->to->have->lengthOf(1);
+      expect($origin[0]->getURL())->to->equal('https://github.com/cedx/coveralls.php.git');
     });
   }
 
@@ -82,25 +80,25 @@ class GitDataTest extends TestCase {
    * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
-    $this->specify('should return a map with default values for a newly created instance', function() {
+    it('should return a map with default values for a newly created instance', function() {
       $map = (new GitData())->jsonSerialize();
-      $this->assertCount(3, get_object_vars($map));
-      $this->assertEmpty($map->branch);
-      $this->assertNull($map->head);
-      $this->assertCount(0, $map->remotes);
+      expect(get_object_vars($map))->to->have->lengthOf(3);
+      expect($map->branch)->to->be->empty;
+      expect($map->head)->to->be->null;
+      expect($map->remotes)->to->be->an('array')->and->be->empty;
     });
 
-    $this->specify('should return a non-empty map for an initialized instance', function() {
+    it('should return a non-empty map for an initialized instance', function() {
       $map = (new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]))->jsonSerialize();
-      $this->assertCount(3, get_object_vars($map));
-      $this->assertEquals('develop', $map->branch);
+      expect(get_object_vars($map))->to->have->lengthOf(3);
+      expect($map->branch)->to->equal('develop');
 
-      $this->assertInstanceOf(\stdClass::class, $map->head);
-      $this->assertEquals('2ef7bde608ce5404e97d5f042f95f89f1c232871', $map->head->id);
+      expect($map->head)->to->be->an('object');
+      expect($map->head->id)->to->equal('2ef7bde608ce5404e97d5f042f95f89f1c232871');
 
-      $this->assertCount(1, $map->remotes);
-      $this->assertInstanceOf(\stdClass::class, $map->remotes[0]);
-      $this->assertEquals('origin', $map->remotes[0]->name);
+      expect($map->remotes)->to->be->an('array')->and->have->lengthOf(1);
+      expect($map->remotes[0])->to->be->an('object');
+      expect($map->remotes[0]->name)->to->equal('origin');
     });
   }
 
@@ -108,16 +106,16 @@ class GitDataTest extends TestCase {
    * @test ::__toString
    */
   public function testToString() {
-    $data = (string) new GitData(null, 'develop');
+    $data = (string) new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]);
 
-    $this->specify('should start with the class name', function() use ($data) {
-      $this->assertStringStartsWith('coveralls\GitData {', $data);
+    it('should start with the class name', function() use ($data) {
+      expect($data)->startWith('coveralls\GitData {');
     });
 
-    $this->specify('should contain the instance properties', function() use ($data) {
-      $this->assertContains('"branch":"develop"', $data);
-      $this->assertContains('"head":null', $data);
-      $this->assertContains('"remotes":[]', $data);
+    it('should contain the instance properties', function() use ($data) {
+      expect($data)->to->contain('"branch":"develop"')
+        ->and->contain('"head":{')
+        ->and->contain('"remotes":[{');
     });
   }
 }

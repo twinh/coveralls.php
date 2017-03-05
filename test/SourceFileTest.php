@@ -4,7 +4,6 @@
  */
 namespace coveralls\test;
 
-use Codeception\{Specify};
 use coveralls\{SourceFile};
 use PHPUnit\Framework\{TestCase};
 
@@ -12,26 +11,26 @@ use PHPUnit\Framework\{TestCase};
  * @coversDefaultClass \coveralls\SourceFile
  */
 class SourceFileTest extends TestCase {
-  use Specify;
 
   /**
    * @test ::fromJSON
    */
   public function testFromJSON() {
-    $this->specify('should return a null reference with a non-object value', function() {
-      $this->assertNull(SourceFile::fromJSON('foo'));
+    it('should return a null reference with a non-object value', function() {
+      expect(SourceFile::fromJSON('foo'))->to->be->null;
     });
 
-    $this->specify('should return an instance with default values for an empty map', function() {
+    it('should return an instance with default values for an empty map', function() {
       $file = SourceFile::fromJSON([]);
-      $this->assertInstanceOf(SourceFile::class, $file);
-      $this->assertCount(0, $file->getCoverage());
-      $this->assertEmpty($file->getName());
-      $this->assertEmpty($file->getSource());
-      $this->assertEmpty($file->getSourceDigest());
+      expect($file)->to->be->instanceOf(SourceFile::class);
+
+      expect($file->getCoverage())->to->be->empty;
+      expect($file->getName())->to->be->empty;
+      expect($file->getSource())->to->be->empty;
+      expect($file->getSourceDigest())->to->be->empty;
     });
 
-    $this->specify('should return an initialized instance for a non-empty map', function() {
+    it('should return an initialized instance for a non-empty map', function() {
       $file = SourceFile::fromJSON([
         'coverage' => [null, 2, 0, null, 4, 15, null],
         'name' => 'coveralls.php',
@@ -39,16 +38,16 @@ class SourceFileTest extends TestCase {
         'source_digest' => 'e23fb141da9a7b438479a48eac7b7249'
       ]);
 
-      $this->assertInstanceOf(SourceFile::class, $file);
+      expect($file)->to->be->instanceOf(SourceFile::class);
 
       $coverage = $file->getCoverage();
-      $this->assertCount(7, $coverage);
-      $this->assertNull($coverage[0]);
-      $this->assertEquals(2, $coverage[1]);
+      expect($coverage)->to->have->lengthOf(7);
+      expect($coverage[0])->to->be->null;
+      expect($coverage[1])->to->equal(2);
 
-      $this->assertEquals('coveralls.php', $file->getName());
-      $this->assertEquals('function main() {}', $file->getSource());
-      $this->assertEquals('e23fb141da9a7b438479a48eac7b7249', $file->getSourceDigest());
+      expect($file->getName())->to->equal('coveralls.php');
+      expect($file->getSource())->to->equal('function main() {}');
+      expect($file->getSourceDigest())->to->equal('e23fb141da9a7b438479a48eac7b7249');
     });
   }
 
@@ -56,15 +55,16 @@ class SourceFileTest extends TestCase {
    * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
-    $this->specify('should return a map with default values for a newly created instance', function() {
+    it('should return a map with default values for a newly created instance', function() {
       $map = (new SourceFile())->jsonSerialize();
-      $this->assertCount(3, get_object_vars($map));
-      $this->assertCount(0, $map->coverage);
-      $this->assertEmpty($map->name);
-      $this->assertEmpty($map->source_digest);
+      expect(get_object_vars($map))->to->have->lengthOf(3);
+
+      expect($map->coverage)->to->be->an('array')->and->be->empty;
+      expect($map->name)->to->be->empty;
+      expect($map->source_digest)->to->be->empty;
     });
 
-    $this->specify('should return a non-empty map for an initialized instance', function() {
+    it('should return a non-empty map for an initialized instance', function() {
       $map = (new SourceFile(
         'coveralls.php',
         'e23fb141da9a7b438479a48eac7b7249',
@@ -72,13 +72,15 @@ class SourceFileTest extends TestCase {
         [null, 2, 0, null, 4, 15, null]
       ))->jsonSerialize();
 
-      $this->assertCount(4, get_object_vars($map));
-      $this->assertCount(7, $map->coverage);
-      $this->assertNull($map->coverage[0]);
-      $this->assertEquals(2, $map->coverage[1]);
-      $this->assertEquals('coveralls.php', $map->name);
-      $this->assertEquals('function main() {}', $map->source);
-      $this->assertEquals('e23fb141da9a7b438479a48eac7b7249', $map->source_digest);
+      expect(get_object_vars($map))->to->have->lengthOf(4);
+
+      expect($map->coverage)->to->be->an('array')->and->have->lengthOf(7);
+      expect($map->coverage[0])->to->be->null;
+      expect($map->coverage[1])->to->equal(2);
+
+      expect($map->name)->to->equal('coveralls.php');
+      expect($map->source)->to->equal('function main() {}');
+      expect($map->source_digest)->to->equal('e23fb141da9a7b438479a48eac7b7249');
     });
   }
 
@@ -86,15 +88,16 @@ class SourceFileTest extends TestCase {
    * @test ::__toString
    */
   public function testToString() {
-    $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249');
+    $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', 'function main() {}', [null, 2, 0, null, 4, 15, null]);
 
-    $this->specify('should start with the class name', function() use ($remote) {
-      $this->assertStringStartsWith('coveralls\SourceFile {', $remote);
+    it('should start with the class name', function() use ($remote) {
+      expect($remote)->startWith('coveralls\SourceFile {');
     });
 
-    $this->specify('should contain the instance properties', function() use ($remote) {
-      $this->assertContains('"name":"coveralls.php"', $remote);
-      $this->assertContains('"source_digest":"e23fb141da9a7b438479a48eac7b7249"', $remote);
+    it('should contain the instance properties', function() use ($remote) {
+      expect($remote)->to->contain('"name":"coveralls.php"')
+        ->and->contain('"source":"function main() {}"')
+        ->and->contain('"source_digest":"e23fb141da9a7b438479a48eac7b7249"');
     });
   }
 }

@@ -4,7 +4,6 @@
  */
 namespace coveralls\test;
 
-use Codeception\{Specify};
 use coveralls\{GitCommit};
 use PHPUnit\Framework\{TestCase};
 
@@ -12,23 +11,26 @@ use PHPUnit\Framework\{TestCase};
  * @coversDefaultClass \coveralls\GitCommit
  */
 class GitCommitTest extends TestCase {
-  use Specify;
 
   /**
    * @test ::fromJSON
    */
   public function testFromJSON() {
-    $this->specify('should return a null reference with a non-object value', function() {
-      $this->assertNull(GitCommit::fromJSON('foo'));
+    it('should return a null reference with a non-object value', function() {
+      expect(GitCommit::fromJSON('foo'))->to->be->null;
     });
 
-    $this->specify('should return an instance with default values for an empty map', function() {
+    it('should return an instance with default values for an empty map', function() {
       $commit = GitCommit::fromJSON([]);
-      $this->assertInstanceOf(GitCommit::class, $commit);
-      $this->assertEmpty($commit->getId());
+      expect($commit)->to->be->instanceOf(GitCommit::class);
+
+      expect($commit->getAuthorEmail())->to->be->empty;
+      expect($commit->getAuthorName())->to->be->empty;
+      expect($commit->getId())->to->be->empty;
+      expect($commit->getMessage())->to->be->empty;
     });
 
-    $this->specify('should return an initialized instance for a non-empty map', function() {
+    it('should return an initialized instance for a non-empty map', function() {
       $commit = GitCommit::fromJSON([
         'author_email' => 'anonymous@secret.com',
         'author_name' => 'Anonymous',
@@ -36,11 +38,11 @@ class GitCommitTest extends TestCase {
         'message' => 'Hello World!'
       ]);
 
-      $this->assertInstanceOf(GitCommit::class, $commit);
-      $this->assertEquals('anonymous@secret.com', $commit->getAuthorEmail());
-      $this->assertEquals('Anonymous', $commit->getAuthorName());
-      $this->assertEquals('2ef7bde608ce5404e97d5f042f95f89f1c232871', $commit->getId());
-      $this->assertEquals('Hello World!', $commit->getMessage());
+      expect($commit)->to->be->instanceOf(GitCommit::class);
+      expect($commit->getAuthorEmail())->to->equal('anonymous@secret.com');
+      expect($commit->getAuthorName())->to->equal('Anonymous');
+      expect($commit->getId())->to->equal('2ef7bde608ce5404e97d5f042f95f89f1c232871');
+      expect($commit->getMessage())->to->equal('Hello World!');
     });
   }
 
@@ -48,23 +50,23 @@ class GitCommitTest extends TestCase {
    * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
-    $this->specify('should return a map with default values for a newly created instance', function() {
+    it('should return a map with default values for a newly created instance', function() {
       $map = (new GitCommit())->jsonSerialize();
-      $this->assertCount(1, get_object_vars($map));
-      $this->assertEmpty($map->id);
+      expect(get_object_vars($map))->to->have->lengthOf(1);
+      expect($map->id)->to->be->empty;
     });
 
-    $this->specify('should return a non-empty map for an initialized instance', function() {
+    it('should return a non-empty map for an initialized instance', function() {
       $map = (new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871', 'Hello World!'))
         ->setAuthorEmail('anonymous@secret.com')
         ->setAuthorName('Anonymous')
         ->jsonSerialize();
 
-      $this->assertCount(4, get_object_vars($map));
-      $this->assertEquals('anonymous@secret.com', $map->author_email);
-      $this->assertEquals('Anonymous', $map->author_name);
-      $this->assertEquals('2ef7bde608ce5404e97d5f042f95f89f1c232871', $map->id);
-      $this->assertEquals('Hello World!', $map->message);
+      expect(get_object_vars($map))->to->have->lengthOf(4);
+      expect($map->author_email)->to->equal('anonymous@secret.com');
+      expect($map->author_name)->to->equal('Anonymous');
+      expect($map->id)->to->equal('2ef7bde608ce5404e97d5f042f95f89f1c232871');
+      expect($map->message)->to->equal('Hello World!');
     });
   }
 
@@ -72,14 +74,19 @@ class GitCommitTest extends TestCase {
    * @test ::__toString
    */
   public function testToString() {
-    $commit = (string) new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871');
+    $commit = (string) (new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871', 'Hello World!'))
+      ->setAuthorEmail('anonymous@secret.com')
+      ->setAuthorName('Anonymous');
 
-    $this->specify('should start with the class name', function() use ($commit) {
-      $this->assertStringStartsWith('coveralls\GitCommit {', $commit);
+    it('should start with the class name', function() use ($commit) {
+      expect($commit)->startWith('coveralls\GitCommit {');
     });
 
-    $this->specify('should contain the instance properties', function() use ($commit) {
-      $this->assertContains('"id":"2ef7bde608ce5404e97d5f042f95f89f1c232871"', $commit);
+    it('should contain the instance properties', function() use ($commit) {
+      expect($commit)->to->contain('"author_email":"anonymous@secret.com"')
+        ->and->contain('"author_name":"Anonymous"')
+        ->and->contain('"id":"2ef7bde608ce5404e97d5f042f95f89f1c232871"')
+        ->and->contain('"message":"Hello World!"');
     });
   }
 }

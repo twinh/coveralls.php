@@ -4,7 +4,6 @@
  */
 namespace coveralls\test;
 
-use Codeception\{Specify};
 use coveralls\{GitData, Job, SourceFile};
 use PHPUnit\Framework\{TestCase};
 
@@ -12,27 +11,27 @@ use PHPUnit\Framework\{TestCase};
  * @coversDefaultClass \coveralls\Job
  */
 class JobTest extends TestCase {
-  use Specify;
 
   /**
    * @test ::fromJSON
    */
   public function testFromJSON() {
-    $this->specify('should return a null reference with a non-object value', function() {
-      $this->assertNull(Job::fromJSON('foo'));
+    it('should return a null reference with a non-object value', function() {
+      expect(Job::fromJSON('foo'))->to->be->null;
     });
 
-    $this->specify('should return an instance with default values for an empty map', function() {
+    it('should return an instance with default values for an empty map', function() {
       $job = Job::fromJSON([]);
-      $this->assertInstanceOf(Job::class, $job);
-      $this->assertNull($job->getGit());
-      $this->assertFalse($job->isParallel());
-      $this->assertEmpty($job->getRepoToken());
-      $this->assertNull($job->getRunAt());
-      $this->assertCount(0, $job->getSourceFiles());
+      expect($job)->to->be->instanceOf(Job::class);
+
+      expect($job->getGit())->to->be->null;
+      expect($job->isParallel())->to->be->false;
+      expect($job->getRepoToken())->to->be->empty;
+      expect($job->getRunAt())->to->be->null;
+      expect($job->getSourceFiles())->to->be->empty;
     });
 
-    $this->specify('should return an initialized instance for a non-empty map', function() {
+    it('should return an initialized instance for a non-empty map', function() {
       $job = Job::fromJSON([
         'git' => ['branch' => 'develop'],
         'parallel' => true,
@@ -43,22 +42,22 @@ class JobTest extends TestCase {
         ]
       ]);
 
-      $this->assertInstanceOf(Job::class, $job);
-      $this->assertTrue($job->isParallel());
-      $this->assertEquals('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt', $job->getRepoToken());
+      expect($job)->to->be->instanceOf(Job::class);
+      expect($job->isParallel())->to->be->true;
+      expect($job->getRepoToken())->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
 
       $git = $job->getGit();
-      $this->assertInstanceOf(GitData::class, $git);
-      $this->assertEquals('develop', $git->getBranch());
+      expect($git)->to->be->instanceOf(GitData::class);
+      expect($git->getBranch())->to->equal('develop');
 
       $runAt = $job->getRunAt();
-      $this->assertInstanceOf(\DateTime::class, $runAt);
-      $this->assertEquals('2017-01-29T03:43:30+01:00', $runAt->format('c'));
+      expect($runAt)->to->be->instanceOf(\DateTime::class);
+      expect($runAt->format('c'))->to->equal('2017-01-29T03:43:30+01:00');
 
       $sourceFiles = $job->getSourceFiles();
-      $this->assertCount(1, $sourceFiles);
-      $this->assertInstanceOf(SourceFile::class, $sourceFiles[0]);
-      $this->assertEquals('/home/cedx/coveralls.php', $sourceFiles[0]->getName());
+      expect($sourceFiles)->to->have->lengthOf(1);
+      expect($sourceFiles[0])->to->be->instanceOf(SourceFile::class);
+      expect($sourceFiles[0]->getName())->to->equal('/home/cedx/coveralls.php');
     });
   }
 
@@ -66,13 +65,13 @@ class JobTest extends TestCase {
    * @test ::jsonSerialize
    */
   public function testJsonSerialize() {
-    $this->specify('should return a map with default values for a newly created instance', function() {
+    it('should return a map with default values for a newly created instance', function() {
       $map = (new Job())->jsonSerialize();
-      $this->assertCount(1, get_object_vars($map));
-      $this->assertCount(0, $map->source_files);
+      expect(get_object_vars($map))->to->have->lengthOf(1);
+      expect($map->source_files)->to->be->an('array')->and->be->empty;
     });
 
-    $this->specify('should return a non-empty map for an initialized instance', function() {
+    it('should return a non-empty map for an initialized instance', function() {
       $map = (new Job())
         ->setGit(new GitData(null, 'develop'))
         ->setParallel(true)
@@ -81,17 +80,17 @@ class JobTest extends TestCase {
         ->setSourceFiles([new SourceFile('/home/cedx/coveralls.php')])
         ->jsonSerialize();
 
-      $this->assertCount(5, get_object_vars($map));
-      $this->assertTrue($map->parallel);
-      $this->assertEquals('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt', $map->repo_token);
-      $this->assertEquals('2017-01-29T03:43:30+01:00', $map->run_at);
+      expect(get_object_vars($map))->to->have->lengthOf(5);
+      expect($map->parallel)->to->be->true;
+      expect($map->repo_token)->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
+      expect($map->run_at)->to->equal('2017-01-29T03:43:30+01:00');
 
-      $this->assertInstanceOf(\stdClass::class, $map->git);
-      $this->assertEquals('develop', $map->git->branch);
+      expect($map->git)->to->be->an('object');
+      expect($map->git->branch)->to->equal('develop');
 
-      $this->assertCount(1, $map->source_files);
-      $this->assertInstanceOf(\stdClass::class, $map->source_files[0]);
-      $this->assertEquals('/home/cedx/coveralls.php', $map->source_files[0]->name);
+      expect($map->source_files)->to->be->an('array')->and->have->lengthOf(1);
+      expect($map->source_files[0])->to->be->an('object');
+      expect($map->source_files[0]->name)->to->equal('/home/cedx/coveralls.php');
     });
   }
 
@@ -99,14 +98,23 @@ class JobTest extends TestCase {
    * @test ::__toString
    */
   public function testToString() {
-    $job = (string) new Job();
+    $job = (string) (new Job())
+      ->setGit(new GitData(null, 'develop'))
+      ->setParallel(true)
+      ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
+      ->setRunAt('2017-01-29T03:43:30+01:00')
+      ->setSourceFiles([new SourceFile('/home/cedx/coveralls.php')]);
 
-    $this->specify('should start with the class name', function() use ($job) {
-      $this->assertStringStartsWith('coveralls\Job {', $job);
+    it('should start with the class name', function() use ($job) {
+      expect($job)->startWith('coveralls\Job {');
     });
 
-    $this->specify('should contain the instance properties', function() use ($job) {
-      $this->assertContains('"source_files":[]', $job);
+    it('should contain the instance properties', function() use ($job) {
+      expect($job)->to->contain('"git":{')
+        ->and->contain('"parallel":true')
+        ->and->contain('"repo_token":"yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt"')
+        ->and->contain('"run_at":"2017-01-29T03:43:30+01:00"')
+        ->and->contain('"source_files":[{');
     });
   }
 }
