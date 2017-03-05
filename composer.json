@@ -38,17 +38,16 @@
     "ext-pcre": "*",
     "ext-simplexml": "*",
     "ext-spl": "*",
-    "cedx/lcov": "^0.4.1",
+    "cedx/lcov": "^0.5.0",
     "guzzlehttp/guzzle": "^6.2.2",
     "reactivex/rxphp": "^1.5.2",
     "symfony/yaml": "^3.2.4",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
-    "codeception/specify": "^0.4.6",
+    "cedx/phpunit-expect": "^0.1.0",
     "phing/phing": "^2.16.0",
-    "phpdocumentor/phpdocumentor": "^2.9.0",
-    "phpunit/phpunit": "^6.0.7"
+    "phpdocumentor/phpdocumentor": "^2.9.0"
   },
   "scripts": {
     "coverage": "php bin/coveralls --file=var/coverage.xml",
