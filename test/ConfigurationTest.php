@@ -139,7 +139,7 @@ class ConfigurationTest extends TestCase {
   public function testJsonSerialize() {
     it('should return an empty map for a newly created instance', function() {
       $map = (new Configuration())->jsonSerialize();
-      expect(get_object_vars($map))->to->be->empty;
+      expect($map)->to->be->empty;
     });
 
     it('should return a non-empty map for an initialized instance', function() {
