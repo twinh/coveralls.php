@@ -51,7 +51,7 @@
   },
   "scripts": {
     "coverage": "php bin/coveralls --file=var/coverage.xml",
-    "test": "phpunit --colors=auto"
+    "test": "phpunit --colors=auto --verbose"
   },
   "support": {
     "issues": "https://github.com/cedx/coveralls.php/issues"
