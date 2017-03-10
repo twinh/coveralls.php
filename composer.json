@@ -38,10 +38,10 @@
     "ext-pcre": "*",
     "ext-simplexml": "*",
     "ext-spl": "*",
-    "cedx/lcov": "^0.5.0",
-    "guzzlehttp/guzzle": "^6.2.2",
+    "cedx/lcov": "^1.0.0",
+    "guzzlehttp/guzzle": "^6.2.3",
     "reactivex/rxphp": "^1.5.2",
-    "symfony/yaml": "^3.2.4",
+    "symfony/yaml": "^3.2.5",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
