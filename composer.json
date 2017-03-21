@@ -40,8 +40,8 @@
     "ext-spl": "*",
     "cedx/lcov": "^1.0.0",
     "guzzlehttp/guzzle": "^6.2.3",
-    "reactivex/rxphp": "^1.5.2",
-    "symfony/yaml": "^3.2.5",
+    "reactivex/rxphp": "^1.5.3",
+    "symfony/yaml": "^3.2.6",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
