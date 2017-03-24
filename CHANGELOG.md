@@ -1,12 +1,9 @@
 # Changelog
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
-## Version 0.5.0
+## Version 0.4.0
 - Breaking change: dropped the dependency on [Observables](http://reactivex.io/intro.html).
 - Breaking change: the `Client` class is now an `EventEmitter`.
-- Updated the package dependencies.
-
-## Version 0.4.0
 - Ported the unit test assertions from [TDD](https://en.wikipedia.org/wiki/Test-driven_development) to [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development).
 - Updated the package dependencies.
 
