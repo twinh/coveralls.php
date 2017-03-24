@@ -1,19 +1,14 @@
 <?php
-/**
- * Implementation of the `coveralls\test\GitCommitTest` class.
- */
-namespace coveralls\test;
-
-use coveralls\{GitCommit};
+namespace coveralls;
 use PHPUnit\Framework\{TestCase};
 
 /**
- * @coversDefaultClass \coveralls\GitCommit
+ * Tests the features of the `coveralls\GitCommit` class.
  */
 class GitCommitTest extends TestCase {
 
   /**
-   * @test ::fromJSON
+   * @test GitCommit::fromJSON
    */
   public function testFromJSON() {
     it('should return a null reference with a non-object value', function() {
@@ -47,7 +42,7 @@ class GitCommitTest extends TestCase {
   }
 
   /**
-   * @test ::jsonSerialize
+   * @test GitCommit::jsonSerialize
    */
   public function testJsonSerialize() {
     it('should return a map with default values for a newly created instance', function() {
@@ -71,7 +66,7 @@ class GitCommitTest extends TestCase {
   }
 
   /**
-   * @test ::__toString
+   * @test GitCommit::__toString
    */
   public function testToString() {
     $commit = (string) (new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871', 'Hello World!'))

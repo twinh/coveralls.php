@@ -1,19 +1,14 @@
 <?php
-/**
- * Implementation of the `coveralls\test\SourceFileTest` class.
- */
-namespace coveralls\test;
-
-use coveralls\{SourceFile};
+namespace coveralls;
 use PHPUnit\Framework\{TestCase};
 
 /**
- * @coversDefaultClass \coveralls\SourceFile
+ * Tests the features of the `coveralls\SourceFile` class.
  */
 class SourceFileTest extends TestCase {
 
   /**
-   * @test ::fromJSON
+   * @test SourceFile::fromJSON
    */
   public function testFromJSON() {
     it('should return a null reference with a non-object value', function() {
@@ -52,7 +47,7 @@ class SourceFileTest extends TestCase {
   }
 
   /**
-   * @test ::jsonSerialize
+   * @test SourceFile::jsonSerialize
    */
   public function testJsonSerialize() {
     it('should return a map with default values for a newly created instance', function() {
@@ -85,7 +80,7 @@ class SourceFileTest extends TestCase {
   }
 
   /**
-   * @test ::__toString
+   * @test SourceFile::__toString
    */
   public function testToString() {
     $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', 'function main() {}', [null, 2, 0, null, 4, 15, null]);

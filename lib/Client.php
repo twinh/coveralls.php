@@ -1,7 +1,4 @@
 <?php
-/**
- * Implementation of the `coveralls\Client` class.
- */
 namespace coveralls;
 
 use Evenement\{EventEmitterTrait};

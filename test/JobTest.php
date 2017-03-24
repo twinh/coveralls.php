@@ -1,19 +1,14 @@
 <?php
-/**
- * Implementation of the `coveralls\test\JobTest` class.
- */
-namespace coveralls\test;
-
-use coveralls\{GitData, Job, SourceFile};
+namespace coveralls;
 use PHPUnit\Framework\{TestCase};
 
 /**
- * @coversDefaultClass \coveralls\Job
+ * Tests the features of the `coveralls\Job` class.
  */
 class JobTest extends TestCase {
 
   /**
-   * @test ::fromJSON
+   * @test Job::fromJSON
    */
   public function testFromJSON() {
     it('should return a null reference with a non-object value', function() {
@@ -62,7 +57,7 @@ class JobTest extends TestCase {
   }
 
   /**
-   * @test ::jsonSerialize
+   * @test Job::jsonSerialize
    */
   public function testJsonSerialize() {
     it('should return a map with default values for a newly created instance', function() {
@@ -95,7 +90,7 @@ class JobTest extends TestCase {
   }
 
   /**
-   * @test ::__toString
+   * @test Job::__toString
    */
   public function testToString() {
     $job = (string) (new Job())

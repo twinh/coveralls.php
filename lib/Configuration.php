@@ -1,7 +1,4 @@
 <?php
-/**
- * Implementation of the `coveralls\Configuration` class.
- */
 namespace coveralls;
 
 use Symfony\Component\Yaml\{Yaml};

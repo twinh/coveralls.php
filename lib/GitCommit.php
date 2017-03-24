@@ -1,7 +1,4 @@
 <?php
-/**
- * Implementation of the `coveralls\GitCommit` class.
- */
 namespace coveralls;
 
 /**

@@ -1,19 +1,14 @@
 <?php
-/**
- * Implementation of the `coveralls\test\ClientTest` class.
- */
-namespace coveralls\test;
-
-use coveralls\{Client, Configuration, GitData, Job, SourceFile};
+namespace coveralls;
 use PHPUnit\Framework\{TestCase};
 
 /**
- * @coversDefaultClass \coveralls\Client
+ * Tests the features of the `coveralls\Client` class.
  */
 class ClientTest extends TestCase {
 
   /**
-   * @test ::parseCloverReport
+   * @test Client::parseCloverReport
    */
   public function testParseCloverReport() {
     it('should properly parse Clover reports', function() {
@@ -50,7 +45,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @test ::parseLcovReport
+   * @test Client::parseLcovReport
    */
   public function testParseLcovReport() {
     it('should properly parse LCOV reports', function() {
@@ -84,7 +79,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @test ::updateJob
+   * @test Client::updateJob
    */
   public function testUpdateJob() {
     $client = new Client();
@@ -123,7 +118,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @test ::upload
+   * @test Client::upload
    */
   public function testUpload() {
     it('should throw an exception with an empty coverage report', function() {
@@ -132,7 +127,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @test ::uploadJob
+   * @test Client::uploadJob
    */
   public function testUploadJob() {
     it('should throw an exception with an empty coverage job', function() {

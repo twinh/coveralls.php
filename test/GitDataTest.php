@@ -1,19 +1,14 @@
 <?php
-/**
- * Implementation of the `coveralls\test\GitDataTest` class.
- */
-namespace coveralls\test;
-
-use coveralls\{GitCommit, GitData, GitRemote};
+namespace coveralls;
 use PHPUnit\Framework\{TestCase};
 
 /**
- * @coversDefaultClass \coveralls\GitData
+ * Tests the features of the `coveralls\GitData` class.
  */
 class GitDataTest extends TestCase {
 
   /**
-   * @test ::fromJSON
+   * @test GitData::fromJSON
    */
   public function testFromJSON() {
     it('should return a null reference with a non-object value', function() {
@@ -52,7 +47,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * @test ::fromRepository
+   * @test GitData::fromRepository
    */
   public function testFromRepository() {
     it('should retrieve the Git data from the executable output', function() {
@@ -77,7 +72,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * @test ::jsonSerialize
+   * @test GitData::jsonSerialize
    */
   public function testJsonSerialize() {
     it('should return a map with default values for a newly created instance', function() {
@@ -103,7 +98,7 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * @test ::__toString
+   * @test GitData::__toString
    */
   public function testToString() {
     $data = (string) new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]);

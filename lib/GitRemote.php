@@ -1,7 +1,4 @@
 <?php
-/**
- * Implementation of the `coveralls\GitRemote` class.
- */
 namespace coveralls;
 
 /**

@@ -1,14 +1,9 @@
 <?php
-/**
- * Implementation of the `coveralls\test\ConfigurationTest` class.
- */
-namespace coveralls\test;
-
-use coveralls\{Configuration};
+namespace coveralls;
 use PHPUnit\Framework\{TestCase};
 
 /**
- * @coversDefaultClass \coveralls\Configuration
+ * Tests the features of the `coveralls\Configuration` class.
  */
 class ConfigurationTest extends TestCase {
 
@@ -34,7 +29,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::count
+   * @test Configuration::count
    */
   public function testCount() {
     it('should return zero for an empty configuration', function() {
@@ -47,7 +42,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::fromEnvironment
+   * @test Configuration::fromEnvironment
    */
   public function testFromEnvironment() {
     it('should return an empty configuration for an empty environment', function() {
@@ -75,7 +70,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::fromYAML
+   * @test Configuration::fromYAML
    */
   public function testFromYAML() {
     it('should return a null reference with a non-object value', function() {
@@ -93,7 +88,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::getIterator
+   * @test Configuration::getIterator
    */
   public function testGetIterator() {
     it('should return a done iterator if configuration is empty', function() {
@@ -118,7 +113,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::getKeys
+   * @test Configuration::getKeys
    */
   public function testGetKeys() {
     it('should return an empty array for an empty configuration', function() {
@@ -134,7 +129,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::jsonSerialize
+   * @test Configuration::jsonSerialize
    */
   public function testJsonSerialize() {
     it('should return an empty map for a newly created instance', function() {
@@ -151,7 +146,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::loadDefaults
+   * @test Configuration::loadDefaults
    */
   public function testLoadDefaults() {
     it('should properly initialize from a `.coveralls.yml` file', function() {
@@ -163,7 +158,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::merge
+   * @test Configuration::merge
    */
   public function testMerge() {
     it('should have the same entries as the other configuration', function() {
@@ -178,7 +173,7 @@ class ConfigurationTest extends TestCase {
   }
 
   /**
-   * @test ::__toString
+   * @test Configuration::__toString
    */
   public function testToString() {
     $config = (string) new Configuration(['foo' => 'bar', 'bar' => 'baz']);

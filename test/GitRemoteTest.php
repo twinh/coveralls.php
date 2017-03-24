@@ -1,19 +1,14 @@
 <?php
-/**
- * Implementation of the `coveralls\test\GitRemoteTest` class.
- */
-namespace coveralls\test;
-
-use coveralls\{GitRemote};
+namespace coveralls;
 use PHPUnit\Framework\{TestCase};
 
 /**
- * @coversDefaultClass \coveralls\GitRemote
+ * Tests the features of the `coveralls\GitRemote` class.
  */
 class GitRemoteTest extends TestCase {
 
   /**
-   * @test ::fromJSON
+   * @test GitRemote::fromJSON
    */
   public function testFromJSON() {
     it('should return a null reference with a non-object value', function() {
@@ -36,7 +31,7 @@ class GitRemoteTest extends TestCase {
   }
 
   /**
-   * @test ::jsonSerialize
+   * @test GitRemote::jsonSerialize
    */
   public function testJsonSerialize() {
     it('should return a map with default values for a newly created instance', function() {
@@ -55,7 +50,7 @@ class GitRemoteTest extends TestCase {
   }
 
   /**
-   * @test ::__toString
+   * @test GitRemote::__toString
    */
   public function testToString() {
     $remote = (string) new GitRemote('origin', 'https://github.com/cedx/coveralls.php.git');

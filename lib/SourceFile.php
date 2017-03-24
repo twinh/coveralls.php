@@ -1,7 +1,4 @@
 <?php
-/**
- * Implementation of the `coveralls\SourceFile` class.
- */
 namespace coveralls;
 
 /**

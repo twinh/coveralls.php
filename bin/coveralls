@@ -1,8 +1,5 @@
 #!/usr/bin/env php
 <?php
-/**
- * Command line interface.
- */
 namespace coveralls\cli;
 use coveralls\{Client};
 
