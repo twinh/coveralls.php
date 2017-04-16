@@ -62,6 +62,7 @@ class GitDataTest extends TestCase {
       expect($remotes)->to->not->be->empty;
       expect($remotes[0])->to->be->instanceOf(GitRemote::class);
 
+      /** @var GitRemote[] $origin */
       $origin = array_filter($remotes->getArrayCopy(), function(GitRemote $remote) {
         return $remote->getName() == 'origin';
       });

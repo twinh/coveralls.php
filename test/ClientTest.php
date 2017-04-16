@@ -17,6 +17,8 @@ class ClientTest extends TestCase {
       };
 
       $job = $parseCloverReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/clover.xml'));
+
+      /** @var SourceFile[] $files */
       $files = $job->getSourceFiles();
       expect($files)->to->have->lengthOf(3);
 
@@ -54,6 +56,8 @@ class ClientTest extends TestCase {
       };
 
       $job = $parseLcovReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/lcov.info'));
+
+      /** @var SourceFile[] $files */
       $files = $job->getSourceFiles();
       expect($files)->to->have->lengthOf(3);
 

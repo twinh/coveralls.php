@@ -64,11 +64,13 @@ class GitCommit implements \JsonSerializable {
     if (is_array($map)) $map = (object) $map;
     if (!is_object($map)) return null;
 
-    return (new static(
-        isset($map->id) && is_string($map->id) ? $map->id : '',
-        isset($map->message) && is_string($map->message) ? $map->message : ''
-      ))
-      ->setAuthorEmail(isset($map->author_email) && is_string($map->author_email) ? $map->author_email : '')
+    /** @var GitCommit $commit */
+    $commit = new static(
+      isset($map->id) && is_string($map->id) ? $map->id : '',
+      isset($map->message) && is_string($map->message) ? $map->message : ''
+    );
+
+    return $commit->setAuthorEmail(isset($map->author_email) && is_string($map->author_email) ? $map->author_email : '')
       ->setAuthorName(isset($map->author_name) && is_string($map->author_name) ? $map->author_name : '')
       ->setCommitterEmail(isset($map->committer_email) && is_string($map->committer_email) ? $map->committer_email : '')
       ->setCommitterName(isset($map->committer_name) && is_string($map->committer_name) ? $map->committer_name : '');

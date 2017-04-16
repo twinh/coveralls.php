@@ -79,13 +79,16 @@ class Job implements \JsonSerializable {
    * @return Job The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJSON($map) {
+    if (is_array($map)) $map = (object) $map;
+    if (!is_object($map)) return null;
+
     $transform = function(array $files) {
       return array_filter(array_map(function($item) { return SourceFile::fromJSON($item); }, $files));
     };
 
-    if (is_array($map)) $map = (object) $map;
-    return !is_object($map) ? null : (new static())
-      ->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
+    /** @var Job $job */
+    $job = new static();
+    return $job->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
       ->setGit(isset($map->git) ? GitData::fromJSON($map->git) : null)
       ->setParallel(isset($map->parallel) && is_bool($map->parallel) ? $map->parallel : false)
       ->setRepoToken(isset($map->repo_token) && is_string($map->repo_token) ? $map->repo_token : '')
