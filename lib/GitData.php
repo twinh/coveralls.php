@@ -72,7 +72,7 @@ class GitData implements \JsonSerializable {
     if ($hasPath) chdir($path);
 
     $branch = trim(`git rev-parse --abbrev-ref HEAD`);
-    $commit = (new GitCommit())
+    $commit = (new GitCommit)
       ->setAuthorEmail(trim(trim(`git log -1 --pretty=format:'%ae'`), "'"))
       ->setAuthorName(trim(trim(`git log -1 --pretty=format:'%aN'`), "'"))
       ->setCommitterEmail(trim(trim(`git log -1 --pretty=format:'%ce'`), "'"))

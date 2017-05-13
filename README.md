@@ -53,7 +53,7 @@ use coveralls\{Client};
 
 try {
   $coverage = @file_get_contents('/path/to/coverage.report');
-  (new Client())->upload($coverage);
+  (new Client)->upload($coverage);
   echo 'The report was sent successfully.';
 }
 

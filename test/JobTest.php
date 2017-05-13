@@ -61,13 +61,13 @@ class JobTest extends TestCase {
    */
   public function testJsonSerialize() {
     it('should return a map with default values for a newly created instance', function() {
-      $map = (new Job())->jsonSerialize();
+      $map = (new Job)->jsonSerialize();
       expect(get_object_vars($map))->to->have->lengthOf(1);
       expect($map->source_files)->to->be->an('array')->and->be->empty;
     });
 
     it('should return a non-empty map for an initialized instance', function() {
-      $map = (new Job())
+      $map = (new Job)
         ->setGit(new GitData(null, 'develop'))
         ->setParallel(true)
         ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
@@ -93,7 +93,7 @@ class JobTest extends TestCase {
    * @test Job::__toString
    */
   public function testToString() {
-    $job = (string) (new Job())
+    $job = (string) (new Job)
       ->setGit(new GitData(null, 'develop'))
       ->setParallel(true)
       ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')

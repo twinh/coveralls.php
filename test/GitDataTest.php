@@ -77,7 +77,7 @@ class GitDataTest extends TestCase {
    */
   public function testJsonSerialize() {
     it('should return a map with default values for a newly created instance', function() {
-      $map = (new GitData())->jsonSerialize();
+      $map = (new GitData)->jsonSerialize();
       expect(get_object_vars($map))->to->have->lengthOf(3);
       expect($map->branch)->to->be->empty;
       expect($map->head)->to->be->null;

@@ -87,7 +87,7 @@ class Job implements \JsonSerializable {
     };
 
     /** @var Job $job */
-    $job = new static();
+    $job = new static;
     return $job->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
       ->setGit(isset($map->git) ? GitData::fromJSON($map->git) : null)
       ->setParallel(isset($map->parallel) && is_bool($map->parallel) ? $map->parallel : false)
@@ -185,7 +185,7 @@ class Job implements \JsonSerializable {
    * @return \stdClass The map in JSON format corresponding to this object.
    */
   public function jsonSerialize(): \stdClass {
-    $map = new \stdClass();
+    $map = new \stdClass;
 
     if (mb_strlen($repoToken = $this->getRepoToken())) $map->repo_token = $repoToken;
     if (mb_strlen($serviceName = $this->getServiceName())) $map->service_name = $serviceName;

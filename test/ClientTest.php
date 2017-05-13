@@ -16,7 +16,7 @@ class ClientTest extends TestCase {
         return $this->parseCloverReport($report);
       };
 
-      $job = $parseCloverReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/clover.xml'));
+      $job = $parseCloverReport->call(new Client, @file_get_contents(__DIR__.'/fixtures/clover.xml'));
 
       /** @var SourceFile[] $files */
       $files = $job->getSourceFiles();
@@ -42,7 +42,7 @@ class ClientTest extends TestCase {
       expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
 
       $this->expectException(\InvalidArgumentException::class);
-      $parseCloverReport->call(new Client(), '<project></project>');
+      $parseCloverReport->call(new Client, '<project></project>');
     });
   }
 
@@ -55,7 +55,7 @@ class ClientTest extends TestCase {
         return $this->parseLcovReport($report);
       };
 
-      $job = $parseLcovReport->call(new Client(), @file_get_contents(__DIR__.'/fixtures/lcov.info'));
+      $job = $parseLcovReport->call(new Client, @file_get_contents(__DIR__.'/fixtures/lcov.info'));
 
       /** @var SourceFile[] $files */
       $files = $job->getSourceFiles();
@@ -86,14 +86,14 @@ class ClientTest extends TestCase {
    * @test Client::updateJob
    */
   public function testUpdateJob() {
-    $client = new Client();
-    $job = new Job();
+    $client = new Client;
+    $job = new Job;
     $updateJob = function(Job $job, Configuration $config) {
       $this->updateJob($job, $config);
     };
 
     it('should not modify the job if the configuration is empty', function() use ($client, $job, $updateJob) {
-      $updateJob->call($client, $job, new Configuration());
+      $updateJob->call($client, $job, new Configuration);
       expect($job->getGit())->to->be->null;
       expect($job->isParallel())->to->be->false;
       expect($job->getRepoToken())->to->be->empty;
@@ -126,7 +126,7 @@ class ClientTest extends TestCase {
    */
   public function testUpload() {
     it('should throw an exception with an empty coverage report', function() {
-      expect(function() { (new Client())->upload(''); })->to->throw(\InvalidArgumentException::class);
+      expect(function() { (new Client)->upload(''); })->to->throw(\InvalidArgumentException::class);
     });
   }
 
@@ -135,7 +135,7 @@ class ClientTest extends TestCase {
    */
   public function testUploadJob() {
     it('should throw an exception with an empty coverage job', function() {
-      expect(function() { (new Client())->uploadJob(new Job()); })->to->throw(\InvalidArgumentException::class);
+      expect(function() { (new Client)->uploadJob(new Job); })->to->throw(\InvalidArgumentException::class);
     });
   }
 }

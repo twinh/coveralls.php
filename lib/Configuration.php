@@ -37,7 +37,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @return Configuration The newly created configuration.
    */
   public static function fromEnvironment(array $env = null): self {
-    $config = new static();
+    $config = new static;
     if (!is_array($env)) $env = $_ENV ?: $_SERVER;
 
     // Standard.

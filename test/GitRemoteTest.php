@@ -35,7 +35,7 @@ class GitRemoteTest extends TestCase {
    */
   public function testJsonSerialize() {
     it('should return a map with default values for a newly created instance', function() {
-      $map = (new GitRemote())->jsonSerialize();
+      $map = (new GitRemote)->jsonSerialize();
       expect(get_object_vars($map))->to->have->lengthOf(2);
       expect($map->name)->to->be->empty;
       expect($map->url)->to->be->empty;

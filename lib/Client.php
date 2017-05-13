@@ -106,7 +106,7 @@ class Client {
       $request = (new ServerRequest('POST', $this->getEndPoint().'/api/v1/jobs'))->withBody($body);
       $this->emit('request', [$request]);
 
-      $response = (new HTTPClient())->send($request, ['multipart' => [$jsonFile]]);
+      $response = (new HTTPClient)->send($request, ['multipart' => [$jsonFile]]);
       $this->emit('reponse', [$response]);
 
       if (($code = $response->getStatusCode()) != 200)

@@ -129,7 +129,7 @@ class GitCommit implements \JsonSerializable {
    * @return \stdClass The map in JSON format corresponding to this object.
    */
   public function jsonSerialize(): \stdClass {
-    $map = new \stdClass();
+    $map = new \stdClass;
     $map->id = $this->getId();
     if (mb_strlen($authorEmail = $this->getAuthorEmail())) $map->author_email = $authorEmail;
     if (mb_strlen($authorName = $this->getAuthorName())) $map->author_name = $authorName;

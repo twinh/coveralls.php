@@ -11,7 +11,7 @@ class ConfigurationTest extends TestCase {
    * @test \ArrayAccess
    */
   public function testArrayAccess() {
-    $config = new Configuration();
+    $config = new Configuration;
 
     it('should handle the existence of an element', function() use ($config) {
       expect($config->offsetExists('foo'))->to->be->false;
@@ -33,7 +33,7 @@ class ConfigurationTest extends TestCase {
    */
   public function testCount() {
     it('should return zero for an empty configuration', function() {
-      expect(new Configuration())->to->have->lengthOf(0);
+      expect(new Configuration)->to->have->lengthOf(0);
     });
 
     it('should return the number of entries for a non-empty configuration', function() {
@@ -92,7 +92,7 @@ class ConfigurationTest extends TestCase {
    */
   public function testGetIterator() {
     it('should return a done iterator if configuration is empty', function() {
-      $iterator = (new Configuration())->getIterator();
+      $iterator = (new Configuration)->getIterator();
       expect($iterator->valid())->to->be->false;
     });
 
@@ -117,7 +117,7 @@ class ConfigurationTest extends TestCase {
    */
   public function testGetKeys() {
     it('should return an empty array for an empty configuration', function() {
-      expect((new Configuration())->getKeys())->to->be->empty;
+      expect((new Configuration)->getKeys())->to->be->empty;
     });
 
     it('should return the list of keys for a non-empty configuration', function() {
@@ -133,7 +133,7 @@ class ConfigurationTest extends TestCase {
    */
   public function testJsonSerialize() {
     it('should return an empty map for a newly created instance', function() {
-      $map = (new Configuration())->jsonSerialize();
+      $map = (new Configuration)->jsonSerialize();
       expect($map)->to->be->empty;
     });
 
@@ -162,7 +162,7 @@ class ConfigurationTest extends TestCase {
    */
   public function testMerge() {
     it('should have the same entries as the other configuration', function() {
-      $config = new Configuration();
+      $config = new Configuration;
       expect($config)->to->have->lengthOf(0);
 
       $config->merge(new Configuration(['foo' => 'bar', 'bar' => 'baz']));
