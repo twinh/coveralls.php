@@ -1,6 +1,10 @@
 # Changelog
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
+## Version 1.0.0
+- First stable release.
+- Updated the package dependencies.
+
 ## Version 0.4.0
 - Breaking change: dropped the dependency on [Observables](http://reactivex.io/intro.html).
 - Breaking change: the `Client` class is now an `EventEmitter`.
