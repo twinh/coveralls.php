@@ -122,7 +122,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @return Configuration The default configuration.
    */
   public static function loadDefaults(string $coverallsFile = ''): self {
-    if (!mb_strlen($coverallsFile)) $coverallsFile = getcwd().'/.coveralls.yml';
+    if (!mb_strlen($coverallsFile)) $coverallsFile = '.coveralls.yml';
 
     $defaults = static::fromEnvironment();
     if ($yaml = @file_get_contents($coverallsFile)) {
