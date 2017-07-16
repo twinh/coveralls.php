@@ -184,25 +184,36 @@ class Client {
   /**
    * Parses the specified [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage report.
    * @param string $report A coverage report in LCOV format.
-   * @return Job The job corresponding to the specified coverage report.
-   * @throws \RuntimeException A source file was not found.
+   * @return Observable The job corresponding to the specified coverage report.
    */
-  private function parseLcovReport(string $report): Job {
+  private function parseLcovReport(string $report): Observable {
     $records = Report::parse($report)->getRecords()->getArrayCopy();
     $workingDir = getcwd();
 
-    return new Job(array_map(function(Record $record) use ($workingDir) {
-      $path = $record->getSourceFile();
-      $source = @file_get_contents($path);
-      if (!$source) throw new \RuntimeException("Source file not found: $path");
+    $sourceFiles = array_map(function(Record $record): string {
+      return $record->getSourceFile();
+    }, $records);
 
-      $lines = preg_split('/\r?\n/', $source);
-      $coverage = new \SplFixedArray(count($lines));
-      foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
+    return Observable::fromArray($sourceFiles)
+      ->map(function(string $path) use ($workingDir): SourceFile {
+        $data = @file_get_contents($path);
+        if (!$data) throw new \RuntimeException("Source file not found: $path");
+        return new SourceFile(Path::makeRelative($path, $workingDir), md5($data), $data);
+      })
+      ->toArray()
+      ->map(function(array $results) use ($records): Job {
+        foreach ($results as $index => $sourceFile) {
+          /** @var Record $record */
+          $record = $records[$index];
+          $lines = preg_split('/\r?\n/', $sourceFile->getSource());
 
-      $filename = Path::makeRelative($path, $workingDir);
-      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
-    }, $records));
+          $coverage = new \SplFixedArray(count($lines));
+          foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
+          $sourceFile->setCoverage($coverage->toArray());
+        }
+
+        return new Job($results);
+      });
   }
 
   /**

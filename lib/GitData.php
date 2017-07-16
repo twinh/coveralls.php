@@ -95,7 +95,7 @@ class GitData implements \JsonSerializable {
         $index = 0;
         foreach ($commands as $key => $value) $commands[$key] = $results[$index++];
       })
-      ->map(function() use (&$commands): static {
+      ->map(function() use (&$commands): self {
         $remotes = [];
         foreach (preg_split('/\r?\n/', $commands['remotes']) as $remote) {
           $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));

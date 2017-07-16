@@ -126,7 +126,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
       ->map(function(string $path): string {
         return (string) @file_get_contents($path);
       })
-      ->map(function(string $data): static {
+      ->map(function(string $data): self {
         $defaults = static::fromEnvironment();
         $config = static::fromYAML($data);
         if ($config) $defaults->merge($config);

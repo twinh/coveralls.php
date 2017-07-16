@@ -3,6 +3,7 @@ namespace coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
+use Rx\{Observable};
 use Rx\Subject\{Subject};
 
 /**
@@ -72,34 +73,33 @@ class ClientTest extends TestCase {
    */
   public function testParseLcovReport() {
     it('should properly parse LCOV reports', function() {
-      $parseLcovReport = function(string $report): Job {
+      $parseLcovReport = function(string $report): Observable {
         return $this->parseLcovReport($report);
       };
 
-      $job = $parseLcovReport->call(new Client, @file_get_contents(__DIR__.'/fixtures/lcov.info'));
+      $parseLcovReport->call(new Client, @file_get_contents('test/fixtures/lcov.info'))->subscribe(function(Job $job) {
+        $files = $job->getSourceFiles();
+        expect($files)->to->have->lengthOf(3);
 
-      /** @var SourceFile[] $files */
-      $files = $job->getSourceFiles();
-      expect($files)->to->have->lengthOf(3);
+        expect($files[0])->to->be->instanceOf(SourceFile::class);
+        expect($files[0]->getName())->to->equal('lib/Client.php');
+        expect($files[0]->getSourceDigest())->to->not->be->empty;
 
-      expect($files[0])->to->be->instanceOf(SourceFile::class);
-      expect($files[0]->getName())->to->equal('lib/Client.php');
-      expect($files[0]->getSourceDigest())->to->not->be->empty;
+        $subset = [null, 2, 2, 2, 2, null];
+        expect(array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()))->to->equal($subset);
 
-      $subset = [null, 2, 2, 2, 2, null];
-      expect(array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()))->to->equal($subset);
+        expect($files[1]->getName())->to->equal('lib/Configuration.php');
+        expect($files[1]->getSourceDigest())->to->not->be->empty;
 
-      expect($files[1]->getName())->to->equal('lib/Configuration.php');
-      expect($files[1]->getSourceDigest())->to->not->be->empty;
+        $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
+        expect(array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()))->to->equal($subset);
 
-      $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-      expect(array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()))->to->equal($subset);
+        expect($files[2]->getName())->to->equal('lib/GitCommit.php');
+        expect($files[2]->getSourceDigest())->to->not->be->empty;
 
-      expect($files[2]->getName())->to->equal('lib/GitCommit.php');
-      expect($files[2]->getSourceDigest())->to->not->be->empty;
-
-      $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-      expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
+        $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
+        expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
+      });
     });
   }
 
