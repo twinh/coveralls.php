@@ -2,6 +2,7 @@
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
 ## Version 2.0.0
+- Replaced [phpDocumentor](https://www.phpdoc.org) documentation generator by [ApiGen](https://github.com/ApiGen/ApiGen).
 
 ## Version 1.0.0
 - First stable release.

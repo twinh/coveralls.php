@@ -45,9 +45,10 @@
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
+    "apigen/apigen": "^5.0.0-RC2",
     "cedx/phpunit-expect": "^0.2.0",
     "phing/phing": "^2.16.0",
-    "phpdocumentor/phpdocumentor": "^2.9.0"
+    "roave/better-reflection": "@dev"
   },
   "scripts": {
     "coverage": "php bin/coveralls --file=var/coverage.xml",
