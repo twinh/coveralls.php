@@ -82,11 +82,12 @@ class Client {
    * Uploads the specified code coverage report to the Coveralls service.
    * @param string $coverage A coverage report.
    * @param Configuration $config The environment settings.
+   * @return Observable Completes when the operation is done.
    * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
-  public function upload(string $coverage, Configuration $config = null) {
+  public function upload(string $coverage, Configuration $config = null): Observable {
     $coverage = trim($coverage);
-    if (!mb_strlen($coverage)) throw new \InvalidArgumentException('The specified coverage report is empty.');
+    if (!mb_strlen($coverage)) return Observable::error(new \InvalidArgumentException('The specified coverage report is empty.'));
 
     $job = null;
     $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
@@ -115,14 +116,14 @@ class Client {
   /**
    * Uploads the specified job to the Coveralls service.
    * @param Job $job The job to be uploaded.
+   * @return Observable Completes when the operation is done.
    * @emits \Psr\Http\Message\RequestInterface The "request" event.
    * @emits \Psr\Http\Message\ResponseInterface The "response" event.
-   * @throws \InvalidArgumentException The job does not meet the requirements.
    * @throws \RuntimeException An error occurred while uploading the report.
    */
-  public function uploadJob(Job $job) {
+  public function uploadJob(Job $job): Observable {
     if (!$job->getRepoToken() && !$job->getServiceName())
-      throw new \InvalidArgumentException('The job does not meet the requirements.');
+      return Observable::error(new \InvalidArgumentException('The job does not meet the requirements.'));
 
     $jsonFile = [
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
@@ -130,7 +131,6 @@ class Client {
       'name' => 'json_file'
     ];
 
-    try {
       $body = new MultipartStream([$jsonFile]);
       $request = (new ServerRequest('POST', $this->getEndPoint().'/api/v1/jobs'))->withBody($body);
       $this->onRequest->onNext($request);
@@ -140,11 +140,6 @@ class Client {
 
       if (($code = $response->getStatusCode()) != 200)
         throw new \DomainException("$code {$response->getReasonPhrase()}");
-    }
-
-    catch (\Throwable $e) {
-      throw new \RuntimeException('An error occurred while uploading the report.');
-    }
   }
 
   /**

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace coveralls;
 
-use function PHPUnit\Expect\{expect, it};
+use function PHPUnit\Expect\{expect, fail, it};
 use PHPUnit\Framework\{TestCase};
 use Rx\{Observable};
 use Rx\Subject\{Subject};
@@ -150,7 +150,17 @@ class ClientTest extends TestCase {
    */
   public function testUpload() {
     it('should throw an exception with an empty coverage report', function() {
-      expect(function() { (new Client)->upload(''); })->to->throw(\InvalidArgumentException::class);
+      (new Client)->upload('')->subscribe(null,
+        function(\Throwable $e) { expect($e)->to->be->instanceOf(\InvalidArgumentException::class); },
+        function() { fail('Error not thrown.'); }
+      );
+    });
+
+    it('should throw an error with an invalid coverage report', function() {
+      (new Client)->upload('end_of_record')->subscribe(null,
+        function(\Throwable $e) { expect($e)->to->be->instanceOf(\InvalidArgumentException::class); },
+        function() { fail('Error not thrown.'); }
+      );
     });
   }
 
@@ -159,7 +169,10 @@ class ClientTest extends TestCase {
    */
   public function testUploadJob() {
     it('should throw an exception with an empty coverage job', function() {
-      expect(function() { (new Client)->uploadJob(new Job); })->to->throw(\InvalidArgumentException::class);
+      (new Client)->uploadJob(new Job)->subscribe(null,
+        function(\Throwable $e) { expect($e)->to->be->instanceOf(\InvalidArgumentException::class); },
+        function() { fail('Error not thrown.'); }
+      );
     });
   }
 }
