@@ -1,6 +1,8 @@
 # Changelog
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
+## Version 2.0.0
+
 ## Version 1.0.0
 - First stable release.
 - Updated the package dependencies.

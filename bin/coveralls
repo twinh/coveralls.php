@@ -6,7 +6,7 @@ use coveralls\{Client};
 /**
  * @var string The version number of this package.
  */
-const VERSION = '1.0.0';
+const VERSION = '2.0.0';
 
 /**
  * Prints the usage information.

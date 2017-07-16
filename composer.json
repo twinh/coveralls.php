@@ -25,7 +25,9 @@
     "code",
     "coverage",
     "coveralls",
-    "lcov"
+    "lcov",
+    "observable",
+    "rxphp"
   ],
   "require": {
     "php": ">=7.0.0",
