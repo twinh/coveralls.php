@@ -39,9 +39,9 @@
     "ext-simplexml": "*",
     "ext-spl": "*",
     "cedx/lcov": "^1.0.0",
-    "evenement/evenement": "^2.0.0",
-    "guzzlehttp/guzzle": "^6.2.3",
-    "symfony/yaml": "^3.2.8",
+    "guzzlehttp/guzzle": "^6.3.0",
+    "reactivex/rxphp": "^2.0.2",
+    "symfony/yaml": "^3.3.4",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
