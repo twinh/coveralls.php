@@ -3,11 +3,30 @@ namespace coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
+use Rx\Subject\{Subject};
 
 /**
  * Tests the features of the `coveralls\Client` class.
  */
 class ClientTest extends TestCase {
+
+  /**
+   * @test Client::onRequest
+   */
+  public function testOnRequest() {
+    it('should return an `Observable` instead of the underlying `Subject`', function() {
+      expect((new Client)->onRequest())->to->not->be->instanceOf(Subject::class);
+    });
+  }
+
+  /**
+   * @test Client::onResponse
+   */
+  public function testOnResponse() {
+    it('should return an `Observable` instead of the underlying `Subject`', function() {
+      expect((new Client)->onResponse())->to->not->be->instanceOf(Subject::class);
+    });
+  }
 
   /**
    * @test Client::parseCloverReport

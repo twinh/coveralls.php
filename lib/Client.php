@@ -1,17 +1,17 @@
 <?php
 namespace coveralls;
 
-use Evenement\{EventEmitterTrait};
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, ServerRequest};
 use lcov\{Record, Report, Token};
+use Rx\{Observable};
+use Rx\Subject\{Subject};
 use Webmozart\PathUtil\{Path};
 
 /**
  * Uploads code coverage reports to the [Coveralls](https://coveralls.io) service.
  */
 class Client {
-  use EventEmitterTrait;
 
   /**
    * @var string The URL of the default API end point.
@@ -24,10 +24,22 @@ class Client {
   private $endPoint;
 
   /**
+   * @var Subject The handler of "request" events.
+   */
+  private $onRequest;
+
+  /**
+   * @var Subject The handler of "response" events.
+   */
+  private $onResponse;
+
+  /**
    * Initializes a new instance of the class.
    * @param string $endPoint The URL of the API end point.
    */
   public function __construct(string $endPoint = self::DEFAULT_ENDPOINT) {
+    $this->onRequest = new Subject();
+    $this->onResponse = new Subject();
     $this->setEndPoint($endPoint);
   }
 
@@ -37,6 +49,22 @@ class Client {
    */
   public function getEndPoint(): string {
     return $this->endPoint;
+  }
+
+  /**
+   * Gets the stream of "request" events.
+   * @return Observable The stream of "request" events.
+   */
+  public function onRequest(): Observable {
+    return $this->onRequest->asObservable();
+  }
+
+  /**
+   * Gets the stream of "response" events.
+   * @return Observable The stream of "response" events.
+   */
+  public function onResponse(): Observable {
+    return $this->onResponse->asObservable();
   }
 
   /**
@@ -86,8 +114,8 @@ class Client {
   /**
    * Uploads the specified job to the Coveralls service.
    * @param Job $job The job to be uploaded.
-   * @emits \GuzzleHttp\Psr7\ServerRequest The "request" event.
-   * @emits \GuzzleHttp\Psr7\Response The "response" event.
+   * @emits \Psr\Http\Message\RequestInterface The "request" event.
+   * @emits \Psr\Http\Message\ResponseInterface The "response" event.
    * @throws \InvalidArgumentException The job does not meet the requirements.
    * @throws \RuntimeException An error occurred while uploading the report.
    */
@@ -104,10 +132,10 @@ class Client {
     try {
       $body = new MultipartStream([$jsonFile]);
       $request = (new ServerRequest('POST', $this->getEndPoint().'/api/v1/jobs'))->withBody($body);
-      $this->emit('request', [$request]);
+      $this->onRequest->onNext($request);
 
       $response = (new HTTPClient)->send($request, ['multipart' => [$jsonFile]]);
-      $this->emit('reponse', [$response]);
+      $this->onResponse->onNext($response);
 
       if (($code = $response->getStatusCode()) != 200)
         throw new \DomainException("$code {$response->getReasonPhrase()}");
@@ -183,17 +211,17 @@ class Client {
    * @param Configuration $config The parameters to define.
    */
   private function updateJob(Job $job, Configuration $config) {
-    if (mb_strlen($config['repo_token']) || mb_strlen($config['repo_secret_token']))
-      $job->setRepoToken($config['repo_token'] ?: $config['repo_secret_token']);
+    if (isset($config['repo_token']) || isset($config['repo_secret_token']))
+      $job->setRepoToken($config['repo_token'] ?? $config['repo_secret_token']);
 
-    if (mb_strlen($config['parallel'])) $job->setParallel($config['parallel'] == 'true');
-    if (mb_strlen($config['run_at'])) $job->setRunAt($config['run_at']);
-    if (mb_strlen($config['service_job_id'])) $job->setServiceJobId($config['service_job_id']);
-    if (mb_strlen($config['service_name'])) $job->setServiceName($config['service_name']);
-    if (mb_strlen($config['service_number'])) $job->setServiceNumber($config['service_number']);
-    if (mb_strlen($config['service_pull_request'])) $job->setServicePullRequest($config['service_pull_request']);
+    if (isset($config['parallel'])) $job->setParallel($config['parallel'] == 'true');
+    if (isset($config['run_at'])) $job->setRunAt($config['run_at']);
+    if (isset($config['service_job_id'])) $job->setServiceJobId($config['service_job_id']);
+    if (isset($config['service_name'])) $job->setServiceName($config['service_name']);
+    if (isset($config['service_number'])) $job->setServiceNumber($config['service_number']);
+    if (isset($config['service_pull_request'])) $job->setServicePullRequest($config['service_pull_request']);
 
-    $hasGitData = count(array_filter($config->getKeys(), function($key) {
+    $hasGitData = count(array_filter($config->getKeys(), function(string $key): bool {
       return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
     })) > 0;
 
