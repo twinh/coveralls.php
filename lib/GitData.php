@@ -101,7 +101,7 @@ class GitData implements \JsonSerializable {
         $remotes = [];
         foreach (preg_split('/\r?\n/', $commands['remotes']) as $remote) {
           $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
-          if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : null);
+          if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
         }
 
         return new static(GitCommit::fromJSON($commands), $commands['branch'], array_values($remotes));

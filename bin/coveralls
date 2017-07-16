@@ -4,11 +4,47 @@ declare(strict_types=1);
 namespace coveralls\cli;
 
 use coveralls\{Client};
+use Rx\{Observable, Scheduler};
 
 /**
  * @var string The version number of this package.
  */
 const VERSION = '2.0.0';
+
+/**
+ * Application entry point.
+ * @return Observable Completes when the program is terminated.
+ */
+function main(): Observable {
+  // Initialize the application.
+  @cli_set_process_title('Coveralls.php');
+  Scheduler::setDefaultFactory([Scheduler::class, 'getImmediate']);
+
+  // Parse the command line arguments.
+  $options = getopt('f:hv', ['file:', 'help', 'version']);
+
+  if (isset($options['v']) || isset($options['version'])) {
+    echo VERSION, PHP_EOL;
+    exit(0);
+  }
+
+  if (isset($options['h']) || isset($options['help'])) printUsage();
+  if (!isset($options['f']) && !isset($options['file'])) printUsage();
+
+  // Run the program.
+  return Observable::of($options['f'] ?? $options['file'])
+    ->map(function(string $path): string {
+      return (string) @file_get_contents($path);
+    })
+    ->flatMap(function(string $coverage): Observable {
+      if (!mb_strlen($coverage)) return Observable::error(new \RuntimeException('The specified file is not found.'));
+
+      $env = $_ENV ?: $_SERVER;
+      $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
+      echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
+      return $client->upload($coverage);
+    });
+}
 
 /**
  * Prints the usage information.
@@ -23,44 +59,12 @@ function printUsage() {
   echo '-f, --file       path to the coverage report', PHP_EOL;
   echo '-h, --help       output usage information', PHP_EOL;
   echo '-v, --version    output the version number', PHP_EOL;
+  exit(0);
 }
 
-// Initialize the application.
-@cli_set_process_title('Coveralls.php');
+// Start the application.
 require_once is_file($path = __DIR__.'/../vendor/autoload.php') ? $path : __DIR__.'/../../../autoload.php';
-
-// Parse the command line arguments.
-$options = getopt('f:hv', ['file:', 'help', 'version']);
-
-if (isset($options['h']) || isset($options['help'])) {
-  printUsage();
-  exit(0);
-}
-
-if (isset($options['v']) || isset($options['version'])) {
-  echo VERSION, PHP_EOL;
-  exit(0);
-}
-
-if (!isset($options['f']) && !isset($options['file'])) {
-  printUsage();
+main()->subscribe(null, function(\Throwable $error) {
+  echo $error, PHP_EOL;
   exit(1);
-}
-
-// Upload the coverage report.
-try {
-  $file = $options['f'] ?? $options['file'];
-  if (!is_file($file)) throw new \RuntimeException('The specified file is not found.');
-
-  $env = $_ENV ?: $_SERVER;
-  $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
-  $coverage = @file_get_contents($file);
-
-  echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
-  $client->upload($coverage);
-}
-
-catch (\Throwable $e) {
-  echo $e->getMessage(), PHP_EOL;
-  exit(2);
-}
+});

@@ -39,7 +39,7 @@ class ClientTest extends TestCase {
     };
 
     it('should properly parse Clover reports', function() use ($parseCloverReport) {
-      $parseCloverReport->call(new Client, @file_get_contents('test/fixtures/clover.xml'))->subscribe(function(Job $job) {
+      $parseCloverReport->call(new Client, file_get_contents('test/fixtures/clover.xml'))->subscribe(function(Job $job) {
         $files = $job->getSourceFiles();
         expect($files)->to->have->lengthOf(3);
 
@@ -80,7 +80,7 @@ class ClientTest extends TestCase {
         return $this->parseLcovReport($report);
       };
 
-      $parseLcovReport->call(new Client, @file_get_contents('test/fixtures/lcov.info'))->subscribe(function(Job $job) {
+      $parseLcovReport->call(new Client, file_get_contents('test/fixtures/lcov.info'))->subscribe(function(Job $job) {
         $files = $job->getSourceFiles();
         expect($files)->to->have->lengthOf(3);
 
