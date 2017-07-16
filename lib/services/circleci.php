@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 namespace coveralls\services\circleci;
 
 use coveralls\{Configuration};

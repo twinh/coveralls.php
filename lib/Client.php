@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 namespace coveralls;
 
 use GuzzleHttp\{Client as HTTPClient};
@@ -150,36 +150,35 @@ class Client {
   /**
    * Parses the specified [Clover](https://www.atlassian.com/software/clover) coverage report.
    * @param string $report A coverage report in LCOV format.
-   * @return Job The job corresponding to the specified coverage report.
-   * @throws \InvalidArgumentException The specified Clover report has an invalid format.
+   * @return Observable The job corresponding to the specified coverage report.
    * @throws \RuntimeException A source file was not found.
    */
-  private function parseCloverReport(string $report): Job {
+  private function parseCloverReport(string $report): Observable {
     $xml = simplexml_load_string($report);
     if (!$xml || !$xml->count() || !$xml->project->count())
-      throw new \InvalidArgumentException('The specified Clover report is invalid.'.$report);
+      return Observable::error(new \InvalidArgumentException('The specified Clover report is invalid.'));
 
-    $sourceFiles = [];
+    $files = array_merge($xml->xpath('/coverage/project/file') ?: [], $xml->xpath('/coverage/project/package/file') ?: []);
     $workingDir = getcwd();
 
-    foreach (['/coverage/project/file', '/coverage/project/package/file'] as $xpath) {
-      foreach ($xml->xpath($xpath) as $file) {
+    return Observable::fromArray($files)
+      ->map(function(\SimpleXMLElement $file) use ($workingDir): SourceFile {
         $path = (string) $file['name'];
-        $source = @file_get_contents($path);
-        if (!$source) throw new \RuntimeException("Source file not found: $path");
+        $data = @file_get_contents($path);
+        if (!$data) throw new \RuntimeException("Source file not found: $path");
 
-        $lines = preg_split('/\r?\n/', $source);
+        $lines = preg_split('/\r?\n/', $data);
         $coverage = new \SplFixedArray(count($lines));
         foreach ($file->line as $line) {
           if ((string) $line['type'] == 'stmt') $coverage[(int) $line['num'] - 1] = (int) $line['count'];
         }
 
-        $filename = Path::makeRelative($path, $workingDir);
-        $sourceFiles[] = new SourceFile($filename, md5($source), $source, $coverage->toArray());
-      }
-    }
-
-    return (new Job($sourceFiles))->setRunAt((int) $xml->project['timestamp']);
+        return new SourceFile(Path::makeRelative($path, $workingDir), md5($data), $data, $coverage->toArray());
+      })
+      ->toArray()
+      ->map(function(array $sourceFiles) use ($xml): Job {
+        return (new Job($sourceFiles))->setRunAt((int) $xml->project['timestamp']);
+      });
   }
 
   /**
@@ -202,8 +201,8 @@ class Client {
         return new SourceFile(Path::makeRelative($path, $workingDir), md5($data), $data);
       })
       ->toArray()
-      ->map(function(array $results) use ($records): Job {
-        foreach ($results as $index => $sourceFile) {
+      ->map(function(array $sourceFiles) use ($records): Job {
+        foreach ($sourceFiles as $index => $sourceFile) {
           /** @var Record $record */
           $record = $records[$index];
           $lines = preg_split('/\r?\n/', $sourceFile->getSource());
@@ -213,7 +212,7 @@ class Client {
           $sourceFile->setCoverage($coverage->toArray());
         }
 
-        return new Job($results);
+        return new Job($sourceFiles);
       });
   }
 

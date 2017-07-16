@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 namespace coveralls\services\travis_ci;
 
 use coveralls\{Configuration};

@@ -2,6 +2,8 @@
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
 ## Version 2.0.0
+- Breaking change: ported some APIs to [Observable](http://reactivex.io/intro.html).
+- Enabled the strict typing.
 - Replaced [phpDocumentor](https://www.phpdoc.org) documentation generator by [ApiGen](https://github.com/ApiGen/ApiGen).
 - Updated the package dependencies.
 

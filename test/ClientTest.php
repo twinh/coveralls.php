@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 namespace coveralls;
 
 use function PHPUnit\Expect\{expect, it};
@@ -34,38 +34,40 @@ class ClientTest extends TestCase {
    * @test Client::parseCloverReport
    */
   public function testParseCloverReport() {
-    it('should properly parse Clover reports', function() {
-      $parseCloverReport = function(string $report) {
-        return $this->parseCloverReport($report);
-      };
+    $parseCloverReport = function(string $report): Observable {
+      return $this->parseCloverReport($report);
+    };
 
-      $job = $parseCloverReport->call(new Client, @file_get_contents(__DIR__.'/fixtures/clover.xml'));
+    it('should properly parse Clover reports', function() use ($parseCloverReport) {
+      $parseCloverReport->call(new Client, @file_get_contents('test/fixtures/clover.xml'))->subscribe(function(Job $job) {
+        $files = $job->getSourceFiles();
+        expect($files)->to->have->lengthOf(3);
 
-      /** @var SourceFile[] $files */
-      $files = $job->getSourceFiles();
-      expect($files)->to->have->lengthOf(3);
+        expect($files[0])->to->be->instanceOf(SourceFile::class);
+        expect($files[0]->getName())->to->equal('lib/Client.php');
+        expect($files[0]->getSourceDigest())->to->not->be->empty;
 
-      expect($files[0])->to->be->instanceOf(SourceFile::class);
-      expect($files[0]->getName())->to->equal('lib/Client.php');
-      expect($files[0]->getSourceDigest())->to->not->be->empty;
+        $subset = [null, 2, 2, 2, 2, null];
+        expect(array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()))->to->equal($subset);
 
-      $subset = [null, 2, 2, 2, 2, null];
-      expect(array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()))->to->equal($subset);
+        expect($files[1]->getName())->to->equal('lib/Configuration.php');
+        expect($files[1]->getSourceDigest())->to->not->be->empty;
 
-      expect($files[1]->getName())->to->equal('lib/Configuration.php');
-      expect($files[1]->getSourceDigest())->to->not->be->empty;
+        $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
+        expect(array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()))->to->equal($subset);
 
-      $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-      expect(array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()))->to->equal($subset);
+        expect($files[2]->getName())->to->equal('lib/GitCommit.php');
+        expect($files[2]->getSourceDigest())->to->not->be->empty;
 
-      expect($files[2]->getName())->to->equal('lib/GitCommit.php');
-      expect($files[2]->getSourceDigest())->to->not->be->empty;
+        $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
+        expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
+      });
+    });
 
-      $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-      expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
-
-      $this->expectException(\InvalidArgumentException::class);
-      $parseCloverReport->call(new Client, '<project></project>');
+    it('should throw an exception if the Clover report is invalid or empty', function() use ($parseCloverReport) {
+      $parseCloverReport->call(new Client, '<project></project>')->subscribe(null, function(\Throwable $e) {
+        expect($e)->to->be->instanceOf(\InvalidArgumentException::class);
+      });
     });
   }
 
@@ -108,22 +110,22 @@ class ClientTest extends TestCase {
    * @test Client::updateJob
    */
   public function testUpdateJob() {
-    $client = new Client;
-    $job = new Job;
     $updateJob = function(Job $job, Configuration $config) {
       $this->updateJob($job, $config);
     };
 
-    it('should not modify the job if the configuration is empty', function() use ($client, $job, $updateJob) {
-      $updateJob->call($client, $job, new Configuration);
+    it('should not modify the job if the configuration is empty', function() use ($updateJob) {
+      $job = new Job;
+      $updateJob->call(new Client, $job, new Configuration);
       expect($job->getGit())->to->be->null;
       expect($job->isParallel())->to->be->false;
       expect($job->getRepoToken())->to->be->empty;
       expect($job->getRunAt())->to->be->null;
     });
 
-    it('should modify the job if the configuration is not empty', function() use ($client, $job, $updateJob) {
-      $updateJob->call($client, $job, new Configuration([
+    it('should modify the job if the configuration is not empty', function() use ($updateJob) {
+      $job = new Job;
+      $updateJob->call(new Client, $job, new Configuration([
         'parallel' => 'true',
         'repo_token' => 'yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt',
         'run_at' => '2017-01-29T03:43:30+01:00',
