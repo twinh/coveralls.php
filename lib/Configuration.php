@@ -1,8 +1,8 @@
 <?php
 namespace coveralls;
 
+use Rx\{Observable};
 use Symfony\Component\Yaml\{Yaml};
-use Symfony\Component\Yaml\Exception\{ParseException};
 
 /**
  * Provides access to the coverage settings.
@@ -75,7 +75,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     if (isset($env['GIT_MESSAGE'])) $config['git_message'] = $env['GIT_MESSAGE'];
 
     // CI services.
-    $merge = function($service) use ($config, $env) {
+    $merge = function(string $service) use ($config, $env) {
       require_once __DIR__."/services/$service.php";
       $config->merge(call_user_func("coveralls\\services\\$service\\getConfiguration", $env));
     };
@@ -110,7 +110,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
       return is_array($yaml) ? new static($yaml) : null;
     }
 
-    catch (ParseException $e) {
+    catch (\Throwable $e) {
       return null;
     }
   }
@@ -119,17 +119,19 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Loads the default configuration.
    * The default values are read from the environment variables and an optional `.coveralls.yml` file.
    * @param string $coverallsFile The path to the `.coveralls.yml` file. Defaults to the file found in the current directory.
-   * @return Configuration The default configuration.
+   * @return Observable The default configuration.
    */
-  public static function loadDefaults(string $coverallsFile = ''): self {
-    if (!mb_strlen($coverallsFile)) $coverallsFile = '.coveralls.yml';
-
-    $defaults = static::fromEnvironment();
-    if ($yaml = @file_get_contents($coverallsFile)) {
-      if ($config = static::fromYAML($yaml)) $defaults->merge($config);
-    }
-
-    return $defaults;
+  public static function loadDefaults(string $coverallsFile = '.coveralls.yml'): Observable {
+    return Observable::of($coverallsFile)
+      ->map(function(string $path): string {
+        return (string) @file_get_contents($path);
+      })
+      ->map(function(string $data): static {
+        $defaults = static::fromEnvironment();
+        $config = static::fromYAML($data);
+        if ($config) $defaults->merge($config);
+        return $defaults;
+      });
   }
 
   /**

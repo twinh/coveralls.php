@@ -152,10 +152,18 @@ class ConfigurationTest extends TestCase {
    */
   public function testLoadDefaults() {
     it('should properly initialize from a `.coveralls.yml` file', function() {
-      $config = Configuration::loadDefaults(__DIR__.'/fixtures/.coveralls.yml');
-      expect($config)->to->have->length->of->at->least(2);
-      expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
-      expect($config['service_name'])->to->equal('travis-pro');
+      Configuration::loadDefaults('test/fixtures/.coveralls.yml')->subscribe(function(Configuration $config) {
+        expect($config)->to->have->length->of->at->least(2);
+        expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
+        expect($config['service_name'])->to->equal('travis-pro');
+      });
+    });
+
+    it('should use the environment defaults if the `.coveralls.yml` file is not found', function() {
+      $defaults = Configuration::fromEnvironment();
+      Configuration::loadDefaults('.dummy/config.yml')->subscribe(function(Configuration $config) use ($defaults) {
+        expect(get_object_vars($config->jsonSerialize()))->to->equal(get_object_vars($defaults->jsonSerialize()));
+      });
     });
   }
 
