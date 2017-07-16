@@ -53,24 +53,25 @@ class GitDataTest extends TestCase {
    */
   public function testFromRepository() {
     it('should retrieve the Git data from the executable output', function() {
-      $data = GitData::fromRepository(__DIR__.'/..');
-      expect($data->getBranch())->to->not->be->empty;
+      GitData::fromRepository()->subscribe(function(GitData $data) {
+        expect($data->getBranch())->to->not->be->empty;
 
-      $commit = $data->getCommit();
-      expect($commit)->to->be->instanceOf(GitCommit::class);
-      expect($commit->getId())->to->match('/^[a-f\d]{40}$/');
+        $commit = $data->getCommit();
+        expect($commit)->to->be->instanceOf(GitCommit::class);
+        expect($commit->getId())->to->match('/^[a-f\d]{40}$/');
 
-      $remotes = $data->getRemotes();
-      expect($remotes)->to->not->be->empty;
-      expect($remotes[0])->to->be->instanceOf(GitRemote::class);
+        $remotes = $data->getRemotes();
+        expect($remotes)->to->not->be->empty;
+        expect($remotes[0])->to->be->instanceOf(GitRemote::class);
 
-      /** @var GitRemote[] $origin */
-      $origin = array_filter($remotes->getArrayCopy(), function(GitRemote $remote) {
-        return $remote->getName() == 'origin';
+        /** @var GitRemote[] $origin */
+        $origin = array_filter($remotes->getArrayCopy(), function(GitRemote $remote): bool {
+          return $remote->getName() == 'origin';
+        });
+
+        expect($origin)->to->have->lengthOf(1);
+        expect($origin[0]->getURL())->to->equal('https://github.com/cedx/coveralls.php.git');
       });
-
-      expect($origin)->to->have->lengthOf(1);
-      expect($origin[0]->getURL())->to->equal('https://github.com/cedx/coveralls.php.git');
     });
   }
 

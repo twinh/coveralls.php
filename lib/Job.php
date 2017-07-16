@@ -82,8 +82,10 @@ class Job implements \JsonSerializable {
     if (is_array($map)) $map = (object) $map;
     if (!is_object($map)) return null;
 
-    $transform = function(array $files) {
-      return array_filter(array_map(function($item) { return SourceFile::fromJSON($item); }, $files));
+    $transform = function(array $files): array {
+      return array_filter(array_map(function($item) {
+        return SourceFile::fromJSON($item);
+      }, $files));
     };
 
     /** @var Job $job */
@@ -193,7 +195,10 @@ class Job implements \JsonSerializable {
     if (mb_strlen($serviceJobId = $this->getServiceJobId())) $map->service_job_id = $serviceJobId;
     if (mb_strlen($servicePullRequest = $this->getServicePullRequest())) $map->service_pull_request = $servicePullRequest;
 
-    $map->source_files = array_map(function(SourceFile $item) { return $item->jsonSerialize(); }, $this->getSourceFiles()->getArrayCopy());
+    $map->source_files = array_map(function(SourceFile $item): \stdClass {
+      return $item->jsonSerialize();
+    }, $this->getSourceFiles()->getArrayCopy());
+
     if ($this->isParallel()) $map->parallel = true;
     if ($git = $this->getGit()) $map->git = $git->jsonSerialize();
     if (mb_strlen($commitSha = $this->getCommitSha())) $map->commit_sha = $commitSha;

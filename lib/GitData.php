@@ -1,5 +1,6 @@
 <?php
 namespace coveralls;
+use Rx\{Observable};
 
 /**
  * Represents Git data that can be used to display more information to users.
@@ -48,8 +49,10 @@ class GitData implements \JsonSerializable {
    * @return GitData The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJSON($map) {
-    $transform = function(array $remotes) {
-      return array_filter(array_map(function($item) { return GitRemote::fromJSON($item); }, $remotes));
+    $transform = function(array $remotes): array {
+      return array_filter(array_map(function($item) {
+        return GitRemote::fromJSON($item);
+      }, $remotes));
     };
 
     if (is_array($map)) $map = (object) $map;
@@ -64,34 +67,46 @@ class GitData implements \JsonSerializable {
    * Creates a new Git data from a local repository.
    * This method relies on the availability of the Git executable in the system path.
    * @param string $path The path to the repository folder. Defaults to the current working directory.
-   * @return GitData The newly created data.
+   * @return Observable The newly created Git data.
    */
-  public static function fromRepository(string $path = ''): self {
-    $hasPath = mb_strlen($path) > 0;
-    $previousDir = $hasPath ? getcwd() : null;
-    if ($hasPath) chdir($path);
+  public static function fromRepository(string $path = ''): Observable {
+    if (!mb_strlen($path)) $path = getcwd();
 
-    $branch = trim(`git rev-parse --abbrev-ref HEAD`);
-    $commit = (new GitCommit)
-      ->setAuthorEmail(trim(trim(`git log -1 --pretty=format:'%ae'`), "'"))
-      ->setAuthorName(trim(trim(`git log -1 --pretty=format:'%aN'`), "'"))
-      ->setCommitterEmail(trim(trim(`git log -1 --pretty=format:'%ce'`), "'"))
-      ->setCommitterName(trim(trim(`git log -1 --pretty=format:'%cN'`), "'"))
-      ->setId(trim(trim(`git log -1 --pretty=format:'%H'`), "'"))
-      ->setMessage(trim(trim(`git log -1 --pretty=format:'%s'`), "'"));
+    $commands = [
+      'author_email' => "log -1 --pretty=format:'%ae'",
+      'author_name' => "log -1 --pretty=format:'%aN'",
+      'branch' => 'rev-parse --abbrev-ref HEAD',
+      'committer_email' => "log -1 --pretty=format:'%ce'",
+      'committer_name' => "log -1 --pretty=format:'%cN'",
+      'id' => "log -1 --pretty=format:'%H'",
+      'message' => "log -1 --pretty=format:'%s'",
+      'remotes' => 'remote -v'
+    ];
 
-    $names = [];
-    $remotes = [];
-    foreach (preg_split('/\r?\n/', trim(`git remote -v`)) as $remote) {
-      $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
-      if (!in_array($parts[0], $names)) {
-        $names[] = $parts[0];
-        $remotes[] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
-      }
-    }
+    $workingDir = getcwd();
+    chdir($path);
 
-    if ($hasPath) chdir($previousDir);
-    return new static($commit, $branch, $remotes);
+    return Observable::fromArray($commands)
+      ->map(function(string $command): string {
+        return trim(trim(shell_exec("git $command")), "'");
+      })
+      ->toArray()
+      ->do(function(array $results) use (&$commands) {
+        $index = 0;
+        foreach ($commands as $key => $value) $commands[$key] = $results[$index++];
+      })
+      ->map(function() use (&$commands): static {
+        $remotes = [];
+        foreach (preg_split('/\r?\n/', $commands['remotes']) as $remote) {
+          $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
+          if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : null);
+        }
+
+        return new static(GitCommit::fromJSON($commands), $commands['branch'], array_values($remotes));
+      })
+      ->do(function() use ($workingDir) {
+        chdir($workingDir);
+      });
   }
 
   /**
@@ -126,7 +141,9 @@ class GitData implements \JsonSerializable {
     return (object) [
       'branch' => $this->getBranch(),
       'head' => ($commit = $this->getCommit()) ? $commit->jsonSerialize() : null,
-      'remotes' => array_map(function(GitRemote $item) { return $item->jsonSerialize(); }, $this->getRemotes()->getArrayCopy())
+      'remotes' => array_map(function(GitRemote $item): \stdClass {
+        return $item->jsonSerialize();
+      }, $this->getRemotes()->getArrayCopy())
     ];
   }
 
