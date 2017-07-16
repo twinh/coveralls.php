@@ -1,12 +1,11 @@
 <?php
-/**
- * Provides a connector for the [Surf](https://github.com/surf-build/surf) service.
- */
+declare(strict_types = 1);
 namespace coveralls\services\surf;
+
 use coveralls\{Configuration};
 
 /**
- * Gets the configuration parameters from the environment.
+ * Gets the [Surf](https://github.com/surf-build/surf) configuration parameters from the environment.
  * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */

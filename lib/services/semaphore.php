@@ -1,12 +1,11 @@
 <?php
-/**
- * Provides a connector for the [Semaphore](https://semaphoreci.com) service.
- */
+declare(strict_types = 1);
 namespace coveralls\services\semaphore;
+
 use coveralls\{Configuration};
 
 /**
- * Gets the configuration parameters from the environment.
+ * Gets the [Semaphore](https://semaphoreci.com) configuration parameters from the environment.
  * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */

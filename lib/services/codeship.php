@@ -1,12 +1,11 @@
 <?php
-/**
- * Provides a connector for the [Codeship](https://codeship.com) service.
- */
+declare(strict_types = 1);
 namespace coveralls\services\codeship;
+
 use coveralls\{Configuration};
 
 /**
- * Gets the configuration parameters from the environment.
+ * Gets the [Codeship](https://codeship.com) configuration parameters from the environment.
  * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */

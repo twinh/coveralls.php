@@ -1,12 +1,11 @@
 <?php
-/**
- * Provides a connector for the [Travis CI](https://travis-ci.com) service.
- */
+declare(strict_types = 1);
 namespace coveralls\services\travis_ci;
+
 use coveralls\{Configuration};
 
 /**
- * Gets the configuration parameters from the environment.
+ * Gets the [Travis CI](https://travis-ci.com) configuration parameters from the environment.
  * @param array $env An array providing environment variables.
  * @return Configuration The configuration parameters.
  */
