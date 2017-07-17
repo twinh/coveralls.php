@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace coveralls;
 
 use GuzzleHttp\{Client as HTTPClient};
+use GuzzleHttp\Promise\{PromiseInterface};
 use GuzzleHttp\Psr7\{MultipartStream, ServerRequest};
 use lcov\{Record, Report, Token};
 use Rx\{Observable};
@@ -87,7 +88,7 @@ class Client {
    */
   public function upload(string $coverage, Configuration $config = null): Observable {
     $coverage = trim($coverage);
-    if (!mb_strlen($coverage)) return Observable::error(new \InvalidArgumentException('The specified coverage report is empty.'));
+    return !mb_strlen($coverage) ? Observable::error(new \InvalidArgumentException('The specified coverage report is empty.')) : Observable::of($coverage);
 
     $job = null;
     $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
@@ -102,7 +103,7 @@ class Client {
     if (!$job->getRunAt()) $job->setRunAt(time());
 
     $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
-    if (mb_strlen(trim(`$command`))) {
+    if (mb_strlen(trim(shell_exec($command)))) {
       $branch = ($git = $job->getGit()) ? $git->getBranch() : '';
       $job->setGit(GitData::fromRepository());
 
@@ -131,15 +132,17 @@ class Client {
       'name' => 'json_file'
     ];
 
-      $body = new MultipartStream([$jsonFile]);
-      $request = (new ServerRequest('POST', $this->getEndPoint().'/api/v1/jobs'))->withBody($body);
-      $this->onRequest->onNext($request);
+    $request = (new ServerRequest('POST', "{$this->getEndPoint()}/api/v1/jobs"))->withBody(new MultipartStream([$jsonFile]));
+    $promise = (new HTTPClient)->sendAsync($request, [
+      'multipart' => [$jsonFile]
+    ]);
 
-      $response = (new HTTPClient)->send($request, ['multipart' => [$jsonFile]]);
+    $this->onRequest->onNext($request);
+    return Observable::of($promise)->map(function(PromiseInterface $promise): string {
+      $response = $promise->wait();
       $this->onResponse->onNext($response);
-
-      if (($code = $response->getStatusCode()) != 200)
-        throw new \DomainException("$code {$response->getReasonPhrase()}");
+      return (string) $response->getBody();
+    });
   }
 
   /**

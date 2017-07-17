@@ -106,7 +106,7 @@ class GitData implements \JsonSerializable {
 
         return new static(GitCommit::fromJSON($commands), $commands['branch'], array_values($remotes));
       })
-      ->do(function() use ($workingDir) {
+      ->finally(function() use ($workingDir) {
         chdir($workingDir);
       });
   }
