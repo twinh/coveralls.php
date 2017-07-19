@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace coveralls\cli;
 
 use coveralls\{Client};
+use EventLoop\{EventLoop};
 use Rx\{Observable, Scheduler};
+use Rx\Scheduler\{EventLoopScheduler};
 
 /**
  * @var string The version number of this package.
@@ -18,7 +20,6 @@ const VERSION = '2.0.0';
 function main(): Observable {
   // Initialize the application.
   @cli_set_process_title('Coveralls.php');
-  Scheduler::setDefaultFactory([Scheduler::class, 'getImmediate']);
 
   // Parse the command line arguments.
   $options = getopt('f:hv', ['file:', 'help', 'version']);
@@ -65,6 +66,10 @@ function printUsage() {
 // Start the application.
 $fileInfo = new \SplFileInfo(__DIR__.'/../vendor/autoload.php');
 require_once $fileInfo->isFile() ? $fileInfo->getPathname() : __DIR__.'/../../../autoload.php';
+
+Scheduler::setDefaultFactory(function() {
+  return new EventLoopScheduler(EventLoop::getLoop());
+});
 
 main()->subscribe(null, function(\Throwable $error) {
   echo $error, PHP_EOL;
