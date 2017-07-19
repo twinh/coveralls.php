@@ -108,9 +108,33 @@ class Client {
           return Observable::of('');
         })
         ->flatMap(function(string $gitPath): Observable {
+          echo '>>> $gitPath ', $gitPath, PHP_EOL;
           return mb_strlen($gitPath) ? GitData::fromRepository() : Observable::of(null);
         })
     ];
+
+    return Observable::fromArray($observables)
+      ->mergeAll()
+      ->toArray()
+      ->map(function($job, $config, $git) {
+        echo '>>> $job ', get_class($job), PHP_EOL;
+        echo '>>> $config ', get_class($config), PHP_EOL;
+        echo '>>> $git ', get_class($git), PHP_EOL;
+
+        $this->updateJob($job, $config);
+        if (!$job->getRunAt()) $job->setRunAt(time());
+
+        if ($git) {
+          $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
+          if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+          $job->setGit($git);
+        }
+
+        return $job;
+      })
+      ->flatMap(function(Job $job): Observable {
+        return $this->uploadJob($job);
+      });
 
     return Observable::forkjoin($observables,
       //function(Job $job, Configuration $config, GitData $git = null) {
