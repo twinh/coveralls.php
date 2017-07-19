@@ -9,6 +9,7 @@ use lcov\{Record, Report, Token};
 use Rx\{Observable};
 use Rx\Subject\{Subject};
 use Webmozart\PathUtil\{Path};
+use function which\{which};
 
 /**
  * Uploads code coverage reports to the [Coveralls](https://coveralls.io) service.
@@ -82,36 +83,51 @@ class Client {
   /**
    * Uploads the specified code coverage report to the Coveralls service.
    * @param string $coverage A coverage report.
-   * @param Configuration $config The environment settings.
+   * @param Configuration $configuration The environment settings.
    * @return Observable Completes when the operation is done.
-   * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
-  public function upload(string $coverage, Configuration $config = null): Observable {
+  public function upload(string $coverage, Configuration $configuration = null): Observable {
     $coverage = trim($coverage);
-    return !mb_strlen($coverage) ? Observable::error(new \InvalidArgumentException('The specified coverage report is empty.')) : Observable::of($coverage);
+    if (!mb_strlen($coverage)) return Observable::error(new \InvalidArgumentException('The specified coverage report is empty.'));
 
-    $job = null;
+    $parser = null;
     $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-    if ($isClover) $job = $this->parseCloverReport($coverage);
+    if ($isClover) $parser = $this->parseCloverReport($coverage);
     else {
       $token = mb_substr($coverage, 0, 3);
-      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $job = $this->parseLcovReport($coverage);
+      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $parser = $this->parseLcovReport($coverage);
     }
 
-    if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
-    $this->updateJob($job, $config ?: Configuration::loadDefaults());
-    if (!$job->getRunAt()) $job->setRunAt(time());
+    if (!$parser) return Observable::error(new \InvalidArgumentException('The specified coverage format is not supported.'));
 
-    $command = PHP_OS == 'WINNT' ? 'where.exe git.exe' : 'which git';
-    if (mb_strlen(trim(shell_exec($command)))) {
-      $branch = ($git = $job->getGit()) ? $git->getBranch() : '';
-      $job->setGit(GitData::fromRepository());
+    $observables = [
+      $parser,
+      $configuration ? Observable::of($configuration) : Configuration::loadDefaults(),
+      which('git')
+        ->catch(function(): Observable {
+          return Observable::of('');
+        })
+        ->flatMap(function(string $gitPath): Observable {
+          return mb_strlen($gitPath) ? GitData::fromRepository() : Observable::of(null);
+        })
+    ];
 
-      $git = $job->getGit();
-      if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-    }
+    return Observable::forkjoin($observables)->map(function(array $results) {
+      list($job, $config, $git) = $results;
 
-    $this->uploadJob($job);
+      /** @var Job $job */
+      $this->updateJob($job, $config);
+      if (!$job->getRunAt()) $job->setRunAt(time());
+
+      /** @var GitData $git */
+      if ($git) {
+        $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
+        if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+        $job->setGit($git);
+      }
+
+      return $this->uploadJob($job);
+    });
   }
 
   /**
@@ -120,7 +136,6 @@ class Client {
    * @return Observable Completes when the operation is done.
    * @emits \Psr\Http\Message\RequestInterface The "request" event.
    * @emits \Psr\Http\Message\ResponseInterface The "response" event.
-   * @throws \RuntimeException An error occurred while uploading the report.
    */
   public function uploadJob(Job $job): Observable {
     if (!$job->getRepoToken() && !$job->getServiceName())
@@ -149,7 +164,6 @@ class Client {
    * Parses the specified [Clover](https://www.atlassian.com/software/clover) coverage report.
    * @param string $report A coverage report in LCOV format.
    * @return Observable The job corresponding to the specified coverage report.
-   * @throws \RuntimeException A source file was not found.
    */
   private function parseCloverReport(string $report): Observable {
     $xml = simplexml_load_string($report);

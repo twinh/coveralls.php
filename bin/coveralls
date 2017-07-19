@@ -63,7 +63,9 @@ function printUsage() {
 }
 
 // Start the application.
-require_once is_file($path = __DIR__.'/../vendor/autoload.php') ? $path : __DIR__.'/../../../autoload.php';
+$fileInfo = new \SplFileInfo(__DIR__.'/../vendor/autoload.php');
+require_once $fileInfo->isFile() ? $fileInfo->getPathname() : __DIR__.'/../../../autoload.php';
+
 main()->subscribe(null, function(\Throwable $error) {
   echo $error, PHP_EOL;
   exit(1);
