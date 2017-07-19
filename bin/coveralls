@@ -71,7 +71,15 @@ Scheduler::setDefaultFactory(function() {
   return new EventLoopScheduler(EventLoop::getLoop());
 });
 
-main()->subscribe(null, function(\Throwable $error) {
-  echo $error, PHP_EOL;
-  exit(1);
-});
+main()->subscribe(
+  function($next) {
+    echo '>>> Next... ', $next, PHP_EOL;
+  },
+  function(\Throwable $error) {
+    echo $error, PHP_EOL;
+    exit(1);
+  },
+  function() {
+    echo '>>> Done!', PHP_EOL;
+  }
+);
