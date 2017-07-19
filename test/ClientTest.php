@@ -152,14 +152,14 @@ class ClientTest extends TestCase {
     it('should throw an exception with an empty coverage report', function() {
       (new Client)->upload('')->subscribe(null,
         function(\Throwable $e) { expect($e)->to->be->instanceOf(\InvalidArgumentException::class); },
-        function() { fail('Error not thrown.'); }
+        function() { fail('Exception not thrown.'); }
       );
     });
 
     it('should throw an error with an invalid coverage report', function() {
       (new Client)->upload('end_of_record')->subscribe(null,
         function(\Throwable $e) { expect($e)->to->be->instanceOf(\InvalidArgumentException::class); },
-        function() { fail('Error not thrown.'); }
+        function() { fail('Exception not thrown.'); }
       );
     });
   }
@@ -171,7 +171,7 @@ class ClientTest extends TestCase {
     it('should throw an exception with an empty coverage job', function() {
       (new Client)->uploadJob(new Job)->subscribe(null,
         function(\Throwable $e) { expect($e)->to->be->instanceOf(\InvalidArgumentException::class); },
-        function() { fail('Error not thrown.'); }
+        function() { fail('Exception not thrown.'); }
       );
     });
   }
