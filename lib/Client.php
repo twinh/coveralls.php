@@ -112,22 +112,22 @@ class Client {
         })
     ];
 
-    return Observable::forkjoin($observables)->map(function(array $results) {
-      list($job, $config, $git) = $results;
+    return Observable::forkjoin($observables,
+      function(Job $job, Configuration $config, GitData $git = null) {
+        $this->updateJob($job, $config);
+        if (!$job->getRunAt()) $job->setRunAt(time());
 
-      /** @var Job $job */
-      $this->updateJob($job, $config);
-      if (!$job->getRunAt()) $job->setRunAt(time());
+        if ($git) {
+          $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
+          if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+          $job->setGit($git);
+        }
 
-      /** @var GitData $git */
-      if ($git) {
-        $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
-        if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-        $job->setGit($git);
-      }
-
-      return $this->uploadJob($job);
-    });
+        return $job;
+      })
+      ->flatMap(function(Job $job): Observable {
+        return $this->uploadJob($job);
+      });
   }
 
   /**
