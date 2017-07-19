@@ -113,7 +113,12 @@ class Client {
     ];
 
     return Observable::forkjoin($observables,
-      function(Job $job, Configuration $config, GitData $git = null) {
+      //function(Job $job, Configuration $config, GitData $git = null) {
+      function($job, $config, $git) {
+        echo '>>> $job ', var_export($job, true), PHP_EOL;
+        echo '>>> $config ', var_export($config, true), PHP_EOL;
+        echo '>>> $git ', var_export($git, true), PHP_EOL;
+
         $this->updateJob($job, $config);
         if (!$job->getRunAt()) $job->setRunAt(time());
 
