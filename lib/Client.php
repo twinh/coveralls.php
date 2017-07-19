@@ -116,7 +116,9 @@ class Client {
     return Observable::fromArray($observables)
       ->mergeAll()
       ->toArray()
-      ->map(function($job, $config, $git) {
+      ->map(function(array $results): Job {
+        list($job, $config, $git) = $results;
+
         echo '>>> $job ', get_class($job), PHP_EOL;
         echo '>>> $config ', get_class($config), PHP_EOL;
         echo '>>> $git ', get_class($git), PHP_EOL;
