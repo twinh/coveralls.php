@@ -90,33 +90,32 @@ class Client {
     $coverage = trim($coverage);
     if (!mb_strlen($coverage)) return Observable::error(new \InvalidArgumentException('The specified coverage report is empty.'));
 
-    $parser = null;
+    $report = null;
     $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-    if ($isClover) $parser = $this->parseCloverReport($coverage);
+    if ($isClover) $report = $this->parseCloverReport($coverage);
     else {
       $token = mb_substr($coverage, 0, 3);
-      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $parser = $this->parseLcovReport($coverage);
+      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $report = $this->parseLcovReport($coverage);
     }
 
-    if (!$parser) return Observable::error(new \InvalidArgumentException('The specified coverage format is not supported.'));
+    if (!$report) return Observable::error(new \InvalidArgumentException('The specified coverage format is not supported.'));
 
     $observables = [
-      $parser,
+      $report,
       $configuration ? Observable::of($configuration) : Configuration::loadDefaults(),
       which('git')
         ->catch(function(): Observable {
           return Observable::of('');
         })
         ->flatMap(function(string $gitPath): Observable {
-          echo '>>> $gitPath ', $gitPath, PHP_EOL;
           return mb_strlen($gitPath) ? GitData::fromRepository() : Observable::of(null);
         })
     ];
 
     return Observable::fromArray($observables)
-      ->mergeAll()
+      ->concatAll()
       ->toArray()
-      ->map(function(array $results): Job {
+      ->flatMap(function(array $results): Observable {
         list($job, $config, $git) = $results;
 
         echo '>>> $job ', get_class($job), PHP_EOL;
@@ -132,13 +131,11 @@ class Client {
           $job->setGit($git);
         }
 
-        return $job;
-      })
-      ->flatMap(function(Job $job): Observable {
+        exit('YEEEEEEEESSSSSSSSSSSSSSSS');
         return $this->uploadJob($job);
       });
 
-    return Observable::forkjoin($observables,
+    return Observable::forkJoin($observables,
       //function(Job $job, Configuration $config, GitData $git = null) {
       function($job, $config, $git) {
         echo '>>> $job ', get_class($job), PHP_EOL;
