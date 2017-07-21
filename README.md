@@ -22,21 +22,23 @@ Then use it to upload your coverage reports:
 
 ```shell
 $ coveralls --help
-Send a Clover or LCOV coverage report to the Coveralls service.
 
-Usage:
-coveralls -f <file>
+Send Clover and LCOV coverage reports to the Coveralls service.
 
-Options:
--f, --file       path to the coverage report
--h, --help       output usage information
--v, --version    output the version number
+file
+     The coverage report to upload.
+
+--help
+     Show the help page for this command.
+
+-v/--version
+     Output the version number.
 ```
 
 For example:
 
 ```shell
-$ coveralls -f build/coverage.xml
+$ coveralls build/coverage.xml
 ```
 
 ### Programming interface

@@ -112,16 +112,11 @@ class Client {
         })
     ];
 
-    /*
     return Observable::fromArray($observables)
       ->concatAll()
       ->toArray()
       ->flatMap(function(array $results): Observable {
         list($job, $config, $git) = $results;
-
-        echo '>>> $job ', get_class($job), PHP_EOL;
-        echo '>>> $config ', get_class($config), PHP_EOL;
-        echo '>>> $git ', get_class($git), PHP_EOL;
 
         $this->updateJob($job, $config);
         if (!$job->getRunAt()) $job->setRunAt(time());
@@ -132,9 +127,8 @@ class Client {
           $job->setGit($git);
         }
 
-        exit('YEEEEEEEESSSSSSSSSSSSSSSS');
         return $this->uploadJob($job);
-      });*/
+      });
 
     return Observable::forkJoin($observables,
       //function(Job $job, Configuration $config, GitData $git = null) {
