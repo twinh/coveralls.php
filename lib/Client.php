@@ -112,6 +112,7 @@ class Client {
         })
     ];
 
+    /*
     return Observable::fromArray($observables)
       ->concatAll()
       ->toArray()
@@ -133,7 +134,7 @@ class Client {
 
         exit('YEEEEEEEESSSSSSSSSSSSSSSS');
         return $this->uploadJob($job);
-      });
+      });*/
 
     return Observable::forkJoin($observables,
       //function(Job $job, Configuration $config, GitData $git = null) {
@@ -151,6 +152,7 @@ class Client {
           $job->setGit($git);
         }
 
+        exit('YEEEEEEEESSSSSSSSSSSSSSSS');
         return $job;
       })
       ->flatMap(function(Job $job): Observable {

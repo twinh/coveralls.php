@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace coveralls\cli;
 
+use Commando\{Command};
 use coveralls\{Client};
 use EventLoop\{EventLoop};
 use Rx\{Observable, Scheduler};
@@ -21,19 +22,35 @@ function main(): Observable {
   // Initialize the application.
   @cli_set_process_title('Coveralls.php');
 
+  Scheduler::setDefaultFactory(function() {
+    return new EventLoopScheduler(EventLoop::getLoop());
+  });
+
   // Parse the command line arguments.
-  $options = getopt('f:hv', ['file:', 'help', 'version']);
+  $program = new Command;
+  $program->setHelp('Send Clover and LCOV coverage reports to the Coveralls service.');
 
-  if (isset($options['v']) || isset($options['version'])) {
-    echo VERSION, PHP_EOL;
-    exit(0);
-  }
+  $program->flag('v')->aka('version')
+    ->description('Output the version number.')
+    ->boolean();
 
-  if (isset($options['h']) || isset($options['help'])) printUsage();
-  if (!isset($options['f']) && !isset($options['file'])) printUsage();
+  $program->argument()->referToAs('file')
+    ->description('The coverage report to upload.')
+    ->file();
 
   // Run the program.
-  return Observable::of($options['f'] ?? $options['file'])
+  if ($program['version']) {
+    echo VERSION, PHP_EOL;
+    return Observable::empty();
+  }
+
+  if (!is_string($program[0])) {
+    $program->printHelp();
+    exit(1);
+  }
+
+  // Run the program.
+  return Observable::of($program[0])
     ->map(function(string $path): string {
       return (string) @file_get_contents($path);
     })
@@ -47,29 +64,9 @@ function main(): Observable {
     });
 }
 
-/**
- * Prints the usage information.
- */
-function printUsage() {
-  echo 'Send a Clover or LCOV coverage report to the Coveralls service.', PHP_EOL;
-  echo PHP_EOL;
-  echo 'Usage:', PHP_EOL;
-  echo 'coveralls -f <file>', PHP_EOL;
-  echo PHP_EOL;
-  echo 'Options:', PHP_EOL;
-  echo '-f, --file       path to the coverage report', PHP_EOL;
-  echo '-h, --help       output usage information', PHP_EOL;
-  echo '-v, --version    output the version number', PHP_EOL;
-  exit(0);
-}
-
 // Start the application.
 $fileInfo = new \SplFileInfo(__DIR__.'/../../../autoload.php');
 require_once $fileInfo->isFile() ? $fileInfo->getPathname() : __DIR__.'/../vendor/autoload.php';
-
-Scheduler::setDefaultFactory(function() {
-  return new EventLoopScheduler(EventLoop::getLoop());
-});
 
 main()->subscribe(
   function($next) {
@@ -77,7 +74,7 @@ main()->subscribe(
   },
   function(\Throwable $e) {
     echo $e, PHP_EOL;
-    exit(1);
+    exit(2);
   },
   function() {
     echo '>>> Done!', PHP_EOL;
