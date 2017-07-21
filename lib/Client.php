@@ -118,38 +118,17 @@ class Client {
       ->flatMap(function(array $results): Observable {
         list($job, $config, $git) = $results;
 
+        /** @var Job $job */
         $this->updateJob($job, $config);
         if (!$job->getRunAt()) $job->setRunAt(time());
 
+        /** @var GitData $git */
         if ($git) {
           $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
           if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
           $job->setGit($git);
         }
 
-        return $this->uploadJob($job);
-      });
-
-    return Observable::forkJoin($observables,
-      //function(Job $job, Configuration $config, GitData $git = null) {
-      function($job, $config, $git) {
-        echo '>>> $job ', get_class($job), PHP_EOL;
-        echo '>>> $config ', get_class($config), PHP_EOL;
-        echo '>>> $git ', get_class($git), PHP_EOL;
-
-        $this->updateJob($job, $config);
-        if (!$job->getRunAt()) $job->setRunAt(time());
-
-        if ($git) {
-          $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
-          if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-          $job->setGit($git);
-        }
-
-        exit('YEEEEEEEESSSSSSSSSSSSSSSS');
-        return $job;
-      })
-      ->flatMap(function(Job $job): Observable {
         return $this->uploadJob($job);
       });
   }
