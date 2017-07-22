@@ -101,7 +101,6 @@ class Client {
     if (!$report) return Observable::error(new \InvalidArgumentException('The specified coverage format is not supported.'));
 
     $observables = [
-      $report,
       $configuration ? Observable::of($configuration) : Configuration::loadDefaults(),
       which('git')
         ->catch(function(): Observable {
@@ -112,25 +111,18 @@ class Client {
         })
     ];
 
-    return Observable::fromArray($observables)
-      ->concatAll()
-      ->toArray()
-      ->flatMap(function(array $results): Observable {
-        list($job, $config, $git) = $results;
+    return $report->zip($observables, function(Job $job, Configuration $config, GitData $git = null): Observable {
+      $this->updateJob($job, $config);
+      if (!$job->getRunAt()) $job->setRunAt(time());
 
-        /** @var Job $job */
-        $this->updateJob($job, $config);
-        if (!$job->getRunAt()) $job->setRunAt(time());
+      if ($git) {
+        $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
+        if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+        $job->setGit($git);
+      }
 
-        /** @var GitData $git */
-        if ($git) {
-          $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
-          if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-          $job->setGit($git);
-        }
-
-        return $this->uploadJob($job);
-      });
+      return $this->uploadJob($job);
+    });
   }
 
   /**

@@ -2,7 +2,8 @@
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
 ## Version 2.0.0
-- Breaking change: ported some APIs to [Observable](http://reactivex.io/intro.html).
+- Breaking change: ported some APIs to [Observables](http://reactivex.io/intro.html).
+- Breaking change: replaced the `-f|--file` named argument of the CLI script by an anonymous argument (e.g. `coveralls coverage.xml` instead of `coveralls -f coverage.xml`)
 - Enabled the strict typing.
 - Replaced [phpDocumentor](https://www.phpdoc.org) documentation generator by [ApiGen](https://github.com/ApiGen/ApiGen).
 - Updated the package dependencies.
