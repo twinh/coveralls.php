@@ -124,7 +124,7 @@ class Client {
 
         return $job;
       })
-      ->flatMap(function(Job $job) {
+      ->flatMap(function(Job $job): Observable {
         return $this->uploadJob($job);
       });
   }
