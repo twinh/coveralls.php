@@ -111,18 +111,22 @@ class Client {
         })
     ];
 
-    return $report->zip($observables, function(Job $job, Configuration $config, GitData $git = null): Observable {
-      $this->updateJob($job, $config);
-      if (!$job->getRunAt()) $job->setRunAt(time());
+    return $report
+      ->zip($observables, function(Job $job, Configuration $config, GitData $git = null): Job {
+        $this->updateJob($job, $config);
+        if (!$job->getRunAt()) $job->setRunAt(time());
 
-      if ($git) {
-        $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
-        if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-        $job->setGit($git);
-      }
+        if ($git) {
+          $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
+          if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+          $job->setGit($git);
+        }
 
-      return $this->uploadJob($job);
-    });
+        return $job;
+      })
+      ->flatMap(function(Job $job) {
+        return $this->uploadJob($job);
+      });
   }
 
   /**
