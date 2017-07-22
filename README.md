@@ -53,16 +53,21 @@ Now, in your [PHP](https://secure.php.net) code, you can use the `coveralls\Clie
 ```php
 use coveralls\{Client};
 
-try {
-  $coverage = file_get_contents('/path/to/coverage.report');
-  (new Client)->upload($coverage);
-  echo 'The report was sent successfully.';
-}
-
-catch (\Throwable $e) {
-  echo 'An error occurred: ', $e->getMessage();
-}
+$coverage = file_get_contents('/path/to/coverage.report');
+(new Client)->upload($coverage)->subscribe(
+  function() {
+    echo 'The report was sent successfully.';
+  },
+  function(\Throwable $e) {
+    echo 'An error occurred: ', $e->getMessage();
+  }
+);
 ```
+
+This package has an API based on [Observables](http://reactivex.io/intro.html).
+
+> When running the tests, the scheduler is automatically bootstrapped.
+> When using [RxPHP](https://github.com/ReactiveX/RxPHP) within your own project, you'll need to set the default scheduler.
 
 ## Supported coverage formats
 Currently, this package supports two formats of coverage reports:
