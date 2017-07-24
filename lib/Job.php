@@ -84,9 +84,9 @@ class Job implements \JsonSerializable {
     if (!is_object($map)) return null;
 
     $transform = function(array $files): array {
-      return array_filter(array_map(function($item) {
+      return array_values(array_filter(array_map(function($item) {
         return SourceFile::fromJSON($item);
-      }, $files));
+      }, $files)));
     };
 
     /** @var Job $job */

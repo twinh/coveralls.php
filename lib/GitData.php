@@ -52,9 +52,9 @@ class GitData implements \JsonSerializable {
    */
   public static function fromJSON($map) {
     $transform = function(array $remotes): array {
-      return array_filter(array_map(function($item) {
+      return array_values(array_filter(array_map(function($item) {
         return GitRemote::fromJSON($item);
-      }, $remotes));
+      }, $remotes)));
     };
 
     if (is_array($map)) $map = (object) $map;
