@@ -12,7 +12,7 @@ use Rx\Scheduler\{EventLoopScheduler};
 /**
  * @var string The version number of this package.
  */
-const VERSION = '2.0.0';
+const VERSION = '2.0.1';
 
 /**
  * Application entry point.

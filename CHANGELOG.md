@@ -1,6 +1,9 @@
 # Changelog
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
+## Version 2.0.1
+- Merged [pull request #1](https://github.com/cedx/coveralls.php/pull/1): fixes an issue with usages of the `array_filter()` function.
+
 ## Version 2.0.0
 - Breaking change: ported some APIs to [Observables](http://reactivex.io/intro.html).
 - Breaking change: replaced the `-f|--file` named argument of the CLI script by an anonymous argument (e.g. `coveralls coverage.xml` instead of `coveralls -f coverage.xml`)
