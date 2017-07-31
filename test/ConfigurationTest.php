@@ -153,7 +153,7 @@ class ConfigurationTest extends TestCase {
    */
   public function testLoadDefaults() {
     it('should properly initialize from a `.coveralls.yml` file', function() {
-      Configuration::loadDefaults('test/fixtures/.coveralls.yml')->subscribe(function(Configuration $config) {
+      Configuration::loadDefaults('test/fixtures/.coveralls.yml')->subscribe(function($config) {
         expect($config)->to->have->length->of->at->least(2);
         expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
         expect($config['service_name'])->to->equal('travis-pro');

@@ -89,15 +89,15 @@ class GitData implements \JsonSerializable {
     chdir($path);
 
     return Observable::fromArray($commands)
-      ->map(function(string $command): string {
+      ->map(function($command) {
         return trim(trim(shell_exec("git $command")), "'");
       })
       ->toArray()
-      ->do(function(array $results) use (&$commands) {
+      ->do(function($results) use (&$commands) {
         $index = 0;
         foreach ($commands as $key => $value) $commands[$key] = $results[$index++];
       })
-      ->map(function() use (&$commands): self {
+      ->map(function() use (&$commands) {
         $remotes = [];
         foreach (preg_split('/\r?\n/', $commands['remotes']) as $remote) {
           $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));

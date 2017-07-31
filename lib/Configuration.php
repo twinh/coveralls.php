@@ -76,8 +76,8 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     if (isset($env['GIT_MESSAGE'])) $config['git_message'] = $env['GIT_MESSAGE'];
 
     // CI services.
-    $merge = function(string $service) use ($config, $env) {
-      require_once __DIR__."/services/$service.php";
+    $merge = function($service) use ($config, $env) {
+      require_once __DIR__."/Services/$service.php";
       $config->merge(call_user_func("Coveralls\\Services\\$service\\getConfiguration", $env));
     };
 
@@ -124,10 +124,10 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    */
   public static function loadDefaults(string $coverallsFile = '.coveralls.yml'): Observable {
     return Observable::of($coverallsFile)
-      ->map(function(string $path): string {
+      ->map(function($path) {
         return (string) @file_get_contents($path);
       })
-      ->map(function(string $data): self {
+      ->map(function($data) {
         $defaults = static::fromEnvironment();
         $config = static::fromYAML($data);
         if ($config) $defaults->merge($config);

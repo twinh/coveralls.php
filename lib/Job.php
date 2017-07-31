@@ -195,7 +195,7 @@ class Job implements \JsonSerializable {
     if (mb_strlen($serviceJobId = $this->getServiceJobId())) $map->service_job_id = $serviceJobId;
     if (mb_strlen($servicePullRequest = $this->getServicePullRequest())) $map->service_pull_request = $servicePullRequest;
 
-    $map->source_files = array_map(function(SourceFile $item): \stdClass {
+    $map->source_files = array_map(function(SourceFile $item) {
       return $item->jsonSerialize();
     }, $this->getSourceFiles()->getArrayCopy());
 

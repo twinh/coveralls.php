@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use GuzzleHttp\{Client as HTTPClient};
+use GuzzleHttp\{Client as HttpClient};
 use GuzzleHttp\Promise\{PromiseInterface};
 use GuzzleHttp\Psr7\{MultipartStream, ServerRequest};
 use Lcov\{Record, Report, Token};
@@ -103,16 +103,16 @@ class Client {
     $observables = [
       $configuration ? Observable::of($configuration) : Configuration::loadDefaults(),
       which('git')
-        ->catch(function(): Observable {
+        ->catch(function() {
           return Observable::of('');
         })
-        ->flatMap(function(string $gitPath): Observable {
+        ->flatMap(function($gitPath) {
           return mb_strlen($gitPath) ? GitData::fromRepository() : Observable::of(null);
         })
     ];
 
     return $report
-      ->zip($observables, function(Job $job, Configuration $config, GitData $git = null): Job {
+      ->zip($observables, function(Job $job, Configuration $config, GitData $git = null) {
         $this->updateJob($job, $config);
         if (!$job->getRunAt()) $job->setRunAt(time());
 
@@ -124,7 +124,7 @@ class Client {
 
         return $job;
       })
-      ->flatMap(function(Job $job): Observable {
+      ->flatMap(function($job) {
         return $this->uploadJob($job);
       });
   }
@@ -147,12 +147,12 @@ class Client {
     ];
 
     $request = (new ServerRequest('POST', "{$this->getEndPoint()}/api/v1/jobs"))->withBody(new MultipartStream([$jsonFile]));
-    $promise = (new HTTPClient)->sendAsync($request, [
+    $promise = (new HttpClient)->sendAsync($request, [
       'multipart' => [$jsonFile]
     ]);
 
     $this->onRequest->onNext($request);
-    return Observable::of($promise)->map(function(PromiseInterface $promise): string {
+    return Observable::of($promise)->map(function(PromiseInterface $promise) {
       $response = $promise->wait();
       $this->onResponse->onNext($response);
       return (string) $response->getBody();
@@ -173,7 +173,7 @@ class Client {
     $workingDir = getcwd();
 
     return Observable::fromArray($files)
-      ->map(function(\SimpleXMLElement $file) use ($workingDir): SourceFile {
+      ->map(function($file) use ($workingDir) {
         $path = (string) $file['name'];
         $data = @file_get_contents($path);
         if (!$data) throw new \RuntimeException("Source file not found: $path");
@@ -187,7 +187,7 @@ class Client {
         return new SourceFile(Path::makeRelative($path, $workingDir), md5($data), $data, $coverage->toArray());
       })
       ->toArray()
-      ->map(function(array $sourceFiles) use ($xml): Job {
+      ->map(function($sourceFiles) use ($xml) {
         return (new Job($sourceFiles))->setRunAt((int) $xml->project['timestamp']);
       });
   }
@@ -201,18 +201,18 @@ class Client {
     $records = Report::parse($report)->getRecords()->getArrayCopy();
     $workingDir = getcwd();
 
-    $sourceFiles = array_map(function(Record $record): string {
+    $sourceFiles = array_map(function(Record $record) {
       return $record->getSourceFile();
     }, $records);
 
     return Observable::fromArray($sourceFiles)
-      ->map(function(string $path) use ($workingDir): SourceFile {
+      ->map(function($path) use ($workingDir) {
         $data = @file_get_contents($path);
         if (!$data) throw new \RuntimeException("Source file not found: $path");
         return new SourceFile(Path::makeRelative($path, $workingDir), md5($data), $data);
       })
       ->toArray()
-      ->map(function(array $sourceFiles) use ($records): Job {
+      ->map(function(array $sourceFiles) use ($records) {
         foreach ($sourceFiles as $index => $sourceFile) {
           /** @var Record $record */
           $record = $records[$index];
@@ -243,7 +243,7 @@ class Client {
     if (isset($config['service_number'])) $job->setServiceNumber($config['service_number']);
     if (isset($config['service_pull_request'])) $job->setServicePullRequest($config['service_pull_request']);
 
-    $hasGitData = count(array_filter($config->getKeys(), function(string $key): bool {
+    $hasGitData = count(array_filter($config->getKeys(), function($key) {
       return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
     })) > 0;
 
