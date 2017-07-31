@@ -11,7 +11,7 @@
     "name": "Cédric Belin"
   }],
   "autoload": {
-    "psr-4": {"coveralls\\": "lib/"}
+    "psr-4": {"Coveralls\\": "lib/"}
   },
   "bin": [
     "bin/coveralls"
@@ -38,8 +38,8 @@
     "ext-pcre": "*",
     "ext-simplexml": "*",
     "ext-spl": "*",
-    "cedx/lcov": "^1.1.0",
-    "cedx/which": "^1.1.1",
+    "cedx/lcov": "^2.0.0",
+    "cedx/which": "^2.0.0",
     "guzzlehttp/guzzle": "^6.3.0",
     "nategood/commando": "^0.2.9",
     "reactivex/rxphp": "^2.0.2",

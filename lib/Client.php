@@ -5,11 +5,11 @@ namespace Coveralls;
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Promise\{PromiseInterface};
 use GuzzleHttp\Psr7\{MultipartStream, ServerRequest};
-use lcov\{Record, Report, Token};
+use Lcov\{Record, Report, Token};
 use Rx\{Observable};
 use Rx\Subject\{Subject};
 use Webmozart\PathUtil\{Path};
-use function which\{which};
+use function Which\{which};
 
 /**
  * Uploads code coverage reports to the [Coveralls](https://coveralls.io) service.
