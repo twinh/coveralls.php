@@ -1,6 +1,9 @@
 # Changelog
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
+## Version 3.0.0
+- Breaking change: renamed the `coveralls` namespace to `Coveralls`.
+
 ## Version 2.0.1
 - Merged [pull request #1](https://github.com/cedx/coveralls.php/pull/1): fixes an issue with usages of the `array_filter()` function.
 
