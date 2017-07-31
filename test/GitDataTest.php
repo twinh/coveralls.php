@@ -1,25 +1,25 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\GitData` class.
+ * Tests the features of the `Coveralls\GitData` class.
  */
 class GitDataTest extends TestCase {
 
   /**
-   * @test GitData::fromJSON
+   * @test GitData::fromJson
    */
-  public function testFromJSON() {
+  public function testFromJson() {
     it('should return a null reference with a non-object value', function() {
-      expect(GitData::fromJSON('foo'))->to->be->null;
+      expect(GitData::fromJson('foo'))->to->be->null;
     });
 
     it('should return an instance with default values for an empty map', function() {
-      $data = GitData::fromJSON([]);
+      $data = GitData::fromJson([]);
       expect($data)->to->be->instanceOf(GitData::class);
       expect($data->getBranch())->to->be->empty;
       expect($data->getCommit())->to->be->null;
@@ -27,7 +27,7 @@ class GitDataTest extends TestCase {
     });
 
     it('should return an initialized instance for a non-empty map', function() {
-      $data = GitData::fromJSON([
+      $data = GitData::fromJson([
         'branch' => 'develop',
         'head' => ['id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871'],
         'remotes' => [
@@ -71,7 +71,7 @@ class GitDataTest extends TestCase {
         }));
 
         expect($origin)->to->have->lengthOf(1);
-        expect($origin[0]->getURL())->to->equal('https://github.com/cedx/coveralls.php.git');
+        expect($origin[0]->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
       });
     });
   }
@@ -109,7 +109,7 @@ class GitDataTest extends TestCase {
     $data = (string) new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]);
 
     it('should start with the class name', function() use ($data) {
-      expect($data)->startWith('coveralls\GitData {');
+      expect($data)->startWith('Coveralls\GitData {');
     });
 
     it('should contain the instance properties', function() use ($data) {

@@ -48,10 +48,10 @@ The hard way. From a command prompt, install the library:
 $ composer require cedx/coveralls
 ```
 
-Now, in your [PHP](https://secure.php.net) code, you can use the `coveralls\Client` class to upload your coverage reports:
+Now, in your [PHP](https://secure.php.net) code, you can use the `Coveralls\Client` class to upload your coverage reports:
 
 ```php
-use coveralls\{Client};
+use Coveralls\{Client};
 
 $coverage = file_get_contents('/path/to/coverage.report');
 (new Client)->upload($coverage)->subscribe(
@@ -96,7 +96,7 @@ There are optional environment variables:
 - `COVERALLS_SERVICE_JOB_ID` : a string that uniquely identifies the build job.
 - `COVERALLS_RUN_AT` : a date string for the time that the job ran. This defaults to your build system's date/time if you don't set it.
 
-The full list of supported environment variables is available in the source code of the `coveralls\Configuration` class (see the `fromEnvironment()` static method).
+The full list of supported environment variables is available in the source code of the `Coveralls\Configuration` class (see the `fromEnvironment()` static method).
 
 ## The `.coveralls.yml` file
 This package supports the same configuration sources as the [Coveralls](https://coveralls.io) ones:  

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\surf;
+namespace Coveralls\Services\Surf;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [Surf](https://github.com/surf-build/surf) configuration parameters from the environment.

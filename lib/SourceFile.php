@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 /**
  * Represents a source code file and its coverage data for a single job.
@@ -55,7 +55,7 @@ class SourceFile implements \JsonSerializable {
    * @param mixed $map A JSON map representing a source file.
    * @return SourceFile The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJSON($map) {
+  public static function fromJson($map) {
     if (is_array($map)) $map = (object) $map;
     return !is_object($map) ? null : new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',

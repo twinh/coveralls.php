@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 /**
  * Represents the coverage data from a single run of a test suite.
@@ -79,20 +79,19 @@ class Job implements \JsonSerializable {
    * @param mixed $map A JSON map representing a job.
    * @return Job The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJSON($map) {
+  public static function fromJson($map) {
     if (is_array($map)) $map = (object) $map;
     if (!is_object($map)) return null;
 
-    $transform = function(array $files): array {
+    $transform = function($files) {
       return array_values(array_filter(array_map(function($item) {
-        return SourceFile::fromJSON($item);
+        return SourceFile::fromJson($item);
       }, $files)));
     };
 
-    /** @var Job $job */
-    $job = new static;
-    return $job->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
-      ->setGit(isset($map->git) ? GitData::fromJSON($map->git) : null)
+    return (new static)
+      ->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
+      ->setGit(isset($map->git) ? GitData::fromJson($map->git) : null)
       ->setParallel(isset($map->parallel) && is_bool($map->parallel) ? $map->parallel : false)
       ->setRepoToken(isset($map->repo_token) && is_string($map->repo_token) ? $map->repo_token : '')
       ->setRunAt(isset($map->run_at) && is_string($map->run_at) ? new \DateTime($map->run_at) : null)

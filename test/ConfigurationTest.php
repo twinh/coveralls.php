@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\Configuration` class.
+ * Tests the features of the `Coveralls\Configuration` class.
  */
 class ConfigurationTest extends TestCase {
 
@@ -190,7 +190,7 @@ class ConfigurationTest extends TestCase {
     $config = (string) new Configuration(['foo' => 'bar', 'bar' => 'baz']);
 
     it('should start with the class name', function() use ($config) {
-      expect($config)->startWith('coveralls\Configuration {');
+      expect($config)->startWith('Coveralls\Configuration {');
     });
 
     it('should contain the instance properties', function() use ($config) {

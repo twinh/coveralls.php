@@ -1,25 +1,25 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\GitCommit` class.
+ * Tests the features of the `Coveralls\GitCommit` class.
  */
 class GitCommitTest extends TestCase {
 
   /**
-   * @test GitCommit::fromJSON
+   * @test GitCommit::fromJson
    */
-  public function testFromJSON() {
+  public function testFromJson() {
     it('should return a null reference with a non-object value', function() {
-      expect(GitCommit::fromJSON('foo'))->to->be->null;
+      expect(GitCommit::fromJson('foo'))->to->be->null;
     });
 
     it('should return an instance with default values for an empty map', function() {
-      $commit = GitCommit::fromJSON([]);
+      $commit = GitCommit::fromJson([]);
       expect($commit)->to->be->instanceOf(GitCommit::class);
 
       expect($commit->getAuthorEmail())->to->be->empty;
@@ -29,7 +29,7 @@ class GitCommitTest extends TestCase {
     });
 
     it('should return an initialized instance for a non-empty map', function() {
-      $commit = GitCommit::fromJSON([
+      $commit = GitCommit::fromJson([
         'author_email' => 'anonymous@secret.com',
         'author_name' => 'Anonymous',
         'id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871',
@@ -77,7 +77,7 @@ class GitCommitTest extends TestCase {
       ->setAuthorName('Anonymous');
 
     it('should start with the class name', function() use ($commit) {
-      expect($commit)->startWith('coveralls\GitCommit {');
+      expect($commit)->startWith('Coveralls\GitCommit {');
     });
 
     it('should contain the instance properties', function() use ($commit) {

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\wercker;
+namespace Coveralls\Services\Wercker;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [Wercker](http://www.wercker.com) configuration parameters from the environment.

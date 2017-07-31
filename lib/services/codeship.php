@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\codeship;
+namespace Coveralls\Services\Codeship;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [Codeship](https://codeship.com) configuration parameters from the environment.

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\jenkins;
+namespace Coveralls\Services\Jenkins;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [Jenkins](https://jenkins.io) configuration parameters from the environment.

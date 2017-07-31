@@ -1,10 +1,9 @@
 #!/usr/bin/env php
 <?php
 declare(strict_types=1);
-namespace coveralls\cli;
 
 use Commando\{Command};
-use coveralls\{Client};
+use Coveralls\{Client};
 use EventLoop\{EventLoop};
 use Rx\{Observable, Scheduler};
 use Rx\Scheduler\{EventLoopScheduler};
@@ -51,10 +50,10 @@ function main(): Observable {
 
   // Run the program.
   return Observable::of($program[0])
-    ->map(function(string $path): string {
+    ->map(function($path) {
       return (string) @file_get_contents($path);
     })
-    ->flatMap(function(string $coverage): Observable {
+    ->flatMap(function($coverage) {
       if (!mb_strlen($coverage)) return Observable::error(new \RuntimeException('The specified file is not found.'));
 
       $env = $_ENV ?: $_SERVER;
@@ -65,10 +64,10 @@ function main(): Observable {
 }
 
 // Start the application.
-$fileInfo = new \SplFileInfo(__DIR__.'/../../../autoload.php');
+$fileInfo = new SplFileInfo(__DIR__.'/../../../autoload.php');
 require_once $fileInfo->isFile() ? $fileInfo->getPathname() : __DIR__.'/../vendor/autoload.php';
 
-main()->subscribe(null, function(\Throwable $e) {
-  echo $e, PHP_EOL;
+main()->subscribe(null, function($error) {
+  echo $error, PHP_EOL;
   exit(2);
 });

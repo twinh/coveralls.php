@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use Rx\{Observable};
 use Symfony\Component\Yaml\{Yaml};
@@ -78,22 +78,22 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     // CI services.
     $merge = function(string $service) use ($config, $env) {
       require_once __DIR__."/services/$service.php";
-      $config->merge(call_user_func("coveralls\\services\\$service\\getConfiguration", $env));
+      $config->merge(call_user_func("Coveralls\\Services\\$service\\getConfiguration", $env));
     };
 
     if (isset($env['TRAVIS'])) {
-      $merge('travis_ci');
+      $merge('TravisCI');
       if (mb_strlen($serviceName) && $serviceName != 'travis-ci') $config['service_name'] = $serviceName;
     }
-    else if (isset($env['APPVEYOR'])) $merge('appveyor');
-    else if (isset($env['CIRCLECI'])) $merge('circleci');
-    else if ($serviceName == 'codeship') $merge('codeship');
-    else if (isset($env['GITLAB_CI'])) $merge('gitlab_ci');
-    else if (isset($env['JENKINS_URL'])) $merge('jenkins');
-    else if (isset($env['SEMAPHORE'])) $merge('semaphore');
-    else if (isset($env['SURF_SHA1'])) $merge('surf');
-    else if (isset($env['TDDIUM'])) $merge('solano_ci');
-    else if (isset($env['WERCKER'])) $merge('wercker');
+    else if (isset($env['APPVEYOR'])) $merge('AppVeyor');
+    else if (isset($env['CIRCLECI'])) $merge('CircleCI');
+    else if ($serviceName == 'codeship') $merge('Codeship');
+    else if (isset($env['GITLAB_CI'])) $merge('GitLabCI');
+    else if (isset($env['JENKINS_URL'])) $merge('Jenkins');
+    else if (isset($env['SEMAPHORE'])) $merge('Semaphore');
+    else if (isset($env['SURF_SHA1'])) $merge('Surf');
+    else if (isset($env['TDDIUM'])) $merge('SolanoCI');
+    else if (isset($env['WERCKER'])) $merge('Wercker');
 
     return $config;
   }

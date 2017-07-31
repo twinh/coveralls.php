@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\solano_ci;
+namespace Coveralls\Services\SolanoCI;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [Solano CI](https://ci.solanolabs.com) configuration parameters from the environment.

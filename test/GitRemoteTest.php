@@ -1,35 +1,35 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\GitRemote` class.
+ * Tests the features of the `Coveralls\GitRemote` class.
  */
 class GitRemoteTest extends TestCase {
 
   /**
-   * @test GitRemote::fromJSON
+   * @test GitRemote::fromJson
    */
-  public function testFromJSON() {
+  public function testFromJson() {
     it('should return a null reference with a non-object value', function() {
-      expect(GitRemote::fromJSON('foo'))->to->be->null;
+      expect(GitRemote::fromJson('foo'))->to->be->null;
     });
 
     it('should return an instance with default values for an empty map', function() {
-      $remote = GitRemote::fromJSON([]);
+      $remote = GitRemote::fromJson([]);
       expect($remote)->to->be->instanceOf(GitRemote::class);
       expect($remote->getName())->to->be->empty;
-      expect($remote->getURL())->to->be->empty;
+      expect($remote->getUrl())->to->be->empty;
     });
 
     it('should return an initialized instance for a non-empty map', function() {
-      $remote = GitRemote::fromJSON(['name' => 'origin', 'url' => 'https://github.com/cedx/coveralls.php.git']);
+      $remote = GitRemote::fromJson(['name' => 'origin', 'url' => 'https://github.com/cedx/coveralls.php.git']);
       expect($remote)->to->be->instanceOf(GitRemote::class);
       expect($remote->getName())->to->equal('origin');
-      expect($remote->getURL())->to->equal('https://github.com/cedx/coveralls.php.git');
+      expect($remote->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
     });
   }
 
@@ -59,7 +59,7 @@ class GitRemoteTest extends TestCase {
     $remote = (string) new GitRemote('origin', 'https://github.com/cedx/coveralls.php.git');
 
     it('should start with the class name', function() use ($remote) {
-      expect($remote)->startWith('coveralls\GitRemote {');
+      expect($remote)->startWith('Coveralls\GitRemote {');
     });
 
     it('should contain the instance properties', function() use ($remote) {

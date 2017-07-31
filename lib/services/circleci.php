@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\circleci;
+namespace Coveralls\Services\CircleCI;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [CircleCI](https://circleci.com) configuration parameters from the environment.

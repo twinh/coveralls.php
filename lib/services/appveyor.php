@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\appveyor;
+namespace Coveralls\Services\AppVeyor;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [AppVeyor](https://www.appveyor.com) configuration parameters from the environment.

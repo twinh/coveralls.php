@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\travis_ci;
+namespace Coveralls\Services\TravisCI;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [Travis CI](https://travis-ci.com) configuration parameters from the environment.

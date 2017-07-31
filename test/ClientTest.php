@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, fail, it};
 use PHPUnit\Framework\{TestCase};
@@ -8,7 +8,7 @@ use Rx\{Observable};
 use Rx\Subject\{Subject};
 
 /**
- * Tests the features of the `coveralls\Client` class.
+ * Tests the features of the `Coveralls\Client` class.
  */
 class ClientTest extends TestCase {
 

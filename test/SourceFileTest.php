@@ -1,25 +1,25 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\SourceFile` class.
+ * Tests the features of the `Coveralls\SourceFile` class.
  */
 class SourceFileTest extends TestCase {
 
   /**
-   * @test SourceFile::fromJSON
+   * @test SourceFile::fromJson
    */
-  public function testFromJSON() {
+  public function testFromJson() {
     it('should return a null reference with a non-object value', function() {
-      expect(SourceFile::fromJSON('foo'))->to->be->null;
+      expect(SourceFile::fromJson('foo'))->to->be->null;
     });
 
     it('should return an instance with default values for an empty map', function() {
-      $file = SourceFile::fromJSON([]);
+      $file = SourceFile::fromJson([]);
       expect($file)->to->be->instanceOf(SourceFile::class);
 
       expect($file->getCoverage())->to->be->empty;
@@ -29,7 +29,7 @@ class SourceFileTest extends TestCase {
     });
 
     it('should return an initialized instance for a non-empty map', function() {
-      $file = SourceFile::fromJSON([
+      $file = SourceFile::fromJson([
         'coverage' => [null, 2, 0, null, 4, 15, null],
         'name' => 'coveralls.php',
         'source' => 'function main() {}',
@@ -89,7 +89,7 @@ class SourceFileTest extends TestCase {
     $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', 'function main() {}', [null, 2, 0, null, 4, 15, null]);
 
     it('should start with the class name', function() use ($remote) {
-      expect($remote)->startWith('coveralls\SourceFile {');
+      expect($remote)->startWith('Coveralls\SourceFile {');
     });
 
     it('should contain the instance properties', function() use ($remote) {

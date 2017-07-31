@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\semaphore;
+namespace Coveralls\Services\Semaphore;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [Semaphore](https://semaphoreci.com) configuration parameters from the environment.

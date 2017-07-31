@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 /**
  * Represents a Git commit.
@@ -61,20 +61,16 @@ class GitCommit implements \JsonSerializable {
    * @param mixed $map A JSON map representing a Git commit.
    * @return GitCommit The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJSON($map) {
+  public static function fromJson($map) {
     if (is_array($map)) $map = (object) $map;
     if (!is_object($map)) return null;
 
-    /** @var GitCommit $commit */
-    $commit = new static(
-      isset($map->id) && is_string($map->id) ? $map->id : '',
-      isset($map->message) && is_string($map->message) ? $map->message : ''
-    );
-
-    return $commit->setAuthorEmail(isset($map->author_email) && is_string($map->author_email) ? $map->author_email : '')
+    return (new static(isset($map->id) && is_string($map->id) ? $map->id : ''))
+      ->setAuthorEmail(isset($map->author_email) && is_string($map->author_email) ? $map->author_email : '')
       ->setAuthorName(isset($map->author_name) && is_string($map->author_name) ? $map->author_name : '')
       ->setCommitterEmail(isset($map->committer_email) && is_string($map->committer_email) ? $map->committer_email : '')
-      ->setCommitterName(isset($map->committer_name) && is_string($map->committer_name) ? $map->committer_name : '');
+      ->setCommitterName(isset($map->committer_name) && is_string($map->committer_name) ? $map->committer_name : '')
+      ->setMessage(isset($map->message) && is_string($map->message) ? $map->message : '');
   }
 
   /**

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace coveralls\services\gitlab_ci;
+namespace Coveralls\Services\GitLabCI;
 
-use coveralls\{Configuration};
+use Coveralls\{Configuration};
 
 /**
  * Gets the [GitLab CI](https://gitlab.com) configuration parameters from the environment.

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use Rx\{Observable};
 
@@ -50,16 +50,16 @@ class GitData implements \JsonSerializable {
    * @param mixed $map A JSON map representing a Git data.
    * @return GitData The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJSON($map) {
-    $transform = function(array $remotes): array {
+  public static function fromJson($map) {
+    $transform = function($remotes): array {
       return array_values(array_filter(array_map(function($item) {
-        return GitRemote::fromJSON($item);
+        return GitRemote::fromJson($item);
       }, $remotes)));
     };
 
     if (is_array($map)) $map = (object) $map;
     return !is_object($map) ? null : new static(
-      GitCommit::fromJSON($map->head ?? null),
+      GitCommit::fromJson($map->head ?? null),
       isset($map->branch) && is_string($map->branch) ? $map->branch : '',
       isset($map->remotes) && is_array($map->remotes) ? $transform($map->remotes) : []
     );
@@ -104,7 +104,7 @@ class GitData implements \JsonSerializable {
           if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
         }
 
-        return new static(GitCommit::fromJSON($commands), $commands['branch'], array_values($remotes));
+        return new static(GitCommit::fromJson($commands), $commands['branch'], array_values($remotes));
       })
       ->finally(function() use ($workingDir) {
         chdir($workingDir);

@@ -1,25 +1,25 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `coveralls\Job` class.
+ * Tests the features of the `Coveralls\Job` class.
  */
 class JobTest extends TestCase {
 
   /**
-   * @test Job::fromJSON
+   * @test Job::fromJson
    */
-  public function testFromJSON() {
+  public function testFromJson() {
     it('should return a null reference with a non-object value', function() {
-      expect(Job::fromJSON('foo'))->to->be->null;
+      expect(Job::fromJson('foo'))->to->be->null;
     });
 
     it('should return an instance with default values for an empty map', function() {
-      $job = Job::fromJSON([]);
+      $job = Job::fromJson([]);
       expect($job)->to->be->instanceOf(Job::class);
 
       expect($job->getGit())->to->be->null;
@@ -30,7 +30,7 @@ class JobTest extends TestCase {
     });
 
     it('should return an initialized instance for a non-empty map', function() {
-      $job = Job::fromJSON([
+      $job = Job::fromJson([
         'git' => ['branch' => 'develop'],
         'parallel' => true,
         'repo_token' => 'yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt',
@@ -104,7 +104,7 @@ class JobTest extends TestCase {
       ->setSourceFiles([new SourceFile('/home/cedx/coveralls.php')]);
 
     it('should start with the class name', function() use ($job) {
-      expect($job)->startWith('coveralls\Job {');
+      expect($job)->startWith('Coveralls\Job {');
     });
 
     it('should contain the instance properties', function() use ($job) {

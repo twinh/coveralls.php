@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Promise\{PromiseInterface};

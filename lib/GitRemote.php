@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace coveralls;
+namespace Coveralls;
 
 /**
  * Represents a Git remote repository.
@@ -24,7 +24,7 @@ class GitRemote implements \JsonSerializable {
    */
   public function __construct(string $name = '', string $url = '') {
     $this->setName($name);
-    $this->setURL($url);
+    $this->setUrl($url);
   }
 
   /**
@@ -41,7 +41,7 @@ class GitRemote implements \JsonSerializable {
    * @param mixed $map A JSON map representing a remote repository.
    * @return GitRemote The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJSON($map) {
+  public static function fromJson($map) {
     if (is_array($map)) $map = (object) $map;
     return !is_object($map) ? null : new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',
@@ -61,7 +61,7 @@ class GitRemote implements \JsonSerializable {
    * Gets the URL of this remote.
    * @return string The remote's URL.
    */
-  public function getURL(): string {
+  public function getUrl(): string {
     return $this->url;
   }
 
@@ -72,7 +72,7 @@ class GitRemote implements \JsonSerializable {
   public function jsonSerialize(): \stdClass {
     return (object) [
       'name' => $this->getName(),
-      'url' => $this->getURL()
+      'url' => $this->getUrl()
     ];
   }
 
@@ -91,7 +91,7 @@ class GitRemote implements \JsonSerializable {
    * @param string $value The new URL.
    * @return GitRemote This instance.
    */
-  public function setURL(string $value): self {
+  public function setUrl(string $value): self {
     $this->url = $value;
     return $this;
   }
