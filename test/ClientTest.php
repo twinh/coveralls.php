@@ -4,7 +4,6 @@ namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, fail, it};
 use PHPUnit\Framework\{TestCase};
-use Rx\{Observable};
 use Rx\Subject\{Subject};
 
 /**

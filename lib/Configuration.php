@@ -103,7 +103,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @param string $document A YAML document providing configuration parameters.
    * @return Configuration The instance corresponding to the specified YAML document, or `null` if a parsing error occurred.
    */
-  public static function fromYAML(string $document) {
+  public static function fromYaml(string $document) {
     if (!mb_strlen($document)) return null;
 
     try {
@@ -129,7 +129,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
       })
       ->map(function($data) {
         $defaults = static::fromEnvironment();
-        $config = static::fromYAML($data);
+        $config = static::fromYaml($data);
         if ($config) $defaults->merge($config);
         return $defaults;
       });
