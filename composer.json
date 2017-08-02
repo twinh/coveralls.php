@@ -27,11 +27,11 @@
     "coveralls",
     "lcov",
     "observable",
+    "reactivex",
     "rxphp"
   ],
   "require": {
     "php": ">=7.0.0",
-    "ext-curl": "*",
     "ext-date": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
@@ -40,9 +40,10 @@
     "ext-spl": "*",
     "cedx/lcov": "^2.0.0",
     "cedx/which": "^2.0.0",
-    "guzzlehttp/guzzle": "^6.3.0",
+    "guzzlehttp/psr7": "^1.4.2",
     "nategood/commando": "^0.2.9",
     "reactivex/rxphp": "^2.0.2",
+    "rx/http": "^2.0.2",
     "symfony/yaml": "^3.3.5",
     "voryx/event-loop": "^2.0.2",
     "webmozart/path-util": "^2.3.0"
