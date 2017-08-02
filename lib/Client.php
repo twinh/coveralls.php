@@ -141,26 +141,24 @@ class Client {
     if (!$job->getRepoToken() && !$job->getServiceName())
       return Observable::error(new \InvalidArgumentException('The job does not meet the requirements.'));
 
-    $reqBody = (new MultipartStream([[
+    $request = new MultipartStream([[
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
       'filename' => 'coveralls.json',
       'name' => 'json_file'
-    ]]))->getContents();
-
-    var_dump(mb_substr($reqBody, 0, 100));
+    ]]);
 
     $headers = [
-      'Content-Length' => strlen($reqBody),
-      'Content-Type' => 'multipart/form-data'
+      'Content-Length' => $request->getSize(),
+      'Content-Type' => "multipart/form-data; boundary={$request->getBoundary()}"
     ];
 
     $uri = $this->getEndPoint()->withPath('/api/v1/jobs');
-    $this->onRequest->onNext(new Request('POST', $uri, $headers, $reqBody));
-    return Http::post((string) $uri, $reqBody, $headers)->includeResponse()->map(function($data) {
+    $this->onRequest->onNext(new Request('POST', $uri, $headers, $request));
+    return Http::post((string) $uri, $request->getContents(), $headers)->includeResponse()->map(function($data) {
       /** @var \React\HttpClient\Response $response */
-      list($resBody, $response) = $data;
-      $this->onResponse->onNext(new Response($response->getCode(), $response->getHeaders(), $resBody));
-      return $resBody;
+      list($body, $response) = $data;
+      $this->onResponse->onNext(new Response($response->getCode(), $response->getHeaders(), $body));
+      return $body;
     });
   }
 
