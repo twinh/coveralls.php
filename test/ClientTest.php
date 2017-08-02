@@ -4,6 +4,7 @@ namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, fail, it};
 use PHPUnit\Framework\{TestCase};
+use Psr\Http\Message\{UriInterface};
 use Rx\Subject\{Subject};
 
 /**
@@ -102,6 +103,21 @@ class ClientTest extends TestCase {
         $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
         expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
       });
+    });
+  }
+
+  /**
+   * @test Client::setEndPoint
+   */
+  public function testSetEndPoint() {
+    it('should return an instance of `UriInterface` for strings', function() {
+      $endPoint = (new Client)->setEndPoint('https://github.com/cedx/free-mobile.php')->getEndPoint();
+      expect($endPoint)->to->be->instanceOf(UriInterface::class);
+      expect((string) $endPoint)->to->equal('https://github.com/cedx/free-mobile.php');
+    });
+
+    it('should return a `null` reference for unsupported values', function() {
+      expect((new Client)->setEndPoint(123)->getEndPoint())->to->be->null;
     });
   }
 

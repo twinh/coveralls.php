@@ -4,6 +4,7 @@ namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
+use Psr\Http\Message\{UriInterface};
 
 /**
  * Tests the features of the `Coveralls\GitRemote` class.
@@ -49,6 +50,21 @@ class GitRemoteTest extends TestCase {
       expect(get_object_vars($map))->to->have->lengthOf(2);
       expect($map->name)->to->equal('origin');
       expect($map->url)->to->equal('https://github.com/cedx/coveralls.php.git');
+    });
+  }
+
+  /**
+   * @test GitRemote::setUrl
+   */
+  public function testSetUrl() {
+    it('should return an instance of `UriInterface` for strings', function() {
+      $url = (new GitRemote)->setUrl('https://github.com/cedx/akismet.php')->getUrl();
+      expect($url)->to->be->instanceOf(UriInterface::class);
+      expect((string) $url)->to->equal('https://github.com/cedx/akismet.php');
+    });
+
+    it('should return a `null` reference for unsupported values', function() {
+      expect((new GitRemote)->setUrl(123)->getUrl())->to->be->null;
     });
   }
 
