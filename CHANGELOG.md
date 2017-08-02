@@ -1,6 +1,11 @@
 # Changelog
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
+## Version 4.0.0
+- Breaking change: properties representing URLs as strings now use instances of the [`Psr\Http\Message\UriInterface`](http://www.php-fig.org/psr/psr-7/#35-psrhttpmessageuriinterface) interface.
+- Added new unit tests.
+- Replaced the [Guzzle](http://docs.guzzlephp.org) HTTP client by an `Observable`-based one.
+
 ## Version 3.0.0
 - Breaking change: renamed the `coveralls` namespace to `Coveralls`.
 
