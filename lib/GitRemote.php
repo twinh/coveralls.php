@@ -2,6 +2,9 @@
 declare(strict_types=1);
 namespace Coveralls;
 
+use GuzzleHttp\Psr7\{Uri};
+use Psr\Http\Message\{UriInterface};
+
 /**
  * Represents a Git remote repository.
  */
@@ -13,16 +16,16 @@ class GitRemote implements \JsonSerializable {
   private $name;
 
   /**
-   * @var string The remote's URL.
+   * @var Uri The remote's URL.
    */
   private $url;
 
   /**
    * Initializes a new instance of the class.
    * @param string $name The remote's name.
-   * @param string $url The remote's URL.
+   * @param string|UriInterface $url The remote's URL.
    */
-  public function __construct(string $name = '', string $url = '') {
+  public function __construct(string $name = '', $url = null) {
     $this->setName($name);
     $this->setUrl($url);
   }
@@ -45,7 +48,7 @@ class GitRemote implements \JsonSerializable {
     if (is_array($map)) $map = (object) $map;
     return !is_object($map) ? null : new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',
-      isset($map->url) && is_string($map->url) ? $map->url : ''
+      isset($map->url) && is_string($map->url) ? $map->url : null
     );
   }
 
@@ -59,9 +62,9 @@ class GitRemote implements \JsonSerializable {
 
   /**
    * Gets the URL of this remote.
-   * @return string The remote's URL.
+   * @return UriInterface The remote's URL.
    */
-  public function getUrl(): string {
+  public function getUrl() {
     return $this->url;
   }
 
@@ -72,7 +75,7 @@ class GitRemote implements \JsonSerializable {
   public function jsonSerialize(): \stdClass {
     return (object) [
       'name' => $this->getName(),
-      'url' => $this->getUrl()
+      'url' => ($url = $this->getUrl()) ? (string) $url : null
     ];
   }
 
@@ -88,11 +91,14 @@ class GitRemote implements \JsonSerializable {
 
   /**
    * Sets the URL of this remote.
-   * @param string $value The new URL.
+   * @param string|UriInterface $value The new URL.
    * @return GitRemote This instance.
    */
-  public function setUrl(string $value): self {
-    $this->url = $value;
+  public function setUrl($value): self {
+    if ($value instanceof UriInterface) $this->url = $value;
+    else if (is_string($value)) $this->url = new Uri($value);
+    else $this->url = null;
+
     return $this;
   }
 }

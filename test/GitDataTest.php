@@ -71,7 +71,7 @@ class GitDataTest extends TestCase {
         }));
 
         expect($origin)->to->have->lengthOf(1);
-        expect($origin[0]->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
+        expect((string) $origin[0]->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
       });
     });
   }

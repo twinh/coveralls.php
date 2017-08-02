@@ -4,8 +4,9 @@ namespace Coveralls;
 
 use GuzzleHttp\{Client as HttpClient};
 use GuzzleHttp\Promise\{PromiseInterface};
-use GuzzleHttp\Psr7\{MultipartStream, ServerRequest};
+use GuzzleHttp\Psr7\{MultipartStream, Request, Response, Uri};
 use Lcov\{Record, Report, Token};
+use Psr\Http\Message\{UriInterface};
 use Rx\{Observable};
 use Rx\Subject\{Subject};
 use Webmozart\PathUtil\{Path};
@@ -22,7 +23,7 @@ class Client {
   const DEFAULT_ENDPOINT = 'https://coveralls.io';
 
   /**
-   * @var string The URL of the API end point.
+   * @var Uri The URL of the API end point.
    */
   private $endPoint;
 
@@ -38,9 +39,9 @@ class Client {
 
   /**
    * Initializes a new instance of the class.
-   * @param string $endPoint The URL of the API end point.
+   * @param string|UriInterface $endPoint The URL of the API end point.
    */
-  public function __construct(string $endPoint = self::DEFAULT_ENDPOINT) {
+  public function __construct($endPoint = self::DEFAULT_ENDPOINT) {
     $this->onRequest = new Subject();
     $this->onResponse = new Subject();
     $this->setEndPoint($endPoint);
@@ -48,9 +49,9 @@ class Client {
 
   /**
    * Gets the URL of the API end point.
-   * @return string The URL of the API end point.
+   * @return UriInterface The URL of the API end point.
    */
-  public function getEndPoint(): string {
+  public function getEndPoint() {
     return $this->endPoint;
   }
 
@@ -72,11 +73,14 @@ class Client {
 
   /**
    * Sets the URL of the API end point.
-   * @param string $value The new URL of the API end point.
+   * @param string|UriInterface $value The new URL of the API end point.
    * @return Client This instance.
    */
-  public function setEndPoint(string $value): self {
-    $this->endPoint = $value;
+  public function setEndPoint($value): self {
+    if ($value instanceof UriInterface) $this->endPoint = $value;
+    else if (is_string($value)) $this->endPoint = new Uri($value);
+    else $this->endPoint = null;
+
     return $this;
   }
 
@@ -198,7 +202,7 @@ class Client {
    * @return Observable The job corresponding to the specified coverage report.
    */
   private function parseLcovReport(string $report): Observable {
-    $records = Report::parse($report)->getRecords()->getArrayCopy();
+    $records = Report::fromCoverage($report)->getRecords()->getArrayCopy();
     $workingDir = getcwd();
 
     $sourceFiles = array_map(function(Record $record) {

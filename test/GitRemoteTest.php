@@ -22,14 +22,14 @@ class GitRemoteTest extends TestCase {
       $remote = GitRemote::fromJson([]);
       expect($remote)->to->be->instanceOf(GitRemote::class);
       expect($remote->getName())->to->be->empty;
-      expect($remote->getUrl())->to->be->empty;
+      expect($remote->getUrl())->to->be->null;
     });
 
     it('should return an initialized instance for a non-empty map', function() {
       $remote = GitRemote::fromJson(['name' => 'origin', 'url' => 'https://github.com/cedx/coveralls.php.git']);
       expect($remote)->to->be->instanceOf(GitRemote::class);
       expect($remote->getName())->to->equal('origin');
-      expect($remote->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
+      expect((string) $remote->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
     });
   }
 
@@ -41,7 +41,7 @@ class GitRemoteTest extends TestCase {
       $map = (new GitRemote)->jsonSerialize();
       expect(get_object_vars($map))->to->have->lengthOf(2);
       expect($map->name)->to->be->empty;
-      expect($map->url)->to->be->empty;
+      expect($map->url)->to->be->null;
     });
 
     it('should return a non-empty map for an initialized instance', function() {
