@@ -2,12 +2,11 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use GuzzleHttp\{Client as HttpClient};
-use GuzzleHttp\Promise\{PromiseInterface};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Response, Uri};
 use Lcov\{Record, Report, Token};
 use Psr\Http\Message\{UriInterface};
 use Rx\{Observable};
+use Rx\React\{Http};
 use Rx\Subject\{Subject};
 use Webmozart\PathUtil\{Path};
 use function Which\{which};
@@ -137,29 +136,31 @@ class Client {
    * Uploads the specified job to the Coveralls service.
    * @param Job $job The job to be uploaded.
    * @return Observable Completes when the operation is done.
-   * @emits \Psr\Http\Message\RequestInterface The "request" event.
-   * @emits \Psr\Http\Message\ResponseInterface The "response" event.
    */
   public function uploadJob(Job $job): Observable {
     if (!$job->getRepoToken() && !$job->getServiceName())
       return Observable::error(new \InvalidArgumentException('The job does not meet the requirements.'));
 
-    $jsonFile = [
+    $reqBody = (new MultipartStream([[
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
       'filename' => 'coveralls.json',
       'name' => 'json_file'
+    ]]))->getContents();
+
+    var_dump(mb_substr($reqBody, 0, 100));
+
+    $headers = [
+      'Content-Length' => strlen($reqBody),
+      'Content-Type' => 'multipart/form-data'
     ];
 
-    $request = (new ServerRequest('POST', "{$this->getEndPoint()}/api/v1/jobs"))->withBody(new MultipartStream([$jsonFile]));
-    $promise = (new HttpClient)->sendAsync($request, [
-      'multipart' => [$jsonFile]
-    ]);
-
-    $this->onRequest->onNext($request);
-    return Observable::of($promise)->map(function(PromiseInterface $promise) {
-      $response = $promise->wait();
-      $this->onResponse->onNext($response);
-      return (string) $response->getBody();
+    $uri = $this->getEndPoint()->withPath('/api/v1/jobs');
+    $this->onRequest->onNext(new Request('POST', $uri, $headers, $reqBody));
+    return Http::post((string) $uri, $reqBody, $headers)->includeResponse()->map(function($data) {
+      /** @var \React\HttpClient\Response $response */
+      list($resBody, $response) = $data;
+      $this->onResponse->onNext(new Response($response->getCode(), $response->getHeaders(), $resBody));
+      return $resBody;
     });
   }
 
