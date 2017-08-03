@@ -192,7 +192,7 @@ class Client {
         foreach ($file->line as $line) {
           if (!isset($line['type'])) throw new \DomainException("Invalid line data: {$line->asXML()}");
           if ((string) $line['type'] == 'stmt') {
-            if (!isset($line['count']) || !!isset($line['num'])) throw new \DomainException("Invalid line data: {$line->asXML()}");
+            if (!isset($line['count']) || !isset($line['num'])) throw new \DomainException("Invalid line data: {$line->asXML()}");
             $coverage[(int) $line['num'] - 1] = (int) $line['count'];
           }
         }
