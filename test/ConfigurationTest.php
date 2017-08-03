@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use function PHPUnit\Expect\{await, expect, it};
+use function PHPUnit\Expect\{await, expect, fail, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
@@ -153,18 +153,28 @@ class ConfigurationTest extends TestCase {
    */
   public function testLoadDefaults() {
     it('should properly initialize from a `.coveralls.yml` file', await(function() {
-      Configuration::loadDefaults('test/fixtures/.coveralls.yml')->subscribe(function($config) {
-        expect($config)->to->have->length->of->at->least(2);
-        expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
-        expect($config['service_name'])->to->equal('travis-pro');
-      });
+      Configuration::loadDefaults('test/fixtures/.coveralls.yml')->subscribe(
+        function($config) {
+          expect($config)->to->have->length->of->at->least(2);
+          expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
+          expect($config['service_name'])->to->equal('travis-pro');
+        },
+        function(\Throwable $e) {
+          fail($e->getMessage());
+        }
+      );
     }));
 
     it('should use the environment defaults if the `.coveralls.yml` file is not found', await(function() {
       $defaults = Configuration::fromEnvironment();
-      Configuration::loadDefaults('.dummy/config.yml')->subscribe(function(Configuration $config) use ($defaults) {
-        expect(get_object_vars($config->jsonSerialize()))->to->equal(get_object_vars($defaults->jsonSerialize()));
-      });
+      Configuration::loadDefaults('.dummy/config.yml')->subscribe(
+        function(Configuration $config) use ($defaults) {
+          expect(get_object_vars($config->jsonSerialize()))->to->equal(get_object_vars($defaults->jsonSerialize()));
+        },
+        function(\Throwable $e) {
+          fail($e->getMessage());
+        }
+      );
     }));
   }
 
