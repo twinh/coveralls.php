@@ -12,8 +12,8 @@ function wait(callable $block) {
     // $loop->futureTick([$loop, 'stop']);
     // $loop->run();
 
-    call_user_func($block);
     $loop->futureTick(function() use ($block, $loop) {
+      call_user_func($block);
       $loop->stop();
     });
 
