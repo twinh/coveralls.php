@@ -37,7 +37,6 @@ function main(): Observable {
     ->description('The coverage report to upload.')
     ->file();
 
-  // Run the program.
   if ($program['version']) {
     echo VERSION, PHP_EOL;
     return Observable::empty();
