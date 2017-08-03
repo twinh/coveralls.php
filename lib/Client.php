@@ -175,24 +175,32 @@ class Client {
     $files = array_merge($xml->xpath('/coverage/project/file') ?: [], $xml->xpath('/coverage/project/package/file') ?: []);
     $workingDir = getcwd();
 
-    return Observable::fromArray($files)
-      ->map(function($file) use ($workingDir) {
-        $path = (string) $file['name'];
-        $data = @file_get_contents($path);
-        if (!$data) throw new \RuntimeException("Source file not found: $path");
+    $observables = array_map(function(\SimpleXMLElement $file) {
+      return isset($file['name']) ?
+        new FromFileObservable((string) $file['name']) :
+        Observable::error(new \DomainException("Invalid file data: {$file->asXML()}"));
+    }, $files);
 
-        $lines = preg_split('/\r?\n/', $data);
+    $first = array_shift($observables);
+    return $first->zip($observables)->map(function($results) use ($files, $workingDir) {
+      return new Job(array_map(function($index, $source) use ($files, $workingDir) {
+        /** @var \SimpleXMLElement $file */
+        $file = $files[$index];
+
+        $lines = preg_split('/\r?\n/', $source);
         $coverage = new \SplFixedArray(count($lines));
         foreach ($file->line as $line) {
-          if ((string) $line['type'] == 'stmt') $coverage[(int) $line['num'] - 1] = (int) $line['count'];
+          if (!isset($line['type'])) throw new \DomainException("Invalid line data: {$line->asXML()}");
+          if ((string) $line['type'] == 'stmt') {
+            if (!isset($line['count']) || !!isset($line['num'])) throw new \DomainException("Invalid line data: {$line->asXML()}");
+            $coverage[(int) $line['num'] - 1] = (int) $line['count'];
+          }
         }
 
-        return new SourceFile(Path::makeRelative($path, $workingDir), md5($data), $data, $coverage->toArray());
-      })
-      ->toArray()
-      ->map(function($sourceFiles) use ($xml) {
-        return (new Job($sourceFiles))->setRunAt((int) $xml->project['timestamp']);
-      });
+        $filename = Path::makeRelative($file['name'], $workingDir);
+        return new SourceFile($filename, md5($source), $source, $coverage->toArray());
+      }, array_keys($results), $results));
+    });
   }
 
   /**
@@ -213,6 +221,7 @@ class Client {
       return new Job(array_map(function($index, $source) use ($records, $workingDir) {
         /** @var Record $record */
         $record = $records[$index];
+
         $lines = preg_split('/\r?\n/', $source);
         $coverage = new \SplFixedArray(count($lines));
         foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();

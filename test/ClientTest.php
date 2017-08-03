@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use function PHPUnit\Expect\{await, expect, fail, it, skip};
+use function PHPUnit\Expect\{await, expect, fail, it};
 use PHPUnit\Framework\{TestCase};
 use Psr\Http\Message\{UriInterface};
 use Rx\Subject\{Subject};
@@ -38,7 +38,7 @@ class ClientTest extends TestCase {
       return $this->parseCloverReport($report);
     };
 
-    skip('should properly parse Clover reports', await(function() use ($parseCloverReport) {
+    it('should properly parse Clover reports', await(function() use ($parseCloverReport) {
       $parseCloverReport->call(new Client, file_get_contents('test/fixtures/clover.xml'))->subscribe(
         function(Job $job) {
           $files = $job->getSourceFiles();
@@ -69,7 +69,7 @@ class ClientTest extends TestCase {
       );
     }));
 
-    skip('should throw an exception if the Clover report is invalid or empty', await(function() use ($parseCloverReport) {
+    it('should throw an exception if the Clover report is invalid or empty', await(function() use ($parseCloverReport) {
       $parseCloverReport->call(new Client, '<project></project>')->subscribe(
         function() { fail('Exception not thrown.'); },
         function($error) { expect($error)->to->be->instanceOf(\InvalidArgumentException::class); }
