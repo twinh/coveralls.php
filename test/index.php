@@ -7,16 +7,8 @@ use Rx\{Scheduler};
 function wait(callable $block) {
   return function() use ($block) {
     $loop = EventLoop::getLoop();
-
-    // call_user_func($block);
-    // $loop->futureTick([$loop, 'stop']);
-    // $loop->run();
-
-    $loop->futureTick(function() use ($block, $loop) {
-      $loop->stop();
-      call_user_func($block);
-    });
-
+    $loop->stop();
+    call_user_func($block);
     $loop->run();
   };
 }
