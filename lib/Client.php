@@ -197,7 +197,7 @@ class Client {
           }
         }
 
-        $filename = Path::makeRelative($file['name'], $workingDir);
+        $filename = Path::makeRelative((string) $file['name'], $workingDir);
         return new SourceFile($filename, md5($source), $source, $coverage->toArray());
       }, array_keys($results), $results));
     });
