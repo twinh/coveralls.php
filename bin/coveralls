@@ -6,6 +6,7 @@ use Commando\{Command};
 use Coveralls\{Client};
 use EventLoop\{EventLoop};
 use Rx\{Observable, Scheduler};
+use Rx\React\{FromFileObservable};
 use Rx\Scheduler\{EventLoopScheduler};
 
 /**
@@ -48,18 +49,14 @@ function main(): Observable {
   }
 
   // Run the program.
-  return Observable::of($program[0])
-    ->map(function($path) {
-      return (string) @file_get_contents($path);
-    })
-    ->flatMap(function($coverage) {
-      if (!mb_strlen($coverage)) return Observable::error(new \RuntimeException('The specified file is not found.'));
+  return (new FromFileObservable($program[0]))->flatMap(function($coverage) {
+    if (!mb_strlen($coverage)) return Observable::error(new \RuntimeException('The specified file is not found.'));
 
-      $env = $_ENV ?: $_SERVER;
-      $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
-      echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
-      return $client->upload($coverage);
-    });
+    $env = $_ENV ?: $_SERVER;
+    $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
+    echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
+    return $client->upload($coverage);
+  });
 }
 
 // Start the application.
