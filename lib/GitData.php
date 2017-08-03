@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use Rx\{Observable};
+use Rx\React\{ProcessSubject};
 
 /**
  * Represents Git data that can be used to display more information to users.
@@ -85,17 +86,15 @@ class GitData implements \JsonSerializable {
       'remotes' => 'remote -v'
     ];
 
-    $workingDir = getcwd();
-    chdir($path);
+    $observables = array_map(function($command) use ($path) {
+      return new ProcessSubject("git $command", null, $path);
+    }, array_values($commands));
 
-    return Observable::fromArray($commands)
-      ->map(function($command) {
-        return trim(trim(shell_exec("git $command")), "'");
-      })
-      ->toArray()
+    $first = array_shift($observables);
+    return $first->zip($observables)
       ->do(function($results) use (&$commands) {
         $index = 0;
-        foreach ($commands as $key => $value) $commands[$key] = $results[$index++];
+        foreach ($commands as $key => $value) $commands[$key] = trim(trim($results[$index++]), "'");
       })
       ->map(function() use (&$commands) {
         $remotes = [];
@@ -105,9 +104,6 @@ class GitData implements \JsonSerializable {
         }
 
         return new static(GitCommit::fromJson($commands), $commands['branch'], array_values($remotes));
-      })
-      ->finally(function() use ($workingDir) {
-        chdir($workingDir);
       });
   }
 
