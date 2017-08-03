@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `Coveralls\GitData` class.
@@ -52,7 +53,7 @@ class GitDataTest extends TestCase {
    * @test GitData::fromRepository
    */
   public function testFromRepository() {
-    it('should retrieve the Git data from the executable output', function() {
+    it('should retrieve the Git data from the executable output', wait(function() {
       GitData::fromRepository()->subscribe(function(GitData $data) {
         expect($data->getBranch())->to->not->be->empty;
 
@@ -72,9 +73,7 @@ class GitDataTest extends TestCase {
         expect($origin)->to->have->lengthOf(1);
         expect((string) $origin[0]->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
       });
-
-      $this->wait();
-    });
+    }));
   }
 
   /**

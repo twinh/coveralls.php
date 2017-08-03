@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
+use PHPUnit\Framework\{TestCase};
 
 /**
  * Tests the features of the `Coveralls\Job` class.
