@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use function PHPUnit\Expect\{expect, it};
+use function PHPUnit\Expect\{await, expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
@@ -152,7 +152,7 @@ class ConfigurationTest extends TestCase {
    * @test Configuration::loadDefaults
    */
   public function testLoadDefaults() {
-    it('should properly initialize from a `.coveralls.yml` file', wait(function() {
+    it('should properly initialize from a `.coveralls.yml` file', await(function() {
       Configuration::loadDefaults('test/fixtures/.coveralls.yml')->subscribe(function($config) {
         expect($config)->to->have->length->of->at->least(2);
         expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
@@ -160,7 +160,7 @@ class ConfigurationTest extends TestCase {
       });
     }));
 
-    it('should use the environment defaults if the `.coveralls.yml` file is not found', wait(function() {
+    it('should use the environment defaults if the `.coveralls.yml` file is not found', await(function() {
       $defaults = Configuration::fromEnvironment();
       Configuration::loadDefaults('.dummy/config.yml')->subscribe(function(Configuration $config) use ($defaults) {
         expect(get_object_vars($config->jsonSerialize()))->to->equal(get_object_vars($defaults->jsonSerialize()));

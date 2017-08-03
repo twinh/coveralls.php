@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use function PHPUnit\Expect\{expect, fail, it};
+use function PHPUnit\Expect\{await, expect, fail, it};
 use PHPUnit\Framework\{TestCase};
 use Psr\Http\Message\{UriInterface};
 use Rx\Subject\{Subject};
@@ -38,7 +38,7 @@ class ClientTest extends TestCase {
       return $this->parseCloverReport($report);
     };
 
-    it('should properly parse Clover reports', wait(function() use ($parseCloverReport) {
+    it('should properly parse Clover reports', await(function() use ($parseCloverReport) {
       $parseCloverReport->call(new Client, file_get_contents('test/fixtures/clover.xml'))->subscribe(function(Job $job) {
         $files = $job->getSourceFiles();
         expect($files)->to->have->lengthOf(3);
@@ -64,7 +64,7 @@ class ClientTest extends TestCase {
       });
     }));
 
-    it('should throw an exception if the Clover report is invalid or empty', wait(function() use ($parseCloverReport) {
+    it('should throw an exception if the Clover report is invalid or empty', await(function() use ($parseCloverReport) {
       $parseCloverReport->call(new Client, '<project></project>')->subscribe(null, function($error) {
         expect($error)->to->be->instanceOf(\InvalidArgumentException::class);
       });
@@ -75,7 +75,7 @@ class ClientTest extends TestCase {
    * @test Client::parseLcovReport
    */
   public function testParseLcovReport() {
-    it('should properly parse LCOV reports', wait(function() {
+    it('should properly parse LCOV reports', await(function() {
       $parseLcovReport = function($report) {
         return $this->parseLcovReport($report);
       };
@@ -164,14 +164,14 @@ class ClientTest extends TestCase {
    * @test Client::upload
    */
   public function testUpload() {
-    it('should throw an exception with an empty coverage report', wait(function() {
+    it('should throw an exception with an empty coverage report', await(function() {
       (new Client)->upload('')->subscribe(null,
         function($error) { expect($error)->to->be->instanceOf(\InvalidArgumentException::class); },
         function() { fail('Exception not thrown.'); }
       );
     }));
 
-    it('should throw an error with an invalid coverage report', wait(function() {
+    it('should throw an error with an invalid coverage report', await(function() {
       (new Client)->upload('end_of_record')->subscribe(null,
         function($error) { expect($error)->to->be->instanceOf(\InvalidArgumentException::class); },
         function() { fail('Exception not thrown.'); }
@@ -183,7 +183,7 @@ class ClientTest extends TestCase {
    * @test Client::uploadJob
    */
   public function testUploadJob() {
-    it('should throw an exception with an empty coverage job', wait(function() {
+    it('should throw an exception with an empty coverage job', await(function() {
       (new Client)->uploadJob(new Job)->subscribe(null,
         function($error) { expect($error)->to->be->instanceOf(\InvalidArgumentException::class); },
         function() { fail('Exception not thrown.'); }

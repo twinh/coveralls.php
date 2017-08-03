@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use function PHPUnit\Expect\{expect, it};
+use function PHPUnit\Expect\{await, expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
@@ -53,7 +53,7 @@ class GitDataTest extends TestCase {
    * @test GitData::fromRepository
    */
   public function testFromRepository() {
-    it('should retrieve the Git data from the executable output', wait(function() {
+    it('should retrieve the Git data from the executable output', await(function() {
       GitData::fromRepository()->subscribe(function(GitData $data) {
         expect($data->getBranch())->to->not->be->empty;
 
