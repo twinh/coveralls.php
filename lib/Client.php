@@ -6,7 +6,7 @@ use GuzzleHttp\Psr7\{MultipartStream, Request, Response, Uri};
 use Lcov\{Record, Report, Token};
 use Psr\Http\Message\{UriInterface};
 use Rx\{Observable};
-use Rx\React\{Http};
+use Rx\React\{FromFileObservable, Http};
 use Rx\Subject\{Subject};
 use Webmozart\PathUtil\{Path};
 use function Which\{which};
@@ -204,30 +204,23 @@ class Client {
     $records = Report::fromCoverage($report)->getRecords()->getArrayCopy();
     $workingDir = getcwd();
 
-    $sourceFiles = array_map(function(Record $record) {
-      return $record->getSourceFile();
+    $observables = array_map(function(Record $record) {
+      return new FromFileObservable($record->getSourceFile());
     }, $records);
 
-    return Observable::fromArray($sourceFiles)
-      ->map(function($path) use ($workingDir) {
-        $data = @file_get_contents($path);
-        if (!$data) throw new \RuntimeException("Source file not found: $path");
-        return new SourceFile(Path::makeRelative($path, $workingDir), md5($data), $data);
-      })
-      ->toArray()
-      ->map(function(array $sourceFiles) use ($records) {
-        foreach ($sourceFiles as $index => $sourceFile) {
-          /** @var Record $record */
-          $record = $records[$index];
-          $lines = preg_split('/\r?\n/', $sourceFile->getSource());
+    $first = array_shift($observables);
+    return $first->zip($observables)->map(function($results) use ($records, $workingDir) {
+      return new Job(array_map(function($index, $source) use ($records, $workingDir) {
+        /** @var Record $record */
+        $record = $records[$index];
+        $lines = preg_split('/\r?\n/', $source);
+        $coverage = new \SplFixedArray(count($lines));
+        foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
-          $coverage = new \SplFixedArray(count($lines));
-          foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
-          $sourceFile->setCoverage($coverage->toArray());
-        }
-
-        return new Job($sourceFiles);
-      });
+        $filename = Path::makeRelative($record->getSourceFile(), $workingDir);
+        return new SourceFile($filename, md5($source), $source, $coverage->toArray());
+      }, array_keys($results), $results));
+    });
   }
 
   /**
