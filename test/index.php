@@ -4,7 +4,8 @@ use Rx\{Scheduler};
 
 // Load the class library.
 $rootPath = dirname(__DIR__);
-require_once "$rootPath/vendor/autoload.php";
+$loader = require "$rootPath/vendor/autoload.php";
+$loader->addPsr4('Coveralls\\', __DIR__);
 
 // Initialize the application.
 ini_set('xdebug.max_nesting_level', '1024');

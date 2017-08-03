@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, fail, it};
-use PHPUnit\Framework\{TestCase};
 use Psr\Http\Message\{UriInterface};
 use Rx\Subject\{Subject};
 
@@ -62,12 +61,16 @@ class ClientTest extends TestCase {
         $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
         expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
       });
+
+      $this->wait();
     });
 
     it('should throw an exception if the Clover report is invalid or empty', function() use ($parseCloverReport) {
       $parseCloverReport->call(new Client, '<project></project>')->subscribe(null, function($error) {
         expect($error)->to->be->instanceOf(\InvalidArgumentException::class);
       });
+
+      $this->wait();
     });
   }
 
@@ -103,6 +106,8 @@ class ClientTest extends TestCase {
         $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
         expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
       });
+
+      $this->wait();
     });
   }
 
@@ -169,6 +174,8 @@ class ClientTest extends TestCase {
         function($error) { expect($error)->to->be->instanceOf(\InvalidArgumentException::class); },
         function() { fail('Exception not thrown.'); }
       );
+
+      $this->wait();
     });
 
     it('should throw an error with an invalid coverage report', function() {
@@ -176,6 +183,8 @@ class ClientTest extends TestCase {
         function($error) { expect($error)->to->be->instanceOf(\InvalidArgumentException::class); },
         function() { fail('Exception not thrown.'); }
       );
+
+      $this->wait();
     });
   }
 
@@ -188,6 +197,8 @@ class ClientTest extends TestCase {
         function($error) { expect($error)->to->be->instanceOf(\InvalidArgumentException::class); },
         function() { fail('Exception not thrown.'); }
       );
+
+      $this->wait();
     });
   }
 }

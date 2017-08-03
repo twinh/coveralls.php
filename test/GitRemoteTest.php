@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
-use PHPUnit\Framework\{TestCase};
 use Psr\Http\Message\{UriInterface};
 
 /**
