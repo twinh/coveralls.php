@@ -13,8 +13,8 @@ function wait(callable $block) {
     // $loop->run();
 
     $loop->futureTick(function() use ($block, $loop) {
-      call_user_func($block);
       $loop->stop();
+      call_user_func($block);
     });
 
     $loop->run();
@@ -23,8 +23,7 @@ function wait(callable $block) {
 
 // Load the class library.
 $rootPath = dirname(__DIR__);
-$loader = require "$rootPath/vendor/autoload.php";
-$loader->addPsr4('Coveralls\\', __DIR__);
+require_once "$rootPath/vendor/autoload.php";
 
 // Initialize the application.
 ini_set('xdebug.max_nesting_level', '1024');
