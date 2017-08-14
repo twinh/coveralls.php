@@ -74,13 +74,13 @@ class GitData implements \JsonSerializable {
     if (!mb_strlen($path)) $path = getcwd();
 
     $commands = [
-      'author_email' => "log -1 --pretty=format:'%ae'",
-      'author_name' => "log -1 --pretty=format:'%aN'",
+      'author_email' => 'log -1 --pretty=format:%ae',
+      'author_name' => 'log -1 --pretty=format:%aN',
       'branch' => 'rev-parse --abbrev-ref HEAD',
-      'committer_email' => "log -1 --pretty=format:'%ce'",
-      'committer_name' => "log -1 --pretty=format:'%cN'",
-      'id' => "log -1 --pretty=format:'%H'",
-      'message' => "log -1 --pretty=format:'%s'",
+      'committer_email' => 'log -1 --pretty=format:%ce',
+      'committer_name' => 'log -1 --pretty=format:%cN',
+      'id' => 'log -1 --pretty=format:%H',
+      'message' => 'log -1 --pretty=format:%s',
       'remotes' => 'remote -v'
     ];
 
@@ -92,7 +92,7 @@ class GitData implements \JsonSerializable {
     return $first->zip($observables)
       ->do(function($results) use (&$commands) {
         $index = 0;
-        foreach ($commands as $key => $value) $commands[$key] = trim(trim($results[$index++]), "'");
+        foreach ($commands as $key => $value) $commands[$key] = trim($results[$index++]);
       })
       ->map(function() use (&$commands) {
         $remotes = [];
