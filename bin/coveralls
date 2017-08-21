@@ -45,7 +45,7 @@ function main(): Observable {
 
   if (!is_string($program[0])) {
     $program->printHelp();
-    exit(1);
+    exit(64);
   }
 
   // Run the program.
@@ -65,5 +65,5 @@ require_once $fileInfo->isFile() ? $fileInfo->getPathname() : __DIR__.'/../vendo
 
 main()->subscribe(null, function($error) {
   echo $error, PHP_EOL;
-  exit(2);
+  exit(1);
 });
