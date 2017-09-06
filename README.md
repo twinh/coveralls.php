@@ -53,15 +53,14 @@ Now, in your [PHP](https://secure.php.net) code, you can use the `Coveralls\Clie
 ```php
 use Coveralls\{Client};
 
-$coverage = file_get_contents('/path/to/coverage.report');
-(new Client)->upload($coverage)->subscribe(
-  function() {
-    echo 'The report was sent successfully.';
-  },
-  function(\Throwable $e) {
-    echo 'An error occurred: ', $e->getMessage();
-  }
-);
+try {
+  $coverage = file_get_contents('/path/to/coverage.report');
+  (new Client)->upload($coverage);
+}
+
+catch (\Throwable $e) {
+  echo 'An error occurred: ', $e->getMessage();
+}
 ```
 
 ## Supported coverage formats
