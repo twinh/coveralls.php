@@ -1,7 +1,7 @@
 {
   "description": "Send Clover and LCOV coverage reports to the Coveralls service.",
   "homepage": "https://github.com/cedx/coveralls.php",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "name": "cedx/coveralls",
   "type": "library",
   "authors": [{

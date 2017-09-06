@@ -108,4 +108,4 @@ This package supports the same configuration sources as the [Coveralls](https://
 - [Continuous integration](https://travis-ci.org/cedx/coveralls.php)
 
 ## License
-[Coveralls for PHP](https://github.com/cedx/coveralls.php) is distributed under the Apache License, version 2.0.
+[Coveralls for PHP](https://github.com/cedx/coveralls.php) is distributed under the MIT License.
