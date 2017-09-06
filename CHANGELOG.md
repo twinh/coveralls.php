@@ -2,6 +2,7 @@
 This file contains highlights of what changes on each version of the [Coveralls for PHP](https://github.com/cedx/coveralls.php) package.
 
 ## Version 5.0.0
+- Breaking change: moved the `Subject` event API to the `EventEmitter` one.
 - Changed licensing for the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Version 4.0.0

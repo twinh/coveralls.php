@@ -3,11 +3,11 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use GuzzleHttp\Psr7\{MultipartStream, Request, Response, Uri};
+use Evenement\{EventEmitterTrait};
 use Lcov\{Record, Report, Token};
 use Psr\Http\Message\{UriInterface};
 use Rx\{Observable};
 use Rx\React\{FromFileObservable, Http};
-use Rx\Subject\{Subject};
 use Webmozart\PathUtil\{Path};
 use function Which\{which};
 
@@ -15,6 +15,7 @@ use function Which\{which};
  * Uploads code coverage reports to the [Coveralls](https://coveralls.io) service.
  */
 class Client {
+  use EventEmitterTrait;
 
   /**
    * @var string The URL of the default API end point.
@@ -27,22 +28,10 @@ class Client {
   private $endPoint;
 
   /**
-   * @var Subject The handler of "request" events.
-   */
-  private $onRequest;
-
-  /**
-   * @var Subject The handler of "response" events.
-   */
-  private $onResponse;
-
-  /**
    * Initializes a new instance of the class.
    * @param string|UriInterface $endPoint The URL of the API end point.
    */
   public function __construct($endPoint = self::DEFAULT_ENDPOINT) {
-    $this->onRequest = new Subject();
-    $this->onResponse = new Subject();
     $this->setEndPoint($endPoint);
   }
 
@@ -52,22 +41,6 @@ class Client {
    */
   public function getEndPoint() {
     return $this->endPoint;
-  }
-
-  /**
-   * Gets the stream of "request" events.
-   * @return Observable The stream of "request" events.
-   */
-  public function onRequest(): Observable {
-    return $this->onRequest->asObservable();
-  }
-
-  /**
-   * Gets the stream of "response" events.
-   * @return Observable The stream of "response" events.
-   */
-  public function onResponse(): Observable {
-    return $this->onResponse->asObservable();
   }
 
   /**
