@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use function PHPUnit\Expect\{await, expect, fail, it};
+use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
@@ -53,32 +53,26 @@ class GitDataTest extends TestCase {
    * @test GitData::fromRepository
    */
   public function testFromRepository() {
-    it('should retrieve the Git data from the executable output', await(function() {
-      GitData::fromRepository()->subscribe(
-        function(GitData $data) {
-          expect($data->getBranch())->to->not->be->empty;
+    it('should retrieve the Git data from the executable output', function() {
+      $data = GitData::fromRepository();
+      expect($data->getBranch())->to->not->be->empty;
 
-          $commit = $data->getCommit();
-          expect($commit)->to->be->instanceOf(GitCommit::class);
-          expect($commit->getId())->to->match('/^[a-f\d]{40}$/');
+      $commit = $data->getCommit();
+      expect($commit)->to->be->instanceOf(GitCommit::class);
+      expect($commit->getId())->to->match('/^[a-f\d]{40}$/');
 
-          $remotes = $data->getRemotes();
-          expect($remotes)->to->not->be->empty;
-          expect($remotes[0])->to->be->instanceOf(GitRemote::class);
+      $remotes = $data->getRemotes();
+      expect($remotes)->to->not->be->empty;
+      expect($remotes[0])->to->be->instanceOf(GitRemote::class);
 
-          /** @var GitRemote[] $origin */
-          $origin = array_values(array_filter($remotes->getArrayCopy(), function(GitRemote $remote): bool {
-            return $remote->getName() == 'origin';
-          }));
+      /** @var GitRemote[] $origin */
+      $origin = array_values(array_filter($remotes->getArrayCopy(), function(GitRemote $remote): bool {
+        return $remote->getName() == 'origin';
+      }));
 
-          expect($origin)->to->have->lengthOf(1);
-          expect((string) $origin[0]->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
-        },
-        function(\Throwable $e) {
-          fail($e->getMessage());
-        }
-      );
-    }));
+      expect($origin)->to->have->lengthOf(1);
+      expect((string) $origin[0]->getUrl())->to->equal('https://github.com/cedx/coveralls.php.git');
+    });
   }
 
   /**

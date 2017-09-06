@@ -4,27 +4,18 @@ declare(strict_types=1);
 
 use Commando\{Command};
 use Coveralls\{Client};
-use EventLoop\{EventLoop};
-use Rx\{Observable, Scheduler};
-use Rx\React\{FromFileObservable};
-use Rx\Scheduler\{EventLoopScheduler};
 
 /**
  * @var string The version number of this package.
  */
-const VERSION = '4.0.0';
+const VERSION = '5.0.0';
 
 /**
  * Application entry point.
- * @return Observable Completes when the program is terminated.
  */
 function main(): Observable {
   // Initialize the application.
   @cli_set_process_title('Coveralls.php');
-
-  Scheduler::setDefaultFactory(function() {
-    return new EventLoopScheduler(EventLoop::getLoop());
-  });
 
   // Parse the command line arguments.
   $program = new Command;
@@ -40,7 +31,7 @@ function main(): Observable {
 
   if ($program['version']) {
     echo VERSION, PHP_EOL;
-    return Observable::empty();
+    exit(0);
   }
 
   if (!is_string($program[0])) {
@@ -49,21 +40,23 @@ function main(): Observable {
   }
 
   // Run the program.
-  return (new FromFileObservable($program[0]))->flatMap(function($coverage) {
-    if (!mb_strlen($coverage)) return Observable::error(new \RuntimeException('The specified file is not found.'));
+  $coverage = (string) @file_get_contents($program[0]);
+  if (!mb_strlen($coverage)) throw new \RuntimeException('The specified file is not found.'));
 
-    $env = $_ENV ?: $_SERVER;
-    $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
-    echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
-    return $client->upload($coverage);
-  });
+  $env = $_ENV ?: $_SERVER;
+  $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
+  echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
+  $client->upload($coverage);
 }
 
 // Start the application.
-$fileInfo = new SplFileInfo(__DIR__.'/../../../autoload.php');
-require_once $fileInfo->isFile() ? $fileInfo->getPathname() : __DIR__.'/../vendor/autoload.php';
+try {
+  $fileInfo = new SplFileInfo(__DIR__.'/../../../autoload.php');
+  require_once $fileInfo->isFile() ? $fileInfo->getPathname() : __DIR__.'/../vendor/autoload.php';
+  main();
+}
 
-main()->subscribe(null, function($error) {
+catch (\Throwable $error) {
   echo $error, PHP_EOL;
   exit(1);
-});
+}

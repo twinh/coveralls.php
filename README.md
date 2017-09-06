@@ -64,11 +64,6 @@ $coverage = file_get_contents('/path/to/coverage.report');
 );
 ```
 
-This package has an API based on [Observables](http://reactivex.io/intro.html).
-
-> When running the tests, the scheduler is automatically bootstrapped.
-> When using [RxPHP](https://github.com/ReactiveX/RxPHP) within your own project, you'll need to set the default scheduler.
-
 ## Supported coverage formats
 Currently, this package supports two formats of coverage reports:
 - [Clover](https://www.atlassian.com/software/clover): the main format used with [PHPUnit](https://phpunit.de).

@@ -2,9 +2,6 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use Rx\{Observable};
-use Rx\React\{ProcessSubject};
-
 /**
  * Represents Git data that can be used to display more information to users.
  */
@@ -68,12 +65,15 @@ class GitData implements \JsonSerializable {
    * Creates a new Git data from a local repository.
    * This method relies on the availability of the Git executable in the system path.
    * @param string $path The path to the repository folder. Defaults to the current working directory.
-   * @return Observable The newly created Git data.
+   * @return GitData The newly created Git data.
    */
-  public static function fromRepository(string $path = ''): Observable {
+  public static function fromRepository(string $path = ''): self {
     if (!mb_strlen($path)) $path = getcwd();
 
-    $commands = [
+    $workingDir = getcwd();
+    chdir($path);
+
+    $commands = array_map(function($command) { return trim(`git $command`); }, [
       'author_email' => 'log -1 --pretty=format:%ae',
       'author_name' => 'log -1 --pretty=format:%aN',
       'branch' => 'rev-parse --abbrev-ref HEAD',
@@ -82,27 +82,16 @@ class GitData implements \JsonSerializable {
       'id' => 'log -1 --pretty=format:%H',
       'message' => 'log -1 --pretty=format:%s',
       'remotes' => 'remote -v'
-    ];
+    ]);
 
-    $observables = array_map(function($command) use ($path) {
-      return new ProcessSubject("git $command", null, $path);
-    }, array_values($commands));
+    $remotes = [];
+    foreach (preg_split('/\r?\n/', $commands['remotes']) as $remote) {
+      $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
+      if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
+    }
 
-    $first = array_shift($observables);
-    return $first->zip($observables)
-      ->do(function($results) use (&$commands) {
-        $index = 0;
-        foreach ($commands as $key => $value) $commands[$key] = trim($results[$index++]);
-      })
-      ->map(function() use (&$commands) {
-        $remotes = [];
-        foreach (preg_split('/\r?\n/', $commands['remotes']) as $remote) {
-          $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
-          if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
-        }
-
-        return new static(GitCommit::fromJson($commands), $commands['branch'], array_values($remotes));
-      });
+    chdir($workingDir);
+    return new static(GitCommit::fromJson($commands), $commands['branch'], array_values($remotes));
   }
 
   /**

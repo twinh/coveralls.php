@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use function PHPUnit\Expect\{await, expect, fail, it};
+use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /**
@@ -152,30 +152,18 @@ class ConfigurationTest extends TestCase {
    * @test Configuration::loadDefaults
    */
   public function testLoadDefaults() {
-    it('should properly initialize from a `.coveralls.yml` file', await(function() {
-      Configuration::loadDefaults('test/fixtures/.coveralls.yml')->subscribe(
-        function($config) {
-          expect($config)->to->have->length->of->at->least(2);
-          expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
-          expect($config['service_name'])->to->equal('travis-pro');
-        },
-        function(\Throwable $e) {
-          fail($e->getMessage());
-        }
-      );
-    }));
+    it('should properly initialize from a `.coveralls.yml` file', function() {
+      $config = Configuration::loadDefaults('test/fixtures/.coveralls.yml');
+      expect($config)->to->have->length->of->at->least(2);
+      expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
+      expect($config['service_name'])->to->equal('travis-pro');
+    });
 
-    it('should use the environment defaults if the `.coveralls.yml` file is not found', await(function() {
+    it('should use the environment defaults if the `.coveralls.yml` file is not found', function() {
       $defaults = Configuration::fromEnvironment();
-      Configuration::loadDefaults('.dummy/config.yml')->subscribe(
-        function(Configuration $config) use ($defaults) {
-          expect(get_object_vars($config->jsonSerialize()))->to->equal(get_object_vars($defaults->jsonSerialize()));
-        },
-        function(\Throwable $e) {
-          fail($e->getMessage());
-        }
-      );
-    }));
+      $config = Configuration::loadDefaults('.dummy/config.yml');
+      expect(get_object_vars($config->jsonSerialize()))->to->equal(get_object_vars($defaults->jsonSerialize()));
+    });
   }
 
   /**

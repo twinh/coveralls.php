@@ -2,8 +2,6 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use Rx\{Observable};
-use Rx\React\{FromFileObservable};
 use Symfony\Component\Yaml\{Yaml};
 
 /**
@@ -121,19 +119,13 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Loads the default configuration.
    * The default values are read from the environment variables and an optional `.coveralls.yml` file.
    * @param string $coverallsFile The path to the `.coveralls.yml` file. Defaults to the file found in the current directory.
-   * @return Observable The default configuration.
+   * @return Configuration The default configuration.
    */
-  public static function loadDefaults(string $coverallsFile = '.coveralls.yml'): Observable {
-    return (new FromFileObservable($coverallsFile))
-      ->catch(function() {
-        return Observable::of('');
-      })
-      ->map(function($data) {
-        $defaults = static::fromEnvironment();
-        $config = static::fromYaml($data);
-        if ($config) $defaults->merge($config);
-        return $defaults;
-      });
+  public static function loadDefaults(string $coverallsFile = '.coveralls.yml'): self {
+    $defaults = static::fromEnvironment();
+    $config = static::fromYaml((string) @file_get_contents($coverallsFile));
+    if ($config) $defaults->merge($config);
+    return $defaults;
   }
 
   /**

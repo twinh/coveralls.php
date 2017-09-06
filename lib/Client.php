@@ -7,7 +7,6 @@ use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
 use Lcov\{Record, Report, Token};
 use Psr\Http\Message\{UriInterface};
-use Rx\{Observable};
 use Webmozart\PathUtil\{Path};
 use function Which\{which};
 
@@ -60,49 +59,35 @@ class Client {
    * Uploads the specified code coverage report to the Coveralls service.
    * @param string $coverage A coverage report.
    * @param Configuration $configuration The environment settings.
-   * @return Observable Completes when the operation is done.
+   * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
-  public function upload(string $coverage, Configuration $configuration = null): Observable {
+  public function upload(string $coverage, Configuration $configuration = null) {
     $coverage = trim($coverage);
-    if (!mb_strlen($coverage)) return Observable::error(new \InvalidArgumentException('The specified coverage report is empty.'));
+    if (!mb_strlen($coverage)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
-    $report = null;
+    $job = null;
     $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-    if ($isClover) $report = $this->parseCloverReport($coverage);
+    if ($isClover) $job = $this->parseCloverReport($coverage);
     else {
       $token = mb_substr($coverage, 0, 3);
-      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $report = $this->parseLcovReport($coverage);
+      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $job = $this->parseLcovReport($coverage);
     }
 
-    if (!$report) return Observable::error(new \InvalidArgumentException('The specified coverage format is not supported.'));
+    if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
+    $this->updateJob($job, $configuration ?: Configuration::loadDefaults());
+    if (!$job->getRunAt()) $job->setRunAt(time());
 
-    $observables = [
-      $configuration ? Observable::of($configuration) : Configuration::loadDefaults(),
-      which('git')
-        ->catch(function() {
-          return Observable::of('');
-        })
-        ->flatMap(function($gitPath) {
-          return mb_strlen($gitPath) ? GitData::fromRepository() : Observable::of(null);
-        })
-    ];
+    try {
+      if (which('git')) {
+        $git = GitData::fromRepository();
+        $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
+        if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+        $job->setGit($git);
+      }
+    }
 
-    return $report
-      ->zip($observables, function(Job $job, Configuration $config, GitData $git = null) {
-        $this->updateJob($job, $config);
-        if (!$job->getRunAt()) $job->setRunAt(time());
-
-        if ($git) {
-          $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
-          if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-          $job->setGit($git);
-        }
-
-        return $job;
-      })
-      ->flatMap(function($job) {
-        return $this->uploadJob($job);
-      });
+    catch (\RuntimeException $e) {}
+    $this->uploadJob($job);
   }
 
   /**
@@ -145,71 +130,62 @@ class Client {
   /**
    * Parses the specified [Clover](https://www.atlassian.com/software/clover) coverage report.
    * @param string $report A coverage report in LCOV format.
-   * @return Observable The job corresponding to the specified coverage report.
+   * @return Job The job corresponding to the specified coverage report.
+   * @throws \InvalidArgumentException The specified Clover report has an invalid format.
+   * @throws \RuntimeException A source file was not found.
    */
-  private function parseCloverReport(string $report): Observable {
-    $xml = simplexml_load_string($report);
+  private function parseCloverReport(string $report): Job {
+    $xml = @simplexml_load_string($report);
     if (!$xml || !$xml->count() || !$xml->project->count())
-      return Observable::error(new \InvalidArgumentException('The specified Clover report is invalid.'));
+      throw new \InvalidArgumentException('The specified Clover report is invalid.');
 
     $files = array_merge($xml->xpath('/coverage/project/file') ?: [], $xml->xpath('/coverage/project/package/file') ?: []);
     $workingDir = getcwd();
 
-    $observables = array_map(function(\SimpleXMLElement $file) {
-      return isset($file['name']) ?
-        new FromFileObservable((string) $file['name']) :
-        Observable::error(new \DomainException("Invalid file data: {$file->asXML()}"));
-    }, $files);
+    return new Job(array_map(function(\SimpleXMLElement $file) use ($workingDir) {
+      if (!isset($file['name'])) throw new \InvalidArgumentException("Invalid file data: {$file->asXML()}");
 
-    $first = array_shift($observables);
-    return $first->zip($observables)->map(function($results) use ($files, $workingDir) {
-      return new Job(array_map(function($index, $source) use ($files, $workingDir) {
-        /** @var \SimpleXMLElement $file */
-        $file = $files[$index];
+      $path = (string) $file['name'];
+      $source = (string) @file_get_contents($path);
+      if (!mb_strlen($source)) throw new \RuntimeException("Source file not found: $path");
 
-        $lines = preg_split('/\r?\n/', $source);
-        $coverage = new \SplFixedArray(count($lines));
-        foreach ($file->line as $line) {
-          if (!isset($line['type'])) throw new \DomainException("Invalid line data: {$line->asXML()}");
-          if ((string) $line['type'] == 'stmt') {
-            if (!isset($line['count']) || !isset($line['num'])) throw new \DomainException("Invalid line data: {$line->asXML()}");
-            $coverage[(int) $line['num'] - 1] = (int) $line['count'];
-          }
+      $lines = preg_split('/\r?\n/', $source);
+      $coverage = new \SplFixedArray(count($lines));
+      foreach ($file->line as $line) {
+        if (!isset($line['type'])) throw new \InvalidArgumentException("Invalid line data: {$line->asXML()}");
+        if ((string) $line['type'] == 'stmt') {
+          if (!isset($line['count']) || !isset($line['num'])) throw new \InvalidArgumentException("Invalid line data: {$line->asXML()}");
+          $coverage[(int) $line['num'] - 1] = (int) $line['count'];
         }
+      }
 
-        $filename = Path::makeRelative((string) $file['name'], $workingDir);
-        return new SourceFile($filename, md5($source), $source, $coverage->toArray());
-      }, array_keys($results), $results));
-    });
+      $filename = Path::makeRelative((string) $file['name'], $workingDir);
+      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
+    }, $files));
   }
 
   /**
    * Parses the specified [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage report.
    * @param string $report A coverage report in LCOV format.
-   * @return Observable The job corresponding to the specified coverage report.
+   * @return Job The job corresponding to the specified coverage report.
+   * @throws \RuntimeException A source file was not found.
    */
-  private function parseLcovReport(string $report): Observable {
+  private function parseLcovReport(string $report): Job {
     $records = Report::fromCoverage($report)->getRecords()->getArrayCopy();
     $workingDir = getcwd();
 
-    $observables = array_map(function(Record $record) {
-      return new FromFileObservable($record->getSourceFile());
-    }, $records);
+    return new Job(array_map(function(Record $record) use ($workingDir) {
+      $path = $record->getSourceFile();
+      $source = (string) @file_get_contents($path);
+      if (!mb_strlen($source)) throw new \RuntimeException("Source file not found: $path");
 
-    $first = array_shift($observables);
-    return $first->zip($observables)->map(function($results) use ($records, $workingDir) {
-      return new Job(array_map(function($index, $source) use ($records, $workingDir) {
-        /** @var Record $record */
-        $record = $records[$index];
+      $lines = preg_split('/\r?\n/', $source);
+      $coverage = new \SplFixedArray(count($lines));
+      foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
-        $lines = preg_split('/\r?\n/', $source);
-        $coverage = new \SplFixedArray(count($lines));
-        foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
-
-        $filename = Path::makeRelative($record->getSourceFile(), $workingDir);
-        return new SourceFile($filename, md5($source), $source, $coverage->toArray());
-      }, array_keys($results), $results));
-    });
+      $filename = Path::makeRelative($path, $workingDir);
+      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
+    }, $records));
   }
 
   /**
