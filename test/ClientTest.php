@@ -5,30 +5,11 @@ namespace Coveralls;
 use function PHPUnit\Expect\{await, expect, fail, it};
 use PHPUnit\Framework\{TestCase};
 use Psr\Http\Message\{UriInterface};
-use Rx\Subject\{Subject};
 
 /**
  * Tests the features of the `Coveralls\Client` class.
  */
 class ClientTest extends TestCase {
-
-  /**
-   * @test Client::onRequest
-   */
-  public function testOnRequest() {
-    it('should return an `Observable` instead of the underlying `Subject`', function() {
-      expect((new Client)->onRequest())->to->not->be->instanceOf(Subject::class);
-    });
-  }
-
-  /**
-   * @test Client::onResponse
-   */
-  public function testOnResponse() {
-    it('should return an `Observable` instead of the underlying `Subject`', function() {
-      expect((new Client)->onResponse())->to->not->be->instanceOf(Subject::class);
-    });
-  }
 
   /**
    * @test Client::parseCloverReport
@@ -194,11 +175,15 @@ class ClientTest extends TestCase {
    * @test Client::uploadJob
    */
   public function testUploadJob() {
-    it('should throw an exception with an empty coverage job', await(function() {
-      (new Client)->uploadJob(new Job)->subscribe(null,
-        function($error) { expect($error)->to->be->instanceOf(\InvalidArgumentException::class); },
-        function() { fail('Exception not thrown.'); }
-      );
-    }));
+    it('should throw an exception with an empty coverage job', function() {
+      try {
+        (new Client)->uploadJob(new Job);
+        fail('Exception not thrown.');
+      }
+
+      catch (\Throwable $e) {
+        expect($e)->to->be->instanceOf(\InvalidArgumentException::class);
+      }
+    });
   }
 }

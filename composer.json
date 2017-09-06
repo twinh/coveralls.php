@@ -30,6 +30,7 @@
   ],
   "require": {
     "php": ">=7.0.0",
+    "ext-curl": "*",
     "ext-date": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
@@ -37,8 +38,9 @@
     "ext-simplexml": "*",
     "ext-spl": "*",
     "cedx/lcov": "^2.0.0",
-    "cedx/which": "^2.0.0",
-    "guzzlehttp/psr7": "^1.4.2",
+    "cedx/which": "^3.0.0",
+    "evenement/evenement": "^3.0.1",
+    "guzzlehttp/guzzle": "^6.3.0",
     "nategood/commando": "^0.2.9",
     "reactivex/rxphp": "^2.0.3",
     "rx/child-process": "^1.0.0",
@@ -49,10 +51,8 @@
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
-    "apigen/apigen": "^5.0.0-RC5",
     "cedx/phpunit-expect": "^0.4.0",
-    "phing/phing": "^2.16.0",
-    "roave/better-reflection": "dev-master#a402048"
+    "phing/phing": "^2.16.0"
   },
   "scripts": {
     "coverage": "php bin/coveralls var/coverage.xml",

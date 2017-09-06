@@ -2,12 +2,12 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use GuzzleHttp\Psr7\{MultipartStream, Request, Response, Uri};
 use Evenement\{EventEmitterTrait};
+use GuzzleHttp\{Client as HTTPClient};
+use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
 use Lcov\{Record, Report, Token};
 use Psr\Http\Message\{UriInterface};
 use Rx\{Observable};
-use Rx\React\{FromFileObservable, Http};
 use Webmozart\PathUtil\{Path};
 use function Which\{which};
 
@@ -108,31 +108,38 @@ class Client {
   /**
    * Uploads the specified job to the Coveralls service.
    * @param Job $job The job to be uploaded.
-   * @return Observable Completes when the operation is done.
+   * @throws \InvalidArgumentException The job does not meet the requirements.
+   * @throws \RuntimeException An error occurred while uploading the report.
    */
-  public function uploadJob(Job $job): Observable {
+  public function uploadJob(Job $job) {
     if (!$job->getRepoToken() && !$job->getServiceName())
-      return Observable::error(new \InvalidArgumentException('The job does not meet the requirements.'));
+      throw new \InvalidArgumentException('The job does not meet the requirements.');
 
-    $request = new MultipartStream([[
-      'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-      'filename' => 'coveralls.json',
-      'name' => 'json_file'
-    ]]);
+    try {
+      $body = new MultipartStream([[
+        'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+        'filename' => 'coveralls.json',
+        'name' => 'json_file'
+      ]]);
 
-    $headers = [
-      'Content-Length' => $request->getSize(),
-      'Content-Type' => "multipart/form-data; boundary={$request->getBoundary()}"
-    ];
+      $headers = [
+        'Content-Length' => $body->getSize(),
+        'Content-Type' => "multipart/form-data; boundary={$body->getBoundary()}"
+      ];
 
-    $uri = $this->getEndPoint()->withPath('/api/v1/jobs');
-    $this->onRequest->onNext(new Request('POST', $uri, $headers, $request));
-    return Http::post((string) $uri, $request->getContents(), $headers)->includeResponse()->map(function($data) {
-      /** @var \React\HttpClient\Response $response */
-      list($body, $response) = $data;
-      $this->onResponse->onNext(new Response($response->getCode(), $response->getHeaders(), $body));
-      return $body;
-    });
+      $request = new Request('POST', $this->getEndPoint()->withPath('/api/v1/jobs'), $headers, $body);
+      $this->emit('request', [$request]);
+
+      $response = (new HTTPClient())->send($request);
+      $this->emit('reponse', [$response]);
+
+      $code = $response->getStatusCode();
+      if ($code != 200) throw new \UnexpectedValueException("$code {$response->getReasonPhrase()}");
+    }
+
+    catch (\Throwable $e) {
+      throw new \RuntimeException('An error occurred while uploading the report.', 0, $e);
+    }
   }
 
   /**

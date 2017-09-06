@@ -4,6 +4,7 @@ This file contains highlights of what changes on each version of the [Coveralls 
 ## Version 5.0.0
 - Breaking change: moved the `Subject` event API to the `EventEmitter` one.
 - Changed licensing for the [MIT License](https://opensource.org/licenses/MIT).
+- Restored the [Guzzle](http://docs.guzzlephp.org) HTTP client.
 
 ## Version 4.0.0
 - Breaking change: properties representing URLs as strings now use instances of the [`Psr\Http\Message\UriInterface`](http://www.php-fig.org/psr/psr-7/#35-psrhttpmessageuriinterface) interface.
