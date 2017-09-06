@@ -13,7 +13,7 @@ const VERSION = '5.0.0';
 /**
  * Application entry point.
  */
-function main(): Observable {
+function main() {
   // Initialize the application.
   @cli_set_process_title('Coveralls.php');
 
@@ -41,7 +41,7 @@ function main(): Observable {
 
   // Run the program.
   $coverage = (string) @file_get_contents($program[0]);
-  if (!mb_strlen($coverage)) throw new \RuntimeException('The specified file is not found.'));
+  if (!mb_strlen($coverage)) throw new \RuntimeException('The specified file is not found.');
 
   $env = $_ENV ?: $_SERVER;
   $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
