@@ -117,9 +117,6 @@ class Client {
 
       $response = (new HTTPClient())->send($request);
       $this->emit('reponse', [$response]);
-
-      $code = $response->getStatusCode();
-      if ($code != 200) throw new \UnexpectedValueException("$code {$response->getReasonPhrase()}");
     }
 
     catch (\Throwable $e) {
