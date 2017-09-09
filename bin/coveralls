@@ -40,13 +40,10 @@ function main() {
   }
 
   // Run the program.
-  $coverage = (string) @file_get_contents($program[0]);
-  if (!mb_strlen($coverage)) throw new \RuntimeException('The specified file is not found.');
-
   $env = $_ENV ?: $_SERVER;
   $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
   echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
-  $client->upload($coverage);
+  $client->upload((string) @file_get_contents($program[0]));
 }
 
 // Start the application.
