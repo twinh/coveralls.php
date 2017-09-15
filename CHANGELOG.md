@@ -5,6 +5,7 @@ This file contains highlights of what changes on each version of the [Coveralls 
 - Breaking change: changed the signature of most class constructors.
 - Breaking change: most class properties are now read-only.
 - Breaking change: the `Configuration::fromYaml()` method now throws an `InvalidArgumentException` if the document is invalid.
+- Updated the package dependencies.
 
 ## Version 5.0.0
 - Breaking change: moved the `Observable` API to a synchronous one.
