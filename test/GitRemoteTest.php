@@ -4,7 +4,6 @@ namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
-use Psr\Http\Message\{UriInterface};
 
 /**
  * Tests the features of the `Coveralls\GitRemote` class.
