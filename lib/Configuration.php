@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use Symfony\Component\Yaml\{Yaml};
+use Symfony\Component\Yaml\Exception\{ParseException};
 
 /**
  * Provides access to the coverage settings.
@@ -101,17 +102,19 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Creates a new configuration from the specified YAML document.
    * @param string $document A YAML document providing configuration parameters.
    * @return Configuration The instance corresponding to the specified YAML document, or `null` if a parsing error occurred.
+   * @throws \InvalidArgumentException The specified document is invalid.
    */
   public static function fromYaml(string $document) {
-    if (!mb_strlen($document)) return null;
+    if (!mb_strlen($document)) throw new \InvalidArgumentException('The specified YAML document is empty.');
 
     try {
       $yaml = Yaml::parse($document);
-      return is_array($yaml) ? new static($yaml) : null;
+      if (!is_array($yaml)) throw new \InvalidArgumentException('The specified YAML document is invalid.');
+      return new static($yaml);
     }
 
-    catch (\Throwable $e) {
-      return null;
+    catch (ParseException $e) {
+      throw new \InvalidArgumentException('The specified YAML document is invalid.', 0, $e);
     }
   }
 
@@ -123,9 +126,15 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    */
   public static function loadDefaults(string $coverallsFile = '.coveralls.yml'): self {
     $defaults = static::fromEnvironment();
-    $config = static::fromYaml((string) @file_get_contents($coverallsFile));
-    if ($config) $defaults->merge($config);
-    return $defaults;
+
+    try {
+      $defaults->merge(static::fromYaml((string) @file_get_contents($coverallsFile)));
+      return $defaults;
+    }
+
+    catch (\Throwable $e) {
+      return $defaults;
+    }
   }
 
   /**

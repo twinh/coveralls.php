@@ -76,9 +76,9 @@ class ConfigurationTest extends TestCase {
    * @test Configuration::fromYaml
    */
   public function testFromYaml() {
-    it('should return a null reference with a non-object value', function() {
-      expect(Configuration::fromYaml('**123/456**'))->to->be->null;
-      expect(Configuration::fromYaml('foo'))->to->be->null;
+    it('should throw an exception with a non-object value', function() {
+      expect(Configuration::fromYaml('**123/456**'))->to->throw(\InvalidArgumentException::class);
+      expect(Configuration::fromYaml('foo'))->to->be->throw(\InvalidArgumentException::class);
     });
 
     it('should return an initialized instance for a non-empty map', function() {
