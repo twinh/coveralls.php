@@ -55,13 +55,13 @@ class Client {
     $isClover = mb_substr($report, 0, 5) == '<?xml' || mb_substr($report, 0, 10) == '<coverage';
     if ($isClover) {
       require_once __DIR__.'/Parsers/Clover.php';
-      $job = call_user_func('Coveralls\Services\Clover\parseReport', $report);
+      $job = call_user_func('Coveralls\Parsers\Clover\parseReport', $report);
     }
     else {
       $token = mb_substr($report, 0, 3);
       if ($token == 'TN:' || $token == 'SF:') {
         require_once __DIR__.'/Parsers/Lcov.php';
-        $job = call_user_func('Coveralls\Services\Lcov\parseReport', $report);
+        $job = call_user_func('Coveralls\Parsers\Lcov\parseReport', $report);
       }
     }
 
