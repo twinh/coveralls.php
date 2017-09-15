@@ -42,9 +42,9 @@ class GitCommit implements \JsonSerializable {
    * @param string $id The commit identifier.
    * @param string $message The commit message.
    */
-  public function __construct(string $id = '', string $message = '') {
-    $this->setId($id);
-    $this->setMessage($message);
+  public function __construct(string $id, string $message = '') {
+    $this->id = $id;
+    $this->message = $message;
   }
 
   /**
@@ -65,12 +65,11 @@ class GitCommit implements \JsonSerializable {
     if (is_array($map)) $map = (object) $map;
     if (!is_object($map)) return null;
 
-    return (new static(isset($map->id) && is_string($map->id) ? $map->id : ''))
+    return (new static(isset($map->id) && is_string($map->id) ? $map->id : '', isset($map->message) && is_string($map->message) ? $map->message : ''))
       ->setAuthorEmail(isset($map->author_email) && is_string($map->author_email) ? $map->author_email : '')
       ->setAuthorName(isset($map->author_name) && is_string($map->author_name) ? $map->author_name : '')
       ->setCommitterEmail(isset($map->committer_email) && is_string($map->committer_email) ? $map->committer_email : '')
-      ->setCommitterName(isset($map->committer_name) && is_string($map->committer_name) ? $map->committer_name : '')
-      ->setMessage(isset($map->message) && is_string($map->message) ? $map->message : '');
+      ->setCommitterName(isset($map->committer_name) && is_string($map->committer_name) ? $map->committer_name : '');
   }
 
   /**

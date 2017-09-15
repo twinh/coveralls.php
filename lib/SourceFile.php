@@ -34,11 +34,11 @@ class SourceFile implements \JsonSerializable {
    * @param string $source The contents of this source file.
    * @param int[] $coverage The coverage data for this file's job.
    */
-  public function __construct(string $name = '', string $sourceDigest = '', string $source = '', array $coverage = []) {
+  public function __construct(string $name, string $sourceDigest, string $source = '', array $coverage = []) {
+    $this->name = $name;
+    $this->sourceDigest = $sourceDigest;
+    $this->source = $source;
     $this->coverage = new \ArrayObject($coverage);
-    $this->setName($name);
-    $this->setSource($source);
-    $this->setSourceDigest($sourceDigest);
   }
 
   /**

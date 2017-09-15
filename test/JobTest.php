@@ -70,12 +70,11 @@ class JobTest extends TestCase {
     });
 
     it('should return a non-empty map for an initialized instance', function() {
-      $map = (new Job)
-        ->setGit(new GitData(null, 'develop'))
+      $map = (new Job([new SourceFile('/home/cedx/coveralls.php', '')]))
+        ->setGit(new GitData(new GitCommit(''), 'develop'))
         ->setParallel(true)
         ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
         ->setRunAt('2017-01-29T03:43:30+01:00')
-        ->setSourceFiles([new SourceFile('/home/cedx/coveralls.php')])
         ->jsonSerialize();
 
       expect(get_object_vars($map))->to->have->lengthOf(5);
@@ -96,12 +95,11 @@ class JobTest extends TestCase {
    * @test Job::__toString
    */
   public function testToString() {
-    $job = (string) (new Job)
-      ->setGit(new GitData(null, 'develop'))
+    $job = (string) (new Job([new SourceFile('/home/cedx/coveralls.php', '')]))
+      ->setGit(new GitData(new GitCommit(''), 'develop'))
       ->setParallel(true)
       ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
-      ->setRunAt('2017-01-29T03:43:30+01:00')
-      ->setSourceFiles([new SourceFile('/home/cedx/coveralls.php')]);
+      ->setRunAt('2017-01-29T03:43:30+01:00');
 
     it('should start with the class name', function() use ($job) {
       expect($job)->startWith('Coveralls\Job {');

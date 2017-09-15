@@ -25,9 +25,9 @@ class GitRemote implements \JsonSerializable {
    * @param string $name The remote's name.
    * @param string|UriInterface $url The remote's URL.
    */
-  public function __construct(string $name = '', $url = null) {
-    $this->setName($name);
-    $this->setUrl($url);
+  public function __construct(string $name, $url = null) {
+    $this->name = $name;
+    $this->url = is_string($url) ? new Uri($url) : $url;
   }
 
   /**

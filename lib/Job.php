@@ -87,7 +87,7 @@ class Job implements \JsonSerializable {
       return array_values(array_filter(array_map([SourceFile::class, 'fromJson'], $files)));
     };
 
-    return (new static)
+    return (new static(isset($map->source_files) && is_array($map->source_files) ? $transform($map->source_files) : []))
       ->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
       ->setGit(isset($map->git) ? GitData::fromJson($map->git) : null)
       ->setParallel(isset($map->parallel) && is_bool($map->parallel) ? $map->parallel : false)
@@ -96,8 +96,7 @@ class Job implements \JsonSerializable {
       ->setServiceJobId(isset($map->service_job_id) && is_string($map->service_job_id) ? $map->service_job_id : '')
       ->setServiceName(isset($map->service_name) && is_string($map->service_name) ? $map->service_name : '')
       ->setServiceNumber(isset($map->service_number) && is_string($map->service_number) ? $map->service_number : '')
-      ->setServicePullRequest(isset($map->service_pull_request) && is_string($map->service_pull_request) ? $map->service_pull_request : '')
-      ->setSourceFiles(isset($map->source_files) && is_array($map->source_files) ? $transform($map->source_files) : []);
+      ->setServicePullRequest(isset($map->service_pull_request) && is_string($map->service_pull_request) ? $map->service_pull_request : '');
   }
 
   /**

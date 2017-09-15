@@ -28,9 +28,9 @@ class GitData implements \JsonSerializable {
    * @param string $branch The branch name.
    * @param GitRemote[] $remotes The remote repositories.
    */
-  public function __construct(GitCommit $commit = null, string $branch = '', array $remotes = []) {
+  public function __construct(GitCommit $commit, string $branch = '', array $remotes = []) {
+    $this->commit = $commit;
     $this->setBranch($branch);
-    $this->setCommit($commit);
     $this->remotes = new \ArrayObject($remotes);
   }
 
@@ -55,7 +55,7 @@ class GitData implements \JsonSerializable {
 
     if (is_array($map)) $map = (object) $map;
     return !is_object($map) ? null : new static(
-      GitCommit::fromJson($map->head ?? null),
+      GitCommit::fromJson($map->head ?? []),
       isset($map->branch) && is_string($map->branch) ? $map->branch : '',
       isset($map->remotes) && is_array($map->remotes) ? $transform($map->remotes) : []
     );
@@ -87,7 +87,7 @@ class GitData implements \JsonSerializable {
     $remotes = [];
     foreach (preg_split('/\r?\n/', $commands['remotes']) as $remote) {
       $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
-      if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : '');
+      if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : null);
     }
 
     chdir($workingDir);

@@ -29,7 +29,7 @@ class Client {
    * @param string|UriInterface $endPoint The URL of the API end point.
    */
   public function __construct($endPoint = self::DEFAULT_ENDPOINT) {
-    $this->setEndPoint($endPoint);
+    $this->endPoint = is_string($endPoint) ? new Uri($endPoint) : $endPoint;
   }
 
   /**
