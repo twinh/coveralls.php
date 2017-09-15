@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use function PHPUnit\Expect\{await, expect, fail, it};
+use function PHPUnit\Expect\{expect, fail, it};
 use PHPUnit\Framework\{TestCase};
 use Psr\Http\Message\{UriInterface};
 
@@ -10,87 +10,6 @@ use Psr\Http\Message\{UriInterface};
  * Tests the features of the `Coveralls\Client` class.
  */
 class ClientTest extends TestCase {
-
-  /**
-   * @test Client::parseCloverReport
-   */
-  public function testParseCloverReport() {
-    $parseCloverReport = function($report) {
-      return $this->parseCloverReport($report);
-    };
-
-    it('should properly parse Clover reports', function() use ($parseCloverReport) {
-      /** @var Job $job */
-      $job = $parseCloverReport->call(new Client, file_get_contents('test/fixtures/clover.xml'));
-      $files = $job->getSourceFiles();
-      expect($files)->to->have->lengthOf(3);
-
-      expect($files[0])->to->be->instanceOf(SourceFile::class);
-      expect($files[0]->getName())->to->equal('lib/Client.php');
-      expect($files[0]->getSourceDigest())->to->not->be->empty;
-
-      $subset = [null, 2, 2, 2, 2, null];
-      expect(array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()))->to->equal($subset);
-
-      expect($files[1]->getName())->to->equal('lib/Configuration.php');
-      expect($files[1]->getSourceDigest())->to->not->be->empty;
-
-      $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-      expect(array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()))->to->equal($subset);
-
-      expect($files[2]->getName())->to->equal('lib/GitCommit.php');
-      expect($files[2]->getSourceDigest())->to->not->be->empty;
-
-      $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-      expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
-    });
-
-    it('should throw an exception if the Clover report is invalid or empty', function() use ($parseCloverReport) {
-      try {
-        $parseCloverReport->call(new Client, '<project></project>');
-        fail('Exception not thrown.');
-      }
-
-      catch (\Throwable $e) {
-        expect($e)->to->be->instanceOf(\InvalidArgumentException::class);
-      }
-    });
-  }
-
-  /**
-   * @test Client::parseLcovReport
-   */
-  public function testParseLcovReport() {
-    $parseLcovReport = function($report) {
-      return $this->parseLcovReport($report);
-    };
-
-    it('should properly parse LCOV reports', function() use ($parseLcovReport) {
-      /** @var Job $job */
-      $job = $parseLcovReport->call(new Client, file_get_contents('test/fixtures/lcov.info'));
-      $files = $job->getSourceFiles();
-      expect($files)->to->have->lengthOf(3);
-
-      expect($files[0])->to->be->instanceOf(SourceFile::class);
-      expect($files[0]->getName())->to->equal('lib/Client.php');
-      expect($files[0]->getSourceDigest())->to->not->be->empty;
-
-      $subset = [null, 2, 2, 2, 2, null];
-      expect(array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()))->to->equal($subset);
-
-      expect($files[1]->getName())->to->equal('lib/Configuration.php');
-      expect($files[1]->getSourceDigest())->to->not->be->empty;
-
-      $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-      expect(array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()))->to->equal($subset);
-
-      expect($files[2]->getName())->to->equal('lib/GitCommit.php');
-      expect($files[2]->getSourceDigest())->to->not->be->empty;
-
-      $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-      expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
-    });
-  }
 
   /**
    * @test Client::setEndPoint

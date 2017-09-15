@@ -5,9 +5,7 @@ namespace Coveralls;
 use Evenement\{EventEmitterTrait};
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
-use Lcov\{Record, Report, Token};
 use Psr\Http\Message\{UriInterface};
-use Webmozart\PathUtil\{Path};
 use function Which\{which};
 
 /**
@@ -62,15 +60,22 @@ class Client {
    * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
   public function upload(string $coverage, Configuration $configuration = null) {
-    $coverage = trim($coverage);
-    if (!mb_strlen($coverage)) throw new \InvalidArgumentException('The specified coverage report is empty.');
+    $report = trim($coverage);
+    if (!mb_strlen($report)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
+    /** @var Job $job */
     $job = null;
-    $isClover = mb_substr($coverage, 0, 5) == '<?xml' || mb_substr($coverage, 0, 10) == '<coverage';
-    if ($isClover) $job = $this->parseCloverReport($coverage);
+    $isClover = mb_substr($report, 0, 5) == '<?xml' || mb_substr($report, 0, 10) == '<coverage';
+    if ($isClover) {
+      require_once __DIR__.'/Parsers/Clover.php';
+      $job = call_user_func('Coveralls\Services\Clover\parseReport', $report);
+    }
     else {
-      $token = mb_substr($coverage, 0, 3);
-      if ($token == Token::TEST_NAME.':' || $token == Token::SOURCE_FILE.':') $job = $this->parseLcovReport($coverage);
+      $token = mb_substr($report, 0, 3);
+      if ($token == 'TN:' || $token == 'SF:') {
+        require_once __DIR__.'/Parsers/Lcov.php';
+        $job = call_user_func('Coveralls\Services\Lcov\parseReport', $report);
+      }
     }
 
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
@@ -78,7 +83,7 @@ class Client {
     if (!$job->getRunAt()) $job->setRunAt(time());
 
     try {
-      if (which('git')) {
+      if (mb_strlen(which('git'))) {
         $git = GitData::fromRepository();
         $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
         if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
@@ -122,67 +127,6 @@ class Client {
     catch (\Throwable $e) {
       throw new \RuntimeException('An error occurred while uploading the report.', 0, $e);
     }
-  }
-
-  /**
-   * Parses the specified [Clover](https://www.atlassian.com/software/clover) coverage report.
-   * @param string $report A coverage report in LCOV format.
-   * @return Job The job corresponding to the specified coverage report.
-   * @throws \InvalidArgumentException The specified Clover report has an invalid format.
-   * @throws \RuntimeException A source file was not found.
-   */
-  private function parseCloverReport(string $report): Job {
-    $xml = @simplexml_load_string($report);
-    if (!$xml || !$xml->count() || !$xml->project->count())
-      throw new \InvalidArgumentException('The specified Clover report is invalid.');
-
-    $files = array_merge($xml->xpath('/coverage/project/file') ?: [], $xml->xpath('/coverage/project/package/file') ?: []);
-    $workingDir = getcwd();
-
-    return new Job(array_map(function(\SimpleXMLElement $file) use ($workingDir) {
-      if (!isset($file['name'])) throw new \InvalidArgumentException("Invalid file data: {$file->asXML()}");
-
-      $path = (string) $file['name'];
-      $source = (string) @file_get_contents($path);
-      if (!mb_strlen($source)) throw new \RuntimeException("Source file not found: $path");
-
-      $lines = preg_split('/\r?\n/', $source);
-      $coverage = new \SplFixedArray(count($lines));
-      foreach ($file->line as $line) {
-        if (!isset($line['type'])) throw new \InvalidArgumentException("Invalid line data: {$line->asXML()}");
-        if ((string) $line['type'] == 'stmt') {
-          if (!isset($line['count']) || !isset($line['num'])) throw new \InvalidArgumentException("Invalid line data: {$line->asXML()}");
-          $coverage[(int) $line['num'] - 1] = (int) $line['count'];
-        }
-      }
-
-      $filename = Path::makeRelative((string) $file['name'], $workingDir);
-      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
-    }, $files));
-  }
-
-  /**
-   * Parses the specified [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage report.
-   * @param string $report A coverage report in LCOV format.
-   * @return Job The job corresponding to the specified coverage report.
-   * @throws \RuntimeException A source file was not found.
-   */
-  private function parseLcovReport(string $report): Job {
-    $records = Report::fromCoverage($report)->getRecords()->getArrayCopy();
-    $workingDir = getcwd();
-
-    return new Job(array_map(function(Record $record) use ($workingDir) {
-      $path = $record->getSourceFile();
-      $source = (string) @file_get_contents($path);
-      if (!mb_strlen($source)) throw new \RuntimeException("Source file not found: $path");
-
-      $lines = preg_split('/\r?\n/', $source);
-      $coverage = new \SplFixedArray(count($lines));
-      foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
-
-      $filename = Path::makeRelative($path, $workingDir);
-      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
-    }, $records));
   }
 
   /**
