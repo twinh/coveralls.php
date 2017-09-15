@@ -34,12 +34,12 @@
     "ext-pcre": "*",
     "ext-simplexml": "*",
     "ext-spl": "*",
-    "cedx/lcov": "^2.0.0",
-    "cedx/which": "^3.0.0",
+    "cedx/lcov": "^3.0.0",
+    "cedx/which": "^4.0.0",
     "evenement/evenement": "^3.0.1",
     "guzzlehttp/guzzle": "^6.3.0",
     "nategood/commando": "^0.2.9",
-    "symfony/yaml": "^3.3.6",
+    "symfony/yaml": "^3.3.9",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
