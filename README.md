@@ -23,7 +23,7 @@ Then use it to upload your coverage reports:
 ```shell
 $ coveralls --help
 
-Send Clover and LCOV coverage reports to the Coveralls service.
+Send a coverage report to the Coveralls service.
 
 file
      The coverage report to upload.

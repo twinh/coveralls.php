@@ -19,7 +19,7 @@ function main() {
 
   // Parse the command line arguments.
   $program = new Command;
-  $program->setHelp('Send Clover and LCOV coverage reports to the Coveralls service.');
+  $program->setHelp('Send a coverage report to the Coveralls service.');
 
   $program->flag('v')->aka('version')
     ->description('Output the version number.')
