@@ -174,24 +174,4 @@ class GitCommit implements \JsonSerializable {
     $this->committerName = $value;
     return $this;
   }
-
-  /**
-   * Sets the commit identifier.
-   * @param string $value The new identifier.
-   * @return GitCommit This instance.
-   */
-  public function setId(string $value): self {
-    $this->id = $value;
-    return $this;
-  }
-
-  /**
-   * Sets the commit message.
-   * @param string $value The new message.
-   * @return GitCommit This instance.
-   */
-  public function setMessage(string $value): self {
-    $this->message = $value;
-    return $this;
-  }
 }

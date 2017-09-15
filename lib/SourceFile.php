@@ -109,44 +109,4 @@ class SourceFile implements \JsonSerializable {
     if (mb_strlen($source = $this->getSource())) $map->source = $source;
     return $map;
   }
-
-  /**
-   * Sets the coverage data for this file's job.
-   * @param int[] $value The new coverage data.
-   * @return SourceFile This instance.
-   */
-  public function setCoverage(array $value): self {
-    $this->getCoverage()->exchangeArray($value);
-    return $this;
-  }
-
-  /**
-   * Sets the file path of this source file.
-   * @param string $value The new file path.
-   * @return SourceFile This instance.
-   */
-  public function setName(string $value): self {
-    $this->name = $value;
-    return $this;
-  }
-
-  /**
-   * Sets the contents of this source file.
-   * @param string $value The new contents.
-   * @return SourceFile This instance.
-   */
-  public function setSource(string $value): self {
-    $this->source = $value;
-    return $this;
-  }
-
-  /**
-   * Sets the MD5 digest of the full source code of this file.
-   * @param string $value The new MD5 digest.
-   * @return SourceFile This instance.
-   */
-  public function setSourceDigest(string $value): self {
-    $this->sourceDigest = $value;
-    return $this;
-  }
 }

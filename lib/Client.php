@@ -41,19 +41,6 @@ class Client {
   }
 
   /**
-   * Sets the URL of the API end point.
-   * @param string|UriInterface $value The new URL of the API end point.
-   * @return Client This instance.
-   */
-  public function setEndPoint($value): self {
-    if ($value instanceof UriInterface) $this->endPoint = $value;
-    else if (is_string($value)) $this->endPoint = new Uri($value);
-    else $this->endPoint = null;
-
-    return $this;
-  }
-
-  /**
    * Uploads the specified code coverage report to the Coveralls service.
    * @param string $coverage A coverage report.
    * @param Configuration $configuration The environment settings.

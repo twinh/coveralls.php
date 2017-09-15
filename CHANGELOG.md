@@ -3,6 +3,7 @@ This file contains highlights of what changes on each version of the [Coveralls 
 
 ## Version 6.0.0
 - Breaking change: changed the signature of most class constructors.
+- Breaking change: most class properties are now read-only.
 - Breaking change: the `Configuration::fromYaml()` method now throws an `InvalidArgumentException` if the document is invalid.
 
 ## Version 5.0.0

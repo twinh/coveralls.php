@@ -141,24 +141,4 @@ class GitData implements \JsonSerializable {
     $this->branch = $value;
     return $this;
   }
-
-  /**
-   * Sets the Git commit.
-   * @param GitCommit $value The new commit.
-   * @return GitData This instance.
-   */
-  public function setCommit(GitCommit $value = null): self {
-    $this->commit = $value;
-    return $this;
-  }
-
-  /**
-   * Sets the remote repositories.
-   * @param GitRemote[] $value The new remote repositories.
-   * @return GitData This instance.
-   */
-  public function setRemotes(array $value): self {
-    $this->getRemotes()->exchangeArray($value);
-    return $this;
-  }
 }

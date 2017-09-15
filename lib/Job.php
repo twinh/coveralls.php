@@ -297,14 +297,4 @@ class Job implements \JsonSerializable {
     $this->servicePullRequest = $value;
     return $this;
   }
-
-  /**
-   * Sets the list of source files.
-   * @param SourceFile[] $value The new source files.
-   * @return Job This instance.
-   */
-  public function setSourceFiles(array $value): self {
-    $this->getSourceFiles()->exchangeArray($value);
-    return $this;
-  }
 }

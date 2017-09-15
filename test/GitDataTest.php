@@ -102,19 +102,6 @@ class GitDataTest extends TestCase {
   }
 
   /**
-   * @test GitData::setRemotes
-   */
-  public function testSetRemotes() {
-    it('should return an instance of `ArrayObject` for plain arrays', function() {
-      $origin = new GitRemote('origin');
-      $remotes = (new GitData)->setRemotes([$origin])->getRemotes();
-      expect($remotes)->to->be->instanceOf(\ArrayObject::class);
-      expect($remotes)->to->have->lengthOf(1);
-      expect($remotes[0])->to->be->identicalTo($origin);
-    });
-  }
-
-  /**
    * @test GitData::__toString
    */
   public function testToString() {

@@ -78,27 +78,4 @@ class GitRemote implements \JsonSerializable {
       'url' => ($url = $this->getUrl()) ? (string) $url : null
     ];
   }
-
-  /**
-   * Sets the name of this remote.
-   * @param string $value The new name.
-   * @return GitRemote This instance.
-   */
-  public function setName(string $value): self {
-    $this->name = $value;
-    return $this;
-  }
-
-  /**
-   * Sets the URL of this remote.
-   * @param string|UriInterface $value The new URL.
-   * @return GitRemote This instance.
-   */
-  public function setUrl($value): self {
-    if ($value instanceof UriInterface) $this->url = $value;
-    else if (is_string($value)) $this->url = new Uri($value);
-    else $this->url = null;
-
-    return $this;
-  }
 }
