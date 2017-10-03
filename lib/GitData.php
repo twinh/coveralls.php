@@ -49,7 +49,7 @@ class GitData implements \JsonSerializable {
    * @return GitData The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJson($map) {
-    $transform = function($remotes): array {
+    $transform = function($remotes) {
       return array_values(array_filter(array_map([GitRemote::class, 'fromJson'], $remotes)));
     };
 
