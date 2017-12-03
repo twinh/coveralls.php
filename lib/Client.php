@@ -108,7 +108,7 @@ class Client {
       $this->emit('request', [$request]);
 
       $response = (new HTTPClient())->send($request);
-      $this->emit('reponse', [$response]);
+      $this->emit('response', [$response]);
     }
 
     catch (\Throwable $e) {
