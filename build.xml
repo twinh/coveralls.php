@@ -24,8 +24,8 @@
   </target>
 
   <target name="lint" description="Performs static analysis of source code.">
+    <phpLint file="bin/coveralls"/>
     <phpLint>
-      <fileSet dir="bin" includes="coveralls"/>
       <fileSet dir="lib" includes="**/*.php"/>
       <fileSet dir="test" includes="**/*.php"/>
     </phpLint>
