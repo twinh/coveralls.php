@@ -47,7 +47,7 @@ class CloverTest extends TestCase {
 
     it('should throw an exception if the Clover report is invalid or empty', function() {
       try {
-        parseReport('<coverage><foo /></coverage>');
+        parseReport('<coverage><foo/></coverage>');
         fail('Exception not thrown.');
       }
 
