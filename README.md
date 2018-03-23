@@ -100,7 +100,7 @@ This package supports the same configuration sources as the [Coveralls](https://
 
 ## See also
 - [API reference](https://cedx.github.io/coveralls.php)
-- [Code coverage](https://coveralls.io/github/cedx/coveralls.php)
+- [Code coverage](https://coveralls.io/github/cedx/coveralls.php/)
 - [Continuous integration](https://travis-ci.org/cedx/coveralls.php)
 
 ## License
