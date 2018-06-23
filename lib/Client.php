@@ -93,19 +93,18 @@ class Client {
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
     $uri = $this->getEndPoint()->withPath('/api/v1/jobs');
+    $body = new MultipartStream([[
+      'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+      'filename' => 'coveralls.json',
+      'name' => 'json_file'
+    ]]);
+
+    $headers = [
+      'Content-Length' => $body->getSize(),
+      'Content-Type' => "multipart/form-data; boundary={$body->getBoundary()}"
+    ];
 
     try {
-      $body = new MultipartStream([[
-        'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-        'filename' => 'coveralls.json',
-        'name' => 'json_file'
-      ]]);
-
-      $headers = [
-        'content-length' => $body->getSize(),
-        'content-type' => "multipart/form-data; boundary={$body->getBoundary()}"
-      ];
-
       $request = new Request('POST', $uri, $headers, $body);
       $this->emit('request', [$request]);
 
