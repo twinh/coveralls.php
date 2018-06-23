@@ -1,13 +1,8 @@
 dist: trusty
-sudo: false
-
 language: php
-php:
-- '7.1'
-- '7.2'
-
-notifications:
-  email: false
+notifications: {email: false}
+php: '7.2'
+sudo: false
 
 install: composer install --no-interaction
 script: composer test

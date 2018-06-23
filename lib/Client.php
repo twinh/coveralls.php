@@ -86,11 +86,13 @@ class Client {
    * Uploads the specified job to the Coveralls service.
    * @param Job $job The job to be uploaded.
    * @throws \InvalidArgumentException The job does not meet the requirements.
-   * @throws \RuntimeException An error occurred while uploading the report.
+   * @throws ClientException An error occurred while uploading the report.
    */
   public function uploadJob(Job $job): void {
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
+
+    $uri = $this->getEndPoint()->withPath('/api/v1/jobs');
 
     try {
       $body = new MultipartStream([[
@@ -104,7 +106,7 @@ class Client {
         'content-type' => "multipart/form-data; boundary={$body->getBoundary()}"
       ];
 
-      $request = new Request('POST', $this->getEndPoint()->withPath('/api/v1/jobs'), $headers, $body);
+      $request = new Request('POST', $uri, $headers, $body);
       $this->emit('request', [$request]);
 
       $response = (new HTTPClient())->send($request);
@@ -112,7 +114,7 @@ class Client {
     }
 
     catch (\Throwable $e) {
-      throw new \RuntimeException('An error occurred while uploading the report.', 0, $e);
+      throw new ClientException('An error occurred while uploading the report.', $uri, $e);
     }
   }
 
