@@ -59,7 +59,7 @@ class GitCommit implements \JsonSerializable {
   /**
    * Creates a new Git commit from the specified JSON map.
    * @param mixed $map A JSON map representing a Git commit.
-   * @return GitCommit The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
+   * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJson($map): ?self {
     if (is_array($map)) $map = (object) $map;
@@ -138,7 +138,7 @@ class GitCommit implements \JsonSerializable {
   /**
    * Sets the author mail address.
    * @param string $value The new mail address.
-   * @return GitCommit This instance.
+   * @return self This instance.
    */
   public function setAuthorEmail(string $value): self {
     $this->authorEmail = $value;
@@ -148,7 +148,7 @@ class GitCommit implements \JsonSerializable {
   /**
    * Sets the author name.
    * @param string $value The new name.
-   * @return GitCommit This instance.
+   * @return self This instance.
    */
   public function setAuthorName(string $value): self {
     $this->authorName = $value;
@@ -158,7 +158,7 @@ class GitCommit implements \JsonSerializable {
   /**
    * Sets the committer mail address.
    * @param string $value The new mail address.
-   * @return GitCommit This instance.
+   * @return self This instance.
    */
   public function setCommitterEmail(string $value): self {
     $this->committerEmail = $value;
@@ -168,7 +168,7 @@ class GitCommit implements \JsonSerializable {
   /**
    * Sets the committer name.
    * @param string $value The new name.
-   * @return GitCommit This instance.
+   * @return self This instance.
    */
   public function setCommitterName(string $value): self {
     $this->committerName = $value;

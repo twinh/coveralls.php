@@ -46,7 +46,7 @@ class GitData implements \JsonSerializable {
   /**
    * Creates a new Git data from the specified JSON map.
    * @param mixed $map A JSON map representing a Git data.
-   * @return GitData The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
+   * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
   public static function fromJson($map): ?self {
     $transform = function($remotes) {
@@ -65,7 +65,7 @@ class GitData implements \JsonSerializable {
    * Creates a new Git data from a local repository.
    * This method relies on the availability of the Git executable in the system path.
    * @param string $path The path to the repository folder. Defaults to the current working directory.
-   * @return GitData The newly created Git data.
+   * @return self The newly created Git data.
    */
   public static function fromRepository(string $path = ''): self {
     if (!mb_strlen($path)) $path = getcwd();
@@ -135,7 +135,7 @@ class GitData implements \JsonSerializable {
   /**
    * Sets the branch name.
    * @param string $value The new name.
-   * @return GitData This instance.
+   * @return self This instance.
    */
   public function setBranch(string $value): self {
     $this->branch = $value;
