@@ -20,6 +20,16 @@ class Client {
   public const DEFAULT_ENDPOINT = 'https://coveralls.io';
 
   /**
+   * @var string An event that is triggered when a request is made to the remote service.
+   */
+  public const EVENT_REQUEST = 'request';
+
+  /**
+   * @var string An event that is triggered when a response is received from the remote service.
+   */
+  public const EVENT_RESPONSE = 'response';
+
+  /**
    * @var Uri The URL of the API end point.
    */
   private $endPoint;
@@ -106,10 +116,10 @@ class Client {
 
     try {
       $request = new Request('POST', $uri, $headers, $body);
-      $this->emit('request', [$request]);
+      $this->emit(static::EVENT_REQUEST, [$request]);
 
       $response = (new HTTPClient())->send($request);
-      $this->emit('response', [$response]);
+      $this->emit(static::EVENT_RESPONSE, [$request, $response]);
     }
 
     catch (\Throwable $e) {
