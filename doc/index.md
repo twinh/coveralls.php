@@ -1,4 +1,6 @@
 # Coveralls <small>for PHP</small>
+![Coveralls](img/coveralls.png)
+
 Send [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) and [Clover](https://www.atlassian.com/software/clover) coverage reports to the [Coveralls](https://coveralls.io) service, in [PHP](https://secure.php.net).
 
 ## Quick start
