@@ -35,11 +35,11 @@
     "ext-simplexml": "*",
     "ext-spl": "*",
     "cedx/lcov": "^5.0.0",
-    "cedx/which": "^6.0.0",
+    "cedx/which": "^6.1.0",
     "evenement/evenement": "^3.0.1",
     "guzzlehttp/guzzle": "^6.3.3",
-    "nategood/commando": "^0.2.9",
-    "symfony/yaml": "^4.1.1",
+    "nategood/commando": "^0.3.0",
+    "symfony/yaml": "^4.1.2",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
