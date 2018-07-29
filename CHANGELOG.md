@@ -1,5 +1,9 @@
 # Changelog
 
+## Version [7.1.0](https://github.com/cedx/coveralls.php/compare/v7.0.0...v7.1.0)
+- Added an example code.
+- Updated the package dependencies.
+
 ## Version [7.0.0](https://github.com/cedx/coveralls.php/compare/v6.0.0...v7.0.0)
 - Breaking change: changed the signature of the `Client` events.
 - Breaking change: raised the required [PHP](https://secure.php.net) version.
