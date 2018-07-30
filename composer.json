@@ -32,7 +32,7 @@
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-pcre": "*",
-    "ext-simplexml": "*",
+    "ext-SimpleXML": "*",
     "ext-spl": "*",
     "cedx/lcov": "^5.0.0",
     "cedx/which": "^6.1.0",

@@ -171,7 +171,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
   /**
    * Adds all entries of the specified configuration to this one.
-   * @param Configuration $config The configuration to be merged.
+   * @param self $config The configuration to be merged.
    */
   public function merge(self $config): void {
     foreach ($config as $key => $value) $this[$key] = $value;
