@@ -15,13 +15,13 @@ class ConfigurationTest extends TestCase {
   public function testArrayAccess(): void {
     $config = new Configuration;
 
-    // It should handle the existence of an element', function() use ($config) {
+    // It should handle the existence of an element.
     assertThat($config->offsetExists('foo'), isFalse());
     $config->offsetSet('foo', 'bar');
     assertThat($config->offsetExists('foo'), isTrue());
     $config->offsetUnset('foo');
 
-    // It should handle the fetch of an element', function() use ($config) {
+    // It should handle the fetch of an element.
     assertThat($config->offsetGet('foo'), isNull());
     $config->offsetSet('foo', 'bar');
     assertThat($config->offsetGet('foo'), equalTo('bar'));
@@ -169,10 +169,10 @@ class ConfigurationTest extends TestCase {
   public function testToString(): void {
     $config = (string) new Configuration(['foo' => 'bar', 'bar' => 'baz']);
 
-    // It should start with the class name', function() use ($config) {
+    // It should start with the class name.
     assertThat($config, stringStartsWith('Coveralls\Configuration {'));
 
-    // It should contain the instance properties', function() use ($config) {
+    // It should contain the instance properties.
     assertThat($config, logicalAnd(stringContains('"bar":"baz"'), stringContains('"foo":"bar"')));
   }
 }

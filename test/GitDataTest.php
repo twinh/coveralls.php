@@ -97,10 +97,10 @@ class GitDataTest extends TestCase {
   public function testToString(): void {
     $data = (string) new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]);
 
-    // It should start with the class name', function() use ($data) {
+    // It should start with the class name.
     assertThat($data, stringStartsWith('Coveralls\GitData {'));
 
-    // It should contain the instance properties', function() use ($data) {
+    // It should contain the instance properties.
     assertThat($data, logicalAnd(
       stringContains('"branch":"develop"'),
       stringContains('"head":{'),

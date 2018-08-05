@@ -52,10 +52,10 @@ class GitRemoteTest extends TestCase {
   public function testToString(): void {
     $remote = (string) new GitRemote('origin', 'https://github.com/cedx/coveralls.php.git');
 
-    // It should start with the class name', function() use ($remote) {
+    // It should start with the class name.
     assertThat($remote, stringStartsWith('Coveralls\GitRemote {'));
 
-    // It should contain the instance properties', function() use ($remote) {
+    // It should contain the instance properties.
     assertThat($remote, logicalAnd(stringContains('"name":"origin"'), stringContains('"url":"https://github.com/cedx/coveralls.php.git"')));
   }
 }

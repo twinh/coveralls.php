@@ -82,10 +82,10 @@ class SourceFileTest extends TestCase {
   public function testToString(): void {
     $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', 'function main() {}', [null, 2, 0, null, 4, 15, null]);
 
-    // It should start with the class name', function() use ($remote) {
+    // It should start with the class name.
     assertThat($remote, stringStartsWith('Coveralls\SourceFile {'));
 
-    // It should contain the instance properties', function() use ($remote) {
+    // It should contain the instance properties.
     assertThat($remote, logicalAnd(
       stringContains('"name":"coveralls.php"'),
       stringContains('"source":"function main() {}"'),

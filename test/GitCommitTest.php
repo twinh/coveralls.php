@@ -70,10 +70,10 @@ class GitCommitTest extends TestCase {
       ->setAuthorEmail('anonymous@secret.com')
       ->setAuthorName('Anonymous');
 
-    // It should start with the class name', function() use ($commit) {
+    // It should start with the class name.
     assertThat($commit, stringStartsWith('Coveralls\GitCommit {'));
 
-    // It should contain the instance properties', function() use ($commit) {
+    // It should contain the instance properties.
     assertThat($commit, logicalAnd(
       stringContains('"author_email":"anonymous@secret.com"'),
       stringContains('"author_name":"Anonymous"'),

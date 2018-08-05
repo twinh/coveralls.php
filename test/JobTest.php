@@ -92,10 +92,10 @@ class JobTest extends TestCase {
       ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
       ->setRunAt('2017-01-29T03:43:30+01:00');
 
-    // It should start with the class name', function() use ($job) {
+    // It should start with the class name.
     assertThat($job, stringStartsWith('Coveralls\Job {'));
 
-    // It should contain the instance properties', function() use ($job) {
+    // It should contain the instance properties.
     assertThat($job, logicalAnd(
       stringContains('"git":{'),
       stringContains('"parallel":true'),
