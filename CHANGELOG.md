@@ -2,6 +2,7 @@
 
 ## Version [7.2.0](https://github.com/cedx/coveralls.php/compare/v7.1.0...v7.2.0)
 - Dropped the dependency on [PHPUnit-Expect](https://dev.belin.io/phpunit-expect).
+- Updated the package dependencies.
 
 ## Version [7.1.0](https://github.com/cedx/coveralls.php/compare/v7.0.0...v7.1.0)
 - Added an example code.
