@@ -13,20 +13,16 @@ class SourceFileTest extends TestCase {
    * @test SourceFile::fromJson
    */
   public function testFromJson(): void {
-    // It should return a null reference with a non-object value.
-    assertThat(SourceFile::fromJson('foo'), isNull());
-
     // It should return an instance with default values for an empty map.
-    $file = SourceFile::fromJson([]);
+    $file = SourceFile::fromJson(new \stdClass);
     assertThat($file, isInstanceOf(SourceFile::class));
-
     assertThat($file->getCoverage(), isEmpty());
     assertThat($file->getName(), isEmpty());
     assertThat($file->getSource(), isEmpty());
     assertThat($file->getSourceDigest(), isEmpty());
 
     // It should return an initialized instance for a non-empty map.
-    $file = SourceFile::fromJson([
+    $file = SourceFile::fromJson((object) [
       'coverage' => [null, 2, 0, null, 4, 15, null],
       'name' => 'coveralls.php',
       'source' => 'function main() {}',

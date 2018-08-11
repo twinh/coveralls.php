@@ -13,11 +13,8 @@ class GitCommitTest extends TestCase {
    * @test GitCommit::fromJson
    */
   public function testFromJson(): void {
-    // It should return a null reference with a non-object value.
-    assertThat(GitCommit::fromJson('foo'), isNull());
-
     // It should return an instance with default values for an empty map.
-    $commit = GitCommit::fromJson([]);
+    $commit = GitCommit::fromJson(new \stdClass);
     assertThat($commit, isInstanceOf(GitCommit::class));
 
     assertThat($commit->getAuthorEmail(), isEmpty());
@@ -26,7 +23,7 @@ class GitCommitTest extends TestCase {
     assertThat($commit->getMessage(), isEmpty());
 
     // It should return an initialized instance for a non-empty map.
-    $commit = GitCommit::fromJson([
+    $commit = GitCommit::fromJson((object) [
       'author_email' => 'anonymous@secret.com',
       'author_name' => 'Anonymous',
       'id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871',

@@ -13,22 +13,19 @@ class GitDataTest extends TestCase {
    * @test GitData::fromJson
    */
   public function testFromJson(): void {
-    // It should return a null reference with a non-object value.
-    assertThat(GitData::fromJson('foo'), isNull());
-
     // It should return an instance with default values for an empty map.
-    $data = GitData::fromJson([]);
+    $data = GitData::fromJson(new \stdClass);
     assertThat($data, isInstanceOf(GitData::class));
     assertThat($data->getBranch(), isEmpty());
-    assertThat($data->getCommit(), isInstanceOf(GitCommit::class));
+    assertThat($data->getCommit(), isNull());
     assertThat($data->getRemotes(), isEmpty());
 
     // It should return an initialized instance for a non-empty map.
-    $data = GitData::fromJson([
+    $data = GitData::fromJson((object) [
       'branch' => 'develop',
-      'head' => ['id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871'],
+      'head' => (object) ['id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871'],
       'remotes' => [
-        ['name' => 'origin']
+        (object) ['name' => 'origin']
       ]
     ]);
 

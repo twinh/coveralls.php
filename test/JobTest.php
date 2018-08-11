@@ -13,13 +13,9 @@ class JobTest extends TestCase {
    * @test Job::fromJson
    */
   public function testFromJson(): void {
-    // It should return a null reference with a non-object value.
-    assertThat(Job::fromJson('foo'), isNull());
-
     // It should return an instance with default values for an empty map.
-    $job = Job::fromJson([]);
+    $job = Job::fromJson(new \stdClass);
     assertThat($job, isInstanceOf(Job::class));
-
     assertThat($job->getGit(), isNull());
     assertThat($job->isParallel(), isFalse());
     assertThat($job->getRepoToken(), isEmpty());
@@ -27,13 +23,13 @@ class JobTest extends TestCase {
     assertThat($job->getSourceFiles(), isEmpty());
 
     // It should return an initialized instance for a non-empty map.
-    $job = Job::fromJson([
-      'git' => ['branch' => 'develop'],
+    $job = Job::fromJson((object) [
+      'git' => (object) ['branch' => 'develop'],
       'parallel' => true,
       'repo_token' => 'yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt',
       'run_at' => '2017-01-29T03:43:30+01:00',
       'source_files' => [
-        ['name' => '/home/cedx/coveralls.php']
+        (object) ['name' => '/home/cedx/coveralls.php']
       ]
     ]);
 
