@@ -1,3 +1,6 @@
+path: blob/master
+source: bin/coveralls
+
 # Command line interface
 The easy way. From a command prompt, install the `coveralls` executable:
 
