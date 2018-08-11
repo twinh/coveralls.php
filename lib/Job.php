@@ -76,20 +76,17 @@ class Job implements \JsonSerializable {
 
   /**
    * Creates a new job from the specified JSON map.
-   * @param mixed $map A JSON map representing a job.
+   * @param object $map A JSON map representing a job.
    * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJson($map): ?self {
-    if (is_array($map)) $map = (object) $map;
-    if (!is_object($map)) return null;
-
+  public static function fromJson(object $map): self {
     $transform = function($files) {
-      return array_values(array_filter(array_map([SourceFile::class, 'fromJson'], $files)));
+      return array_map([SourceFile::class, 'fromJson'], $files);
     };
 
     return (new static(isset($map->source_files) && is_array($map->source_files) ? $transform($map->source_files) : []))
       ->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
-      ->setGit(isset($map->git) ? GitData::fromJson($map->git) : null)
+      ->setGit(isset($map->git) && is_object($map->git) ? GitData::fromJson($map->git) : null)
       ->setParallel(isset($map->parallel) && is_bool($map->parallel) ? $map->parallel : false)
       ->setRepoToken(isset($map->repo_token) && is_string($map->repo_token) ? $map->repo_token : '')
       ->setRunAt(isset($map->run_at) && is_string($map->run_at) ? new \DateTime($map->run_at) : null)
@@ -219,7 +216,7 @@ class Job implements \JsonSerializable {
    * @param GitData $value The new Git data.
    * @return self This instance.
    */
-  public function setGit(GitData $value = null): self {
+  public function setGit(?GitData $value): self {
     $this->git = $value;
     return $this;
   }

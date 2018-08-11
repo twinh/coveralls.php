@@ -41,12 +41,11 @@ class GitRemote implements \JsonSerializable {
 
   /**
    * Creates a new remote repository from the specified JSON map.
-   * @param mixed $map A JSON map representing a remote repository.
+   * @param object $map A JSON map representing a remote repository.
    * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJson($map): ?self {
-    if (is_array($map)) $map = (object) $map;
-    return !is_object($map) ? null : new static(
+  public static function fromJson(object $map): self {
+    return new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',
       isset($map->url) && is_string($map->url) ? $map->url : null
     );
