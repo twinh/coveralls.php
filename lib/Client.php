@@ -76,7 +76,7 @@ class Client {
     }
 
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
-    $this->updateJob($job, $configuration ?: Configuration::loadDefaults());
+    $this->updateJob($job, $configuration ?? Configuration::loadDefaults());
     if (!$job->getRunAt()) $job->setRunAt(time());
 
     try {
