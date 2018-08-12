@@ -22,7 +22,7 @@ function parseReport(string $report): Job {
     if (!mb_strlen($source)) throw new \RuntimeException("Source file not found: $sourceFile");
 
     $coverage = new \SplFixedArray(count(preg_split('/\r?\n/', $source)));
-    foreach ($record->getLines()->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
+    if ($lines = $record->getLines()) foreach ($lines->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
     $filename = Path::makeRelative($sourceFile, $workingDir);
     return new SourceFile($filename, md5($source), $source, $coverage->toArray());
