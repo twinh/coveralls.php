@@ -246,12 +246,8 @@ class Job implements \JsonSerializable {
    * @param mixed $value The new timestamp.
    * @return self This instance.
    */
-  public function setRunAt($value): self {
-    if ($value instanceof \DateTime) $this->runAt = $value;
-    else if (is_string($value)) $this->runAt = new \DateTime($value);
-    else if (is_int($value)) $this->runAt = new \DateTime("@$value");
-    else $this->runAt = null;
-
+  public function setRunAt(?\DateTime $value): self {
+    $this->runAt = $value;
     return $this;
   }
 

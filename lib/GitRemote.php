@@ -2,7 +2,6 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
 /**
@@ -16,18 +15,18 @@ class GitRemote implements \JsonSerializable {
   private $name;
 
   /**
-   * @var Uri The remote's URL.
+   * @var UriInterface The remote's URL.
    */
   private $url;
 
   /**
    * Initializes a new instance of the class.
    * @param string $name The remote's name.
-   * @param string|UriInterface $url The remote's URL.
+   * @param UriInterface $url The remote's URL.
    */
-  public function __construct(string $name, $url = null) {
+  public function __construct(string $name, UriInterface $url = null) {
     $this->name = $name;
-    $this->url = is_string($url) ? new Uri($url) : $url;
+    $this->url = $url;
   }
 
   /**

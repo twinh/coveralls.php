@@ -30,16 +30,16 @@ class Client {
   public const EVENT_RESPONSE = 'response';
 
   /**
-   * @var Uri The URL of the API end point.
+   * @var UriInterface The URL of the API end point.
    */
   private $endPoint;
 
   /**
    * Initializes a new instance of the class.
-   * @param string|UriInterface $endPoint The URL of the API end point.
+   * @param UriInterface $endPoint The URL of the API end point.
    */
-  public function __construct($endPoint = self::DEFAULT_ENDPOINT) {
-    $this->endPoint = is_string($endPoint) ? new Uri($endPoint) : $endPoint;
+  public function __construct(UriInterface $endPoint = null) {
+    $this->endPoint = $endPoint ?? new Uri(static::DEFAULT_ENDPOINT);
   }
 
   /**
