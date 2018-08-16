@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
+use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
 /**
@@ -46,7 +47,7 @@ class GitRemote implements \JsonSerializable {
   public static function fromJson(object $map): self {
     return new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',
-      isset($map->url) && is_string($map->url) ? $map->url : null
+      isset($map->url) && is_string($map->url) ? new Uri($map->url) : null
     );
   }
 

@@ -65,7 +65,7 @@ class JobTest extends TestCase {
       ->setGit(new GitData(new GitCommit(''), 'develop'))
       ->setParallel(true)
       ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
-      ->setRunAt('2017-01-29T03:43:30+01:00')
+      ->setRunAt(new \DateTime('2017-01-29T03:43:30+01:00'))
       ->jsonSerialize();
 
     assertThat(get_object_vars($map), countOf(5));
@@ -86,7 +86,7 @@ class JobTest extends TestCase {
       ->setGit(new GitData(new GitCommit(''), 'develop'))
       ->setParallel(true)
       ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
-      ->setRunAt('2017-01-29T03:43:30+01:00');
+      ->setRunAt(new \DateTime('2017-01-29T03:43:30+01:00'));
 
     // It should start with the class name.
     assertThat($job, stringStartsWith('Coveralls\Job {'));

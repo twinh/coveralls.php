@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
+use GuzzleHttp\Psr7\{Uri};
 use PHPUnit\Framework\{TestCase};
 
 /**
@@ -37,7 +38,7 @@ class GitRemoteTest extends TestCase {
     assertThat($map->url, isNull());
 
     // It should return a non-empty map for an initialized instance.
-    $map = (new GitRemote('origin', 'https://github.com/cedx/coveralls.php.git'))->jsonSerialize();
+    $map = (new GitRemote('origin', new Uri('https://github.com/cedx/coveralls.php.git')))->jsonSerialize();
     assertThat(get_object_vars($map), countOf(2));
     assertThat($map->name, equalTo('origin'));
     assertThat($map->url, equalTo('https://github.com/cedx/coveralls.php.git'));
@@ -47,7 +48,7 @@ class GitRemoteTest extends TestCase {
    * @test GitRemote::__toString
    */
   public function testToString(): void {
-    $remote = (string) new GitRemote('origin', 'https://github.com/cedx/coveralls.php.git');
+    $remote = (string) new GitRemote('origin', new Uri('https://github.com/cedx/coveralls.php.git'));
 
     // It should start with the class name.
     assertThat($remote, stringStartsWith('Coveralls\GitRemote {'));

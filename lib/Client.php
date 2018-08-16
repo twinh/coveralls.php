@@ -77,7 +77,7 @@ class Client {
 
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');
     $this->updateJob($job, $configuration ?? Configuration::loadDefaults());
-    if (!$job->getRunAt()) $job->setRunAt(time());
+    if (!$job->getRunAt()) $job->setRunAt(new \DateTime);
 
     try {
       if (mb_strlen(which('git'))) {
@@ -137,7 +137,7 @@ class Client {
       $job->setRepoToken($config['repo_token'] ?? $config['repo_secret_token']);
 
     if (isset($config['parallel'])) $job->setParallel($config['parallel'] == 'true');
-    if (isset($config['run_at'])) $job->setRunAt($config['run_at']);
+    if (isset($config['run_at'])) $job->setRunAt(new \DateTime($config['run_at']));
     if (isset($config['service_job_id'])) $job->setServiceJobId($config['service_job_id']);
     if (isset($config['service_name'])) $job->setServiceName($config['service_name']);
     if (isset($config['service_number'])) $job->setServiceNumber($config['service_number']);
