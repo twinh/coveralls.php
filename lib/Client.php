@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
+use Coveralls\Parsers\{Clover, Lcov};
 use Evenement\{EventEmitterTrait};
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
@@ -63,16 +64,10 @@ class Client {
     /** @var Job $job */
     $job = null;
     $isClover = mb_substr($report, 0, 5) == '<?xml' || mb_substr($report, 0, 10) == '<coverage';
-    if ($isClover) {
-      require_once __DIR__.'/Parsers/Clover.php';
-      $job = call_user_func('Coveralls\Parsers\Clover\parseReport', $report);
-    }
+    if ($isClover) $job = Clover::parseReport($report);
     else {
       $token = mb_substr($report, 0, 3);
-      if ($token == 'TN:' || $token == 'SF:') {
-        require_once __DIR__.'/Parsers/Lcov.php';
-        $job = call_user_func('Coveralls\Parsers\Lcov\parseReport', $report);
-      }
+      if ($token == 'TN:' || $token == 'SF:') $job = Lcov::parseReport($report);
     }
 
     if (!$job) throw new \InvalidArgumentException('The specified coverage format is not supported.');

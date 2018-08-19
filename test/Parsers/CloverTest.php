@@ -1,21 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace Coveralls\Parsers\Clover;
+namespace Coveralls\Parsers;
 
 use Coveralls\{SourceFile};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `Coveralls\Parsers\Clover\parseReport` function.
+ * Tests the features of the `Coveralls\Parsers\Clover` class.
  */
 class CloverTest extends TestCase {
-
-  /**
-   * Performs a common set of tasks just before the first test method is called.
-   */
-  static function setUpBeforeClass(): void {
-    require_once __DIR__.'/../../lib/Parsers/Clover.php';
-  }
 
   /**
    * @test parseReport
@@ -23,7 +16,7 @@ class CloverTest extends TestCase {
   function testParseReport(): void {
     // It should properly parse Clover reports.
     /** @var \Coveralls\Job $job */
-    $job = parseReport(file_get_contents('test/fixtures/clover.xml'));
+    $job = Clover::parseReport(file_get_contents('test/fixtures/clover.xml'));
     $files = $job->getSourceFiles();
     assertThat($files, countOf(3));
 
@@ -45,7 +38,7 @@ class CloverTest extends TestCase {
 
     // It should throw an exception if the Clover report is invalid or empty.
     try {
-      parseReport('<coverage><foo/></coverage>');
+      Clover::parseReport('<coverage><foo/></coverage>');
       $this->fail('Exception not thrown.');
     }
 

@@ -1,21 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace Coveralls\Parsers\Lcov;
+namespace Coveralls\Parsers;
 
 use Coveralls\{SourceFile};
 use PHPUnit\Framework\{TestCase};
 
 /**
- * Tests the features of the `Coveralls\Parsers\Lcov\parseReport` function.
+ * Tests the features of the `Coveralls\Parsers\Lcov` class.
  */
 class LcovTest extends TestCase {
-
-  /**
-   * Performs a common set of tasks just before the first test method is called.
-   */
-  static function setUpBeforeClass(): void {
-    require_once __DIR__.'/../../lib/Parsers/Lcov.php';
-  }
 
   /**
    * @test parseReport
@@ -23,7 +16,7 @@ class LcovTest extends TestCase {
   function testParseReport(): void {
     // It should properly parse LCOV reports.
     /** @var \Coveralls\Job $job */
-    $job = parseReport(file_get_contents('test/fixtures/lcov.info'));
+    $job = Lcov::parseReport(file_get_contents('test/fixtures/lcov.info'));
     $files = $job->getSourceFiles();
     assertThat($files, countOf(3));
 
