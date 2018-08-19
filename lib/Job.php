@@ -13,7 +13,7 @@ class Job implements \JsonSerializable {
   private $commitSha = '';
 
   /**
-   * @var GitData The Git data that can be used to display more information to users.
+   * @var GitData|null The Git data that can be used to display more information to users.
    */
   private $git;
 
@@ -28,7 +28,7 @@ class Job implements \JsonSerializable {
   private $repoToken = '';
 
   /**
-   * @var \DateTime The timestamp of when the job ran.
+   * @var \DateTime|null The timestamp of when the job ran.
    */
   private $runAt;
 
@@ -61,7 +61,7 @@ class Job implements \JsonSerializable {
    * Initializes a new instance of the class.
    * @param SourceFile[] $sourceFiles The list of source files.
    */
-  public function __construct(array $sourceFiles = []) {
+  function __construct(array $sourceFiles = []) {
     $this->sourceFiles = new \ArrayObject($sourceFiles);
   }
 
@@ -69,7 +69,7 @@ class Job implements \JsonSerializable {
    * Returns a string representation of this object.
    * @return string The string representation of this object.
    */
-  public function __toString(): string {
+  function __toString(): string {
     $json = json_encode($this, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     return static::class." $json";
   }
@@ -79,7 +79,7 @@ class Job implements \JsonSerializable {
    * @param object $map A JSON map representing a job.
    * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJson(object $map): self {
+  static function fromJson(object $map): self {
     $transform = function($files) {
       return array_map([SourceFile::class, 'fromJson'], $files);
     };
@@ -100,7 +100,7 @@ class Job implements \JsonSerializable {
    * Gets the current SHA of the commit being built to override the `git` parameter.
    * @return string The SHA of the commit being built.
    */
-  public function getCommitSha(): string {
+  function getCommitSha(): string {
     return $this->commitSha;
   }
 
@@ -108,7 +108,7 @@ class Job implements \JsonSerializable {
    * Get the Git data that can be used to display more information to users.
    * @return GitData The Git data that can be used to display more information to users.
    */
-  public function getGit(): ?GitData {
+  function getGit(): ?GitData {
     return $this->git;
   }
 
@@ -116,7 +116,7 @@ class Job implements \JsonSerializable {
    * Gets the secret token for the repository.
    * @return string The secret token for the repository.
    */
-  public function getRepoToken(): string {
+  function getRepoToken(): string {
     return $this->repoToken;
   }
 
@@ -124,7 +124,7 @@ class Job implements \JsonSerializable {
    * Gets the timestamp of when the job ran.
    * @return \DateTime The timestamp of when the job ran.
    */
-  public function getRunAt(): ?\DateTime {
+  function getRunAt(): ?\DateTime {
     return $this->runAt;
   }
 
@@ -132,7 +132,7 @@ class Job implements \JsonSerializable {
    * Gets the unique identifier of the job on the CI service.
    * @return string The unique identifier of the job on the CI service.
    */
-  public function getServiceJobId(): string {
+  function getServiceJobId(): string {
     return $this->serviceJobId;
   }
 
@@ -140,7 +140,7 @@ class Job implements \JsonSerializable {
    * Gets the CI service or other environment in which the test suite was run.
    * @return string The CI service or other environment in which the test suite was run.
    */
-  public function getServiceName(): string {
+  function getServiceName(): string {
     return $this->serviceName;
   }
 
@@ -148,7 +148,7 @@ class Job implements \JsonSerializable {
    * Gets the build number.
    * @return string The build number.
    */
-  public function getServiceNumber(): string {
+  function getServiceNumber(): string {
     return $this->serviceNumber;
   }
 
@@ -156,7 +156,7 @@ class Job implements \JsonSerializable {
    * Gets the associated pull request identifier of the build.
    * @return string The associated pull request identifier of the build.
    */
-  public function getServicePullRequest(): string {
+  function getServicePullRequest(): string {
     return $this->servicePullRequest;
   }
 
@@ -164,7 +164,7 @@ class Job implements \JsonSerializable {
    * Gets the list of source files.
    * @return \ArrayObject The source files.
    */
-  public function getSourceFiles(): \ArrayObject {
+  function getSourceFiles(): \ArrayObject {
     return $this->sourceFiles;
   }
 
@@ -172,7 +172,7 @@ class Job implements \JsonSerializable {
    * Gets a value indicating whether the build will not be considered done until a webhook has been sent to Coveralls.
    * @return bool `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
    */
-  public function isParallel(): bool {
+  function isParallel(): bool {
     return $this->isParallel;
   }
 
@@ -180,7 +180,7 @@ class Job implements \JsonSerializable {
    * Converts this object to a map in JSON format.
    * @return \stdClass The map in JSON format corresponding to this object.
    */
-  public function jsonSerialize(): \stdClass {
+  function jsonSerialize(): \stdClass {
     $map = new \stdClass;
 
     if (mb_strlen($repoToken = $this->getRepoToken())) $map->repo_token = $repoToken;
@@ -206,17 +206,17 @@ class Job implements \JsonSerializable {
    * @param string $value The new SHA of the commit being built.
    * @return self This instance.
    */
-  public function setCommitSha(string $value): self {
+  function setCommitSha(string $value): self {
     $this->commitSha = $value;
     return $this;
   }
 
   /**
    * Sets the Git data that can be used to display more information to users.
-   * @param GitData $value The new Git data.
+   * @param GitData|null $value The new Git data.
    * @return self This instance.
    */
-  public function setGit(?GitData $value): self {
+  function setGit(?GitData $value): self {
     $this->git = $value;
     return $this;
   }
@@ -226,7 +226,7 @@ class Job implements \JsonSerializable {
    * @param bool $value `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
    * @return self This instance.
    */
-  public function setParallel(bool $value): self {
+  function setParallel(bool $value): self {
     $this->isParallel = $value;
     return $this;
   }
@@ -236,17 +236,17 @@ class Job implements \JsonSerializable {
    * @param string $value The new secret token.
    * @return self This instance.
    */
-  public function setRepoToken(string $value): self {
+  function setRepoToken(string $value): self {
     $this->repoToken = $value;
     return $this;
   }
 
   /**
    * Sets the timestamp of when the job ran.
-   * @param mixed $value The new timestamp.
+   * @param \DateTime|null $value The new timestamp.
    * @return self This instance.
    */
-  public function setRunAt(?\DateTime $value): self {
+  function setRunAt(?\DateTime $value): self {
     $this->runAt = $value;
     return $this;
   }
@@ -256,7 +256,7 @@ class Job implements \JsonSerializable {
    * @param string $value The new unique identifier of the job on the CI service.
    * @return self This instance.
    */
-  public function setServiceJobId(string $value): self {
+  function setServiceJobId(string $value): self {
     $this->serviceJobId = $value;
     return $this;
   }
@@ -266,7 +266,7 @@ class Job implements \JsonSerializable {
    * @param string $value The new CI service in which the test suite was run.
    * @return self This instance.
    */
-  public function setServiceName(string $value): self {
+  function setServiceName(string $value): self {
     $this->serviceName = $value;
     return $this;
   }
@@ -276,7 +276,7 @@ class Job implements \JsonSerializable {
    * @param string $value The new build number.
    * @return self This instance.
    */
-  public function setServiceNumber(string $value): self {
+  function setServiceNumber(string $value): self {
     $this->serviceNumber = $value;
     return $this;
   }
@@ -286,7 +286,7 @@ class Job implements \JsonSerializable {
    * @param string $value The new pull request identifier.
    * @return self This instance.
    */
-  public function setServicePullRequest(string $value): self {
+  function setServicePullRequest(string $value): self {
     $this->servicePullRequest = $value;
     return $this;
   }

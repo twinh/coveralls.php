@@ -30,7 +30,7 @@ class GitData implements \JsonSerializable {
    * @param string $branch The branch name.
    * @param GitRemote[] $remotes The remote repositories.
    */
-  public function __construct(?GitCommit $commit, string $branch = '', array $remotes = []) {
+  function __construct(?GitCommit $commit, string $branch = '', array $remotes = []) {
     $this->commit = $commit;
     $this->setBranch($branch);
     $this->remotes = new \ArrayObject($remotes);
@@ -40,7 +40,7 @@ class GitData implements \JsonSerializable {
    * Returns a string representation of this object.
    * @return string The string representation of this object.
    */
-  public function __toString(): string {
+  function __toString(): string {
     $json = json_encode($this, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     return static::class." $json";
   }
@@ -50,7 +50,7 @@ class GitData implements \JsonSerializable {
    * @param object $map A JSON map representing a Git data.
    * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJson(object $map): self {
+  static function fromJson(object $map): self {
     $transform = function($remotes) {
       return array_map([GitRemote::class, 'fromJson'], $remotes);
     };
@@ -99,7 +99,7 @@ class GitData implements \JsonSerializable {
    * Gets the branch name.
    * @return string The branch name.
    */
-  public function getBranch(): string {
+  function getBranch(): string {
     return $this->branch;
   }
 
@@ -107,7 +107,7 @@ class GitData implements \JsonSerializable {
    * Gets the Git commit.
    * @return GitCommit The Git commit.
    */
-  public function getCommit(): ?GitCommit {
+  function getCommit(): ?GitCommit {
     return $this->commit;
   }
 
@@ -115,7 +115,7 @@ class GitData implements \JsonSerializable {
    * Gets the remote repositories.
    * @return \ArrayObject The remote repositories.
    */
-  public function getRemotes(): \ArrayObject {
+  function getRemotes(): \ArrayObject {
     return $this->remotes;
   }
 
@@ -123,7 +123,7 @@ class GitData implements \JsonSerializable {
    * Converts this object to a map in JSON format.
    * @return \stdClass The map in JSON format corresponding to this object.
    */
-  public function jsonSerialize(): \stdClass {
+  function jsonSerialize(): \stdClass {
     return (object) [
       'branch' => $this->getBranch(),
       'head' => ($commit = $this->getCommit()) ? $commit->jsonSerialize() : null,
@@ -138,7 +138,7 @@ class GitData implements \JsonSerializable {
    * @param string $value The new name.
    * @return self This instance.
    */
-  public function setBranch(string $value): self {
+  function setBranch(string $value): self {
     $this->branch = $value;
     return $this;
   }

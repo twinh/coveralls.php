@@ -16,7 +16,7 @@ class GitRemote implements \JsonSerializable {
   private $name;
 
   /**
-   * @var UriInterface The remote's URL.
+   * @var UriInterface|null The remote's URL.
    */
   private $url;
 
@@ -25,7 +25,7 @@ class GitRemote implements \JsonSerializable {
    * @param string $name The remote's name.
    * @param UriInterface $url The remote's URL.
    */
-  public function __construct(string $name, UriInterface $url = null) {
+  function __construct(string $name, UriInterface $url = null) {
     $this->name = $name;
     $this->url = $url;
   }
@@ -34,7 +34,7 @@ class GitRemote implements \JsonSerializable {
    * Returns a string representation of this object.
    * @return string The string representation of this object.
    */
-  public function __toString(): string {
+  function __toString(): string {
     $json = json_encode($this, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     return static::class." $json";
   }
@@ -44,7 +44,7 @@ class GitRemote implements \JsonSerializable {
    * @param object $map A JSON map representing a remote repository.
    * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJson(object $map): self {
+  static function fromJson(object $map): self {
     return new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',
       isset($map->url) && is_string($map->url) ? new Uri($map->url) : null
@@ -55,7 +55,7 @@ class GitRemote implements \JsonSerializable {
    * Gets the name of this remote.
    * @return string The remote's name.
    */
-  public function getName(): string {
+  function getName(): string {
     return $this->name;
   }
 
@@ -63,7 +63,7 @@ class GitRemote implements \JsonSerializable {
    * Gets the URL of this remote.
    * @return UriInterface The remote's URL.
    */
-  public function getUrl(): ?UriInterface {
+  function getUrl(): ?UriInterface {
     return $this->url;
   }
 
@@ -71,7 +71,7 @@ class GitRemote implements \JsonSerializable {
    * Converts this object to a map in JSON format.
    * @return \stdClass The map in JSON format corresponding to this object.
    */
-  public function jsonSerialize(): \stdClass {
+  function jsonSerialize(): \stdClass {
     return (object) [
       'name' => $this->getName(),
       'url' => ($url = $this->getUrl()) ? (string) $url : null

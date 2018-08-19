@@ -12,7 +12,7 @@ class JobTest extends TestCase {
   /**
    * @test Job::fromJson
    */
-  public function testFromJson(): void {
+  function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $job = Job::fromJson(new \stdClass);
     assertThat($job, isInstanceOf(Job::class));
@@ -37,10 +37,12 @@ class JobTest extends TestCase {
     assertThat($job->isParallel(), isTrue());
     assertThat($job->getRepoToken(), equalTo('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt'));
 
+    /** @var GitData $git */
     $git = $job->getGit();
     assertThat($git, isInstanceOf(GitData::class));
     assertThat($git->getBranch(), equalTo('develop'));
 
+    /** @var \DateTime $runAt */
     $runAt = $job->getRunAt();
     assertThat($runAt, isInstanceOf(\DateTime::class));
     assertThat($runAt->format('c'), equalTo('2017-01-29T03:43:30+01:00'));
@@ -54,7 +56,7 @@ class JobTest extends TestCase {
   /**
    * @test Job::jsonSerialize
    */
-  public function testJsonSerialize(): void {
+  function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new Job)->jsonSerialize();
     assertThat(get_object_vars($map), countOf(1));
@@ -81,7 +83,7 @@ class JobTest extends TestCase {
   /**
    * @test Job::__toString
    */
-  public function testToString(): void {
+  function testToString(): void {
     $job = (string) (new Job([new SourceFile('/home/cedx/coveralls.php', '')]))
       ->setGit(new GitData(new GitCommit(''), 'develop'))
       ->setParallel(true)

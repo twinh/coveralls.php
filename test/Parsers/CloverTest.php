@@ -13,14 +13,14 @@ class CloverTest extends TestCase {
   /**
    * Performs a common set of tasks just before the first test method is called.
    */
-  public static function setUpBeforeClass(): void {
+  static function setUpBeforeClass(): void {
     require_once __DIR__.'/../../lib/Parsers/Clover.php';
   }
 
   /**
    * @test parseReport
    */
-  public function testParseReport(): void {
+  function testParseReport(): void {
     // It should properly parse Clover reports.
     /** @var \Coveralls\Job $job */
     $job = parseReport(file_get_contents('test/fixtures/clover.xml'));

@@ -12,7 +12,7 @@ class ClientTest extends TestCase {
   /**
    * @test Client::upload
    */
-  public function testUpload(): void {
+  function testUpload(): void {
     // It should throw an exception with an empty coverage report.
     try {
       (new Client)->upload('');
@@ -37,7 +37,7 @@ class ClientTest extends TestCase {
   /**
    * @test Client::uploadJob
    */
-  public function testUploadJob(): void {
+  function testUploadJob(): void {
     // It should throw an exception with an empty coverage job.
     try {
       (new Client)->uploadJob(new Job);

@@ -32,9 +32,9 @@ class SourceFile implements \JsonSerializable {
    * @param string $name The file path of this source file.
    * @param string $sourceDigest The MD5 digest of the full source code of this file.
    * @param string $source The contents of this source file.
-   * @param int[] $coverage The coverage data for this file's job.
+   * @param array<int|null> $coverage The coverage data for this file's job.
    */
-  public function __construct(string $name, string $sourceDigest, string $source = '', array $coverage = []) {
+  function __construct(string $name, string $sourceDigest, string $source = '', array $coverage = []) {
     $this->name = $name;
     $this->sourceDigest = $sourceDigest;
     $this->source = $source;
@@ -45,7 +45,7 @@ class SourceFile implements \JsonSerializable {
    * Returns a string representation of this object.
    * @return string The string representation of this object.
    */
-  public function __toString(): string {
+  function __toString(): string {
     $json = json_encode($this, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     return static::class." $json";
   }
@@ -55,7 +55,7 @@ class SourceFile implements \JsonSerializable {
    * @param object $map A JSON map representing a source file.
    * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
    */
-  public static function fromJson(object $map): self {
+  static function fromJson(object $map): self {
     return new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',
       isset($map->source_digest) && is_string($map->source_digest) ? $map->source_digest : '',
@@ -68,7 +68,7 @@ class SourceFile implements \JsonSerializable {
    * Gets the coverage data for this file's job.
    * @return \ArrayObject The coverage data.
    */
-  public function getCoverage(): \ArrayObject {
+  function getCoverage(): \ArrayObject {
     return $this->coverage;
   }
 
@@ -76,7 +76,7 @@ class SourceFile implements \JsonSerializable {
    * Gets the file path of this source file.
    * @return string The file path of this source file.
    */
-  public function getName(): string {
+  function getName(): string {
     return $this->name;
   }
 
@@ -84,7 +84,7 @@ class SourceFile implements \JsonSerializable {
    * Gets the contents of this source file.
    * @return string The contents of this source file.
    */
-  public function getSource(): string {
+  function getSource(): string {
     return $this->source;
   }
 
@@ -92,7 +92,7 @@ class SourceFile implements \JsonSerializable {
    * Gets the MD5 digest of the full source code of this file.
    * @return string The MD5 digest of the full source code of this file.
    */
-  public function getSourceDigest(): string {
+  function getSourceDigest(): string {
     return $this->sourceDigest;
   }
 
@@ -100,7 +100,7 @@ class SourceFile implements \JsonSerializable {
    * Converts this object to a map in JSON format.
    * @return \stdClass The map in JSON format corresponding to this object.
    */
-  public function jsonSerialize(): \stdClass {
+  function jsonSerialize(): \stdClass {
     $map = new \stdClass;
     $map->name = $this->getName();
     $map->source_digest = $this->getSourceDigest();

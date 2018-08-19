@@ -13,7 +13,7 @@ class GitRemoteTest extends TestCase {
   /**
    * @test GitRemote::fromJson
    */
-  public function testFromJson(): void {
+  function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $remote = GitRemote::fromJson(new \stdClass);
     assertThat($remote, isInstanceOf(GitRemote::class));
@@ -30,7 +30,7 @@ class GitRemoteTest extends TestCase {
   /**
    * @test GitRemote::jsonSerialize
    */
-  public function testJsonSerialize(): void {
+  function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new GitRemote(''))->jsonSerialize();
     assertThat(get_object_vars($map), countOf(2));
@@ -47,7 +47,7 @@ class GitRemoteTest extends TestCase {
   /**
    * @test GitRemote::__toString
    */
-  public function testToString(): void {
+  function testToString(): void {
     $remote = (string) new GitRemote('origin', new Uri('https://github.com/cedx/coveralls.php.git'));
 
     // It should start with the class name.

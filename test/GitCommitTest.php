@@ -12,7 +12,7 @@ class GitCommitTest extends TestCase {
   /**
    * @test GitCommit::fromJson
    */
-  public function testFromJson(): void {
+  function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $commit = GitCommit::fromJson(new \stdClass);
     assertThat($commit, isInstanceOf(GitCommit::class));
@@ -40,7 +40,7 @@ class GitCommitTest extends TestCase {
   /**
    * @test GitCommit::jsonSerialize
    */
-  public function testJsonSerialize(): void {
+  function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new GitCommit(''))->jsonSerialize();
     assertThat(get_object_vars($map), countOf(1));
@@ -62,7 +62,7 @@ class GitCommitTest extends TestCase {
   /**
    * @test GitCommit::__toString
    */
-  public function testToString(): void {
+  function testToString(): void {
     $commit = (string) (new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871', 'Hello World!'))
       ->setAuthorEmail('anonymous@secret.com')
       ->setAuthorName('Anonymous');

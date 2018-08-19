@@ -12,7 +12,7 @@ class SourceFileTest extends TestCase {
   /**
    * @test SourceFile::fromJson
    */
-  public function testFromJson(): void {
+  function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $file = SourceFile::fromJson(new \stdClass);
     assertThat($file, isInstanceOf(SourceFile::class));
@@ -44,7 +44,7 @@ class SourceFileTest extends TestCase {
   /**
    * @test SourceFile::jsonSerialize
    */
-  public function testJsonSerialize(): void {
+  function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new SourceFile('', ''))->jsonSerialize();
     assertThat(get_object_vars($map), countOf(3));
@@ -75,7 +75,7 @@ class SourceFileTest extends TestCase {
   /**
    * @test SourceFile::__toString
    */
-  public function testToString(): void {
+  function testToString(): void {
     $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', 'function main() {}', [null, 2, 0, null, 4, 15, null]);
 
     // It should start with the class name.

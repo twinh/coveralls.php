@@ -17,17 +17,17 @@ class Client {
   /**
    * @var string The URL of the default API end point.
    */
-  public const DEFAULT_ENDPOINT = 'https://coveralls.io';
+  const DEFAULT_ENDPOINT = 'https://coveralls.io';
 
   /**
    * @var string An event that is triggered when a request is made to the remote service.
    */
-  public const EVENT_REQUEST = 'request';
+  const EVENT_REQUEST = 'request';
 
   /**
    * @var string An event that is triggered when a response is received from the remote service.
    */
-  public const EVENT_RESPONSE = 'response';
+  const EVENT_RESPONSE = 'response';
 
   /**
    * @var UriInterface The URL of the API end point.
@@ -38,7 +38,7 @@ class Client {
    * Initializes a new instance of the class.
    * @param UriInterface $endPoint The URL of the API end point.
    */
-  public function __construct(UriInterface $endPoint = null) {
+  function __construct(UriInterface $endPoint = null) {
     $this->endPoint = $endPoint ?? new Uri(static::DEFAULT_ENDPOINT);
   }
 
@@ -46,7 +46,7 @@ class Client {
    * Gets the URL of the API end point.
    * @return UriInterface The URL of the API end point.
    */
-  public function getEndPoint(): ?UriInterface {
+  function getEndPoint(): UriInterface {
     return $this->endPoint;
   }
 
@@ -56,7 +56,7 @@ class Client {
    * @param Configuration $configuration The environment settings.
    * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
    */
-  public function upload(string $coverage, Configuration $configuration = null): void {
+  function upload(string $coverage, Configuration $configuration = null): void {
     $report = trim($coverage);
     if (!mb_strlen($report)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
@@ -98,7 +98,7 @@ class Client {
    * @throws \InvalidArgumentException The job does not meet the requirements.
    * @throws ClientException An error occurred while uploading the report.
    */
-  public function uploadJob(Job $job): void {
+  function uploadJob(Job $job): void {
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 

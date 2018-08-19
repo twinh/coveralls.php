@@ -19,7 +19,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Initializes a new instance of the class.
    * @param array $params The configuration parameters.
    */
-  public function __construct(array $params = []) {
+  function __construct(array $params = []) {
     $this->params = $params;
   }
 
@@ -27,7 +27,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Returns a string representation of this object.
    * @return string The string representation of this object.
    */
-  public function __toString(): string {
+  function __toString(): string {
     $json = json_encode($this, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     return static::class." $json";
   }
@@ -37,7 +37,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @param array $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
    * @return Configuration The newly created configuration.
    */
-  public static function fromEnvironment(array $env = null): self {
+  static function fromEnvironment(array $env = null): self {
     $config = new static;
     if (!is_array($env)) $env = $_ENV ?: $_SERVER;
 
@@ -104,7 +104,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @return self The instance corresponding to the specified YAML document.
    * @throws \InvalidArgumentException The specified document is invalid.
    */
-  public static function fromYaml(string $document): self {
+  static function fromYaml(string $document): self {
     if (!mb_strlen($document)) throw new \InvalidArgumentException('The specified YAML document is empty.');
 
     try {
@@ -124,7 +124,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @param string $coverallsFile The path to the `.coveralls.yml` file. Defaults to the file found in the current directory.
    * @return Configuration The default configuration.
    */
-  public static function loadDefaults(string $coverallsFile = '.coveralls.yml'): self {
+  static function loadDefaults(string $coverallsFile = '.coveralls.yml'): self {
     $defaults = static::fromEnvironment();
 
     try {
@@ -141,7 +141,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Gets the number of entries in this configuration.
    * @return int The number of entries in this configuration.
    */
-  public function count(): int {
+  function count(): int {
     return count($this->params);
   }
 
@@ -149,7 +149,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Returns a new iterator that allows iterating the elements of this configuration.
    * @return \Iterator An iterator for the elements of this configuration.
    */
-  public function getIterator(): \Iterator {
+  function getIterator(): \Iterator {
     return new \ArrayIterator($this->params);
   }
 
@@ -157,7 +157,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Gets the keys of this configuration.
    * @return string[] The keys of this configuration.
    */
-  public function getKeys(): array {
+  function getKeys(): array {
     return array_keys($this->params);
   }
 
@@ -165,7 +165,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Converts this object to a map in JSON format.
    * @return \stdClass The map in JSON format corresponding to this object.
    */
-  public function jsonSerialize(): \stdClass {
+  function jsonSerialize(): \stdClass {
     return (object) $this->params;
   }
 
@@ -173,7 +173,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Adds all entries of the specified configuration to this one.
    * @param self $config The configuration to be merged.
    */
-  public function merge(self $config): void {
+  function merge(self $config): void {
     foreach ($config as $key => $value) $this[$key] = $value;
   }
 
@@ -182,7 +182,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @param string $key The key to seek for.
    * @return bool `true` if this configuration contains the specified key, otherwiser `false`.
    */
-  public function offsetExists($key): bool {
+  function offsetExists($key): bool {
     return isset($this->params[$key]);
   }
 
@@ -191,7 +191,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @param string $key The key to seek for.
    * @return string The value, or a `null` reference is the key is not found.
    */
-  public function offsetGet($key): ?string {
+  function offsetGet($key): ?string {
     return $this->params[$key] ?? null;
   }
 
@@ -200,7 +200,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * @param string $key The key to seek for.
    * @param string $value The new value.
    */
-  public function offsetSet($key, $value): void {
+  function offsetSet($key, $value): void {
     $this->params[$key] = $value;
   }
 
@@ -208,7 +208,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Removes the value associated to the specified key.
    * @param string $key The key to seek for.
    */
-  public function offsetUnset($key): void {
+  function offsetUnset($key): void {
     unset($this->params[$key]);
   }
 }

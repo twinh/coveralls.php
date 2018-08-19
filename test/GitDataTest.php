@@ -12,7 +12,7 @@ class GitDataTest extends TestCase {
   /**
    * @test GitData::fromJson
    */
-  public function testFromJson(): void {
+  function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $data = GitData::fromJson(new \stdClass);
     assertThat($data, isInstanceOf(GitData::class));
@@ -32,6 +32,7 @@ class GitDataTest extends TestCase {
     assertThat($data, isInstanceOf(GitData::class));
     assertThat($data->getBranch(), equalTo('develop'));
 
+    /** @var GitCommit $commit */
     $commit = $data->getCommit();
     assertThat($commit, isInstanceOf(GitCommit::class));
     assertThat($commit->getId(), equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));
@@ -45,11 +46,12 @@ class GitDataTest extends TestCase {
   /**
    * @test GitData::fromRepository
    */
-  public function testFromRepository(): void {
+  function testFromRepository(): void {
     // It should retrieve the Git data from the executable output.
     $data = GitData::fromRepository();
     assertThat($data->getBranch(), logicalNot(isEmpty()));
 
+    /** @var GitCommit $commit */
     $commit = $data->getCommit();
     assertThat($commit, isInstanceOf(GitCommit::class));
     assertThat($commit->getId(), matchesRegularExpression('/^[a-f\d]{40}$/'));
@@ -70,7 +72,7 @@ class GitDataTest extends TestCase {
   /**
    * @test GitData::jsonSerialize
    */
-  public function testJsonSerialize(): void {
+  function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new GitData(new GitCommit('')))->jsonSerialize();
     assertThat(get_object_vars($map), countOf(3));
@@ -91,7 +93,7 @@ class GitDataTest extends TestCase {
   /**
    * @test GitData::__toString
    */
-  public function testToString(): void {
+  function testToString(): void {
     $data = (string) new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]);
 
     // It should start with the class name.
