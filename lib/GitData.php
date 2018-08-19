@@ -68,10 +68,9 @@ class GitData implements \JsonSerializable {
    * @param string $path The path to the repository folder. Defaults to the current working directory.
    * @return self The newly created Git data.
    */
-  public static function fromRepository(string $path = ''): self {
-    if (!mb_strlen($path)) $path = getcwd();
-
-    $workingDir = getcwd();
+  static function fromRepository(string $path = ''): self {
+    $workingDir = getcwd() ?: '.';
+    if (!mb_strlen($path)) $path = $workingDir;
     chdir($path);
 
     $commands = (object) array_map(function($command) { return trim(`git $command`); }, [

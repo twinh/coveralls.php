@@ -133,6 +133,10 @@ class Client {
    * @param Configuration $config The parameters to define.
    */
   private function updateJob(Job $job, Configuration $config): void {
+    if (isset($config['repo_token'])) $job->setRepoToken($config['repo_token']);
+    else if (isset($config['repo_secret_token'])) $job->setRepoToken($config['repo_secret_token']);
+
+    // TODO !!!!
     if (isset($config['repo_token']) || isset($config['repo_secret_token']))
       $job->setRepoToken($config['repo_token'] ?? $config['repo_secret_token']);
 
