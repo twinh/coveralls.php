@@ -15,8 +15,7 @@ class LcovTest extends TestCase {
    */
   function testParseReport(): void {
     // It should properly parse LCOV reports.
-    /** @var \Coveralls\Job $job */
-    $job = Lcov::parseReport(file_get_contents('test/fixtures/lcov.info'));
+    $job = Lcov::parseReport((string) file_get_contents('test/fixtures/lcov.info'));
     $files = $job->getSourceFiles();
     assertThat($files, countOf(3));
 

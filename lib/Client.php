@@ -61,7 +61,6 @@ class Client {
     $report = trim($coverage);
     if (!mb_strlen($report)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
-    /** @var Job $job */
     $job = null;
     $isClover = mb_substr($report, 0, 5) == '<?xml' || mb_substr($report, 0, 10) == '<coverage';
     if ($isClover) $job = Clover::parseReport($report);
@@ -75,12 +74,11 @@ class Client {
     if (!$job->getRunAt()) $job->setRunAt(new \DateTime);
 
     try {
-      if (mb_strlen(which('git'))) {
-        $git = GitData::fromRepository();
-        $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
-        if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
-        $job->setGit($git);
-      }
+      which('git');
+      $git = GitData::fromRepository();
+      $branch = ($gitData = $job->getGit()) ? $gitData->getBranch() : '';
+      if ($git->getBranch() == 'HEAD' && mb_strlen($branch)) $git->setBranch($branch);
+      $job->setGit($git);
     }
 
     catch (\RuntimeException $e) {}
@@ -130,10 +128,6 @@ class Client {
   private function updateJob(Job $job, Configuration $config): void {
     if (isset($config['repo_token'])) $job->setRepoToken($config['repo_token']);
     else if (isset($config['repo_secret_token'])) $job->setRepoToken($config['repo_secret_token']);
-
-    // TODO !!!!
-    if (isset($config['repo_token']) || isset($config['repo_secret_token']))
-      $job->setRepoToken($config['repo_token'] ?? $config['repo_secret_token']);
 
     if (isset($config['parallel'])) $job->setParallel($config['parallel'] == 'true');
     if (isset($config['run_at'])) $job->setRunAt(new \DateTime($config['run_at']));

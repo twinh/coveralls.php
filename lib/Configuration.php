@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
+use Coveralls\Services\{AppVeyor, CircleCI, Codeship, GitLabCI, Jenkins, Semaphore, SolanoCI, Surf, TravisCI, Wercker};
 use Symfony\Component\Yaml\{Yaml};
 use Symfony\Component\Yaml\Exception\{ParseException};
 
@@ -34,12 +35,12 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
   /**
    * Creates a new configuration from the variables of the specified environment.
-   * @param array $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
+   * @param array<string, string> $env $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
    * @return Configuration The newly created configuration.
    */
   static function fromEnvironment(array $env = null): self {
-    $config = new static;
     if (!is_array($env)) $env = $_ENV ?: $_SERVER;
+    $config = new static;
 
     // Standard.
     $serviceName = $env['CI_NAME'] ?? '';
@@ -76,24 +77,19 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     if (isset($env['GIT_MESSAGE'])) $config['git_message'] = $env['GIT_MESSAGE'];
 
     // CI services.
-    $merge = function($service) use ($config, $env) {
-      require_once __DIR__."/Services/$service.php";
-      $config->merge(call_user_func("Coveralls\\Services\\$service\\getConfiguration", $env));
-    };
-
     if (isset($env['TRAVIS'])) {
-      $merge('TravisCI');
+      $config->merge(TravisCI::getConfiguration($env));
       if (mb_strlen($serviceName) && $serviceName != 'travis-ci') $config['service_name'] = $serviceName;
     }
-    else if (isset($env['APPVEYOR'])) $merge('AppVeyor');
-    else if (isset($env['CIRCLECI'])) $merge('CircleCI');
-    else if ($serviceName == 'codeship') $merge('Codeship');
-    else if (isset($env['GITLAB_CI'])) $merge('GitLabCI');
-    else if (isset($env['JENKINS_URL'])) $merge('Jenkins');
-    else if (isset($env['SEMAPHORE'])) $merge('Semaphore');
-    else if (isset($env['SURF_SHA1'])) $merge('Surf');
-    else if (isset($env['TDDIUM'])) $merge('SolanoCI');
-    else if (isset($env['WERCKER'])) $merge('Wercker');
+    else if (isset($env['APPVEYOR'])) $config->merge(AppVeyor::getConfiguration($env));
+    else if (isset($env['CIRCLECI'])) $config->merge(CircleCI::getConfiguration($env));
+    else if ($serviceName == 'codeship') $config->merge(Codeship::getConfiguration($env));
+    else if (isset($env['GITLAB_CI'])) $config->merge(GitLabCI::getConfiguration($env));
+    else if (isset($env['JENKINS_URL'])) $config->merge(Jenkins::getConfiguration($env));
+    else if (isset($env['SEMAPHORE'])) $config->merge(Semaphore::getConfiguration($env));
+    else if (isset($env['SURF_SHA1'])) $config->merge(Surf::getConfiguration($env));
+    else if (isset($env['TDDIUM'])) $config->merge(SolanoCI::getConfiguration($env));
+    else if (isset($env['WERCKER'])) $config->merge(Wercker::getConfiguration($env));
 
     return $config;
   }
