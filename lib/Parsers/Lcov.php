@@ -12,7 +12,7 @@ use Webmozart\PathUtil\{Path};
 abstract class Lcov {
 
   /**
-   * Parses the specified LCOV coverage report.
+   * Parses the specified coverage report.
    * @param string $report A coverage report in LCOV format.
    * @return Job The job corresponding to the specified coverage report.
    * @throws \RuntimeException A source file was not found.

@@ -11,10 +11,10 @@ use Webmozart\PathUtil\{Path};
 abstract class Clover {
 
   /**
-   * Parses the specified Clover coverage report.
-   * @param string $report A coverage report in LCOV format.
+   * Parses the specified coverage report.
+   * @param string $report A coverage report in Clover format.
    * @return Job The job corresponding to the specified coverage report.
-   * @throws \InvalidArgumentException The specified Clover report has an invalid format.
+   * @throws \InvalidArgumentException The specified report has an invalid format.
    * @throws \RuntimeException A source file was not found.
    */
   static function parseReport(string $report): Job {
