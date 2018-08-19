@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
 <project default="test" name="coveralls">
-  <if>
+  <condition property="composer" value="C:\Program Files\PHP\share\composer.phar" else="/usr/local/bin/composer">
     <os family="windows"/>
-    <then><property name="composer" value="C:\Program Files\PHP\share\composer.phar"/></then>
-    <else><property name="composer" value="/usr/local/bin/composer"/></else>
-  </if>
+  </condition>
 
   <target name="clean" description="Delete the generated files">
     <delete dir="build" quiet="true"/>
@@ -15,25 +13,24 @@
     </delete>
   </target>
 
-  <target name="coverage" depends="test" description="Sends the results of the code coverage.">
+  <target name="coverage" description="Upload the code coverage">
     <exec command="php bin/coveralls var/coverage.xml" passthru="true"/>
   </target>
 
-  <target name="doc" description="Builds the documentation.">
+  <target name="doc" description="Build the documentation">
     <exec executable="vendor/bin/phpdoc" passthru="true"/>
     <exec command="mkdocs build" passthru="true"/>
   </target>
 
-  <target name="lint" description="Performs static analysis of source code.">
+  <target name="lint" description="Perform the static analysis">
     <phpLint file="bin/coveralls"/>
-    <phpLint>
-      <fileSet dir="example" includes="*.php"/>
-      <fileSet dir="lib" includes="**/*.php"/>
-      <fileSet dir="test" includes="**/*.php"/>
-    </phpLint>
+    <phpLint file="example/main.php"/>
+    <exec executable="vendor/bin/phpstan" passthru="true">
+      <arg value="analyse"/>
+    </exec>
   </target>
 
-  <target name="test" description="Runs the unit tests.">
+  <target name="test" description="Run the tests">
     <exec executable="vendor/bin/phpunit" passthru="true"/>
   </target>
 
