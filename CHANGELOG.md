@@ -1,5 +1,13 @@
 # Changelog
 
+## Version [9.0.0](https://github.com/cedx/coveralls.php/compare/v8.0.0...v9.0.0)
+- Breaking change: changed the signature of the `Client`, `ClientException` and `GitRemote` constructors.
+- Breaking change: changed the signature of the `Job::setRunAt()` method.
+- Breaking change: replaced the parser functions by classes.
+- Breaking change: replaced the service functions by classes.
+- Added support for [PHPStan](https://github.com/phpstan/phpstan) static analyzer.
+- Updated the package dependencies.
+
 ## Version [8.0.0](https://github.com/cedx/coveralls.php/compare/v7.2.0...v8.0.0)
 - Breaking change: changed the signature of the `fromJson()` methods.
 - Updated the package dependencies.

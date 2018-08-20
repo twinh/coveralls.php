@@ -7,6 +7,7 @@ use Evenement\{EventEmitterTrait};
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
 use Psr\Http\Message\{UriInterface};
+use Which\{FinderException};
 use function Which\{which};
 
 /**
@@ -81,7 +82,7 @@ class Client {
       $job->setGit($git);
     }
 
-    catch (\RuntimeException $e) {}
+    catch (FinderException $e) {}
     $this->uploadJob($job);
   }
 
