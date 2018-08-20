@@ -11,7 +11,7 @@ use PHPUnit\Framework\{TestCase};
 class LcovTest extends TestCase {
 
   /**
-   * @test parseReport
+   * Tests the `Lcov::parseReport()` method.
    */
   function testParseReport(): void {
     // It should properly parse LCOV reports.

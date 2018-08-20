@@ -11,7 +11,7 @@ use PHPUnit\Framework\{TestCase};
 class CloverTest extends TestCase {
 
   /**
-   * @test parseReport
+   * Tests the `Clover::parseReport()` method.
    */
   function testParseReport(): void {
     // It should properly parse Clover reports.

@@ -10,7 +10,7 @@ use PHPUnit\Framework\{TestCase};
 class SourceFileTest extends TestCase {
 
   /**
-   * @test SourceFile::fromJson
+   * Tests the `SourceFile::fromJson()` method.
    */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
@@ -42,7 +42,7 @@ class SourceFileTest extends TestCase {
   }
 
   /**
-   * @test SourceFile::jsonSerialize
+   * Tests the `SourceFile::jsonSerialize()` method.
    */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
@@ -73,7 +73,7 @@ class SourceFileTest extends TestCase {
   }
 
   /**
-   * @test SourceFile::__toString
+   * Tests the `SourceFile::__toString()` method.
    */
   function testToString(): void {
     $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', 'function main() {}', [null, 2, 0, null, 4, 15, null]);

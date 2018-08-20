@@ -10,7 +10,7 @@ use PHPUnit\Framework\{TestCase};
 class GitCommitTest extends TestCase {
 
   /**
-   * @test GitCommit::fromJson
+   * Tests the `GitCommit::fromJson()` method.
    */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
@@ -38,7 +38,7 @@ class GitCommitTest extends TestCase {
   }
 
   /**
-   * @test GitCommit::jsonSerialize
+   * Tests the `GitCommit::jsonSerialize()` method.
    */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
@@ -60,7 +60,7 @@ class GitCommitTest extends TestCase {
   }
 
   /**
-   * @test GitCommit::__toString
+   * Tests the `GitCommit::__toString()` method.
    */
   function testToString(): void {
     $commit = (string) (new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871', 'Hello World!'))

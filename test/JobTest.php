@@ -10,7 +10,7 @@ use PHPUnit\Framework\{TestCase};
 class JobTest extends TestCase {
 
   /**
-   * @test Job::fromJson
+   * Tests the `Job::fromJson()` method.
    */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
@@ -54,7 +54,7 @@ class JobTest extends TestCase {
   }
 
   /**
-   * @test Job::jsonSerialize
+   * Tests the `Job::jsonSerialize()` method.
    */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
@@ -81,7 +81,7 @@ class JobTest extends TestCase {
   }
 
   /**
-   * @test Job::__toString
+   * Tests the `Job::__toString()` method.
    */
   function testToString(): void {
     $job = (string) (new Job([new SourceFile('/home/cedx/coveralls.php', '')]))

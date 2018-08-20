@@ -10,7 +10,7 @@ use PHPUnit\Framework\{TestCase};
 class ClientTest extends TestCase {
 
   /**
-   * @test Client::upload
+   * Tests the `Client::upload()` method.
    */
   function testUpload(): void {
     // It should throw an exception with an empty coverage report.
@@ -35,7 +35,7 @@ class ClientTest extends TestCase {
   }
 
   /**
-   * @test Client::uploadJob
+   * Tests the `Client::uploadJob()` method.
    */
   function testUploadJob(): void {
     // It should throw an exception with an empty coverage job.
