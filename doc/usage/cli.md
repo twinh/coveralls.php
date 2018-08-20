@@ -8,7 +8,8 @@ The easy way. From a command prompt, install the `coveralls` executable:
 composer global require cedx/coveralls
 ```
 
-> Consider adding the [`composer global`](https://getcomposer.org/doc/03-cli.md#global) executables directory to your system path.
+!!! tip
+    Consider adding the [`composer global`](https://getcomposer.org/doc/03-cli.md#global) executables directory to your system path.
 
 Then use it to upload your coverage reports:
 
