@@ -22,3 +22,25 @@ catch (\Throwable $e) {
 
 The `Client::upload()` method throws an [`InvalidArgumentException`](https://secure.php.net/manual/en/class.invalidargumentexception.php)
 if the input report is invalid. It throws a `Coveralls\ClientException` if any error occurred while uploading the report.
+
+## Client events
+The `Coveralls\Client` class is an [`EventEmitter`](https://github.com/igorw/evenement/blob/master/src/Evenement/EventEmitterInterface.php) that triggers some events during its life cycle:
+
+- `Client::EVENT_REQUEST` : emitted every time a request is made to the remote service.
+- `Client::EVENT_RESPONSE` : emitted every time a response is received from the remote service.
+
+You can subscribe to them using the `on()` method:
+
+```php
+<?php
+use Coveralls\{Client};
+use Psr\Http\Message\{RequestInterface, ResponseInterface};
+
+$client->on(Client::EVENT_REQUEST, function(RequestInterface $request) {
+  echo 'Client request: ', $request->getUri();
+});
+
+$client->on(Client::EVENT_RESPONSE, function($request, ResponseInterface $response) {
+  echo 'Server response: ', $response->getStatusCode();
+});
+```
