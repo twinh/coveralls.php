@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Commando\{Command};
 use Coveralls\{Client};
+use GuzzleHttp\Psr7\{Uri};
 
 /**
  * @var string The version number of this package.
@@ -41,7 +42,7 @@ function main() {
 
   // Run the program.
   $env = $_ENV ?: $_SERVER;
-  $client = new Client($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT);
+  $client = new Client(new Uri($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT));
   echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
   $client->upload((string) @file_get_contents($program[0]));
 }
