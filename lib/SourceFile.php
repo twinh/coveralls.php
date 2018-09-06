@@ -28,7 +28,7 @@ class SourceFile implements \JsonSerializable {
   private $sourceDigest;
 
   /**
-   * Initializes a new instance of the class.
+   * Creates a new source file.
    * @param string $name The file path of this source file.
    * @param string $sourceDigest The MD5 digest of the full source code of this file.
    * @param string $source The contents of this source file.

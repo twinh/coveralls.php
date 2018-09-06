@@ -37,7 +37,7 @@ class Client {
   private $endPoint;
 
   /**
-   * Initializes a new instance of the class.
+   * Creates a new client.
    * @param UriInterface $endPoint The URL of the API end point.
    */
   function __construct(UriInterface $endPoint = null) {

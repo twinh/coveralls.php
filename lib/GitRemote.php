@@ -21,7 +21,7 @@ class GitRemote implements \JsonSerializable {
   private $url;
 
   /**
-   * Initializes a new instance of the class.
+   * Creates a new Git remote repository.
    * @param string $name The remote's name.
    * @param UriInterface $url The remote's URL.
    */

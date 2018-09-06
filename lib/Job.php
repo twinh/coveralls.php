@@ -58,7 +58,7 @@ class Job implements \JsonSerializable {
   private $sourceFiles;
 
   /**
-   * Initializes a new instance of the class.
+   * Creates a new job.
    * @param SourceFile[] $sourceFiles The list of source files.
    */
   function __construct(array $sourceFiles = []) {

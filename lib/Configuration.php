@@ -17,7 +17,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   private $params;
 
   /**
-   * Initializes a new instance of the class.
+   * Creates a new configuration.
    * @param array $params The configuration parameters.
    */
   function __construct(array $params = []) {

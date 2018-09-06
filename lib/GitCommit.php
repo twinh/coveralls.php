@@ -38,7 +38,7 @@ class GitCommit implements \JsonSerializable {
   private $message;
 
   /**
-   * Initializes a new instance of the class.
+   * Creates a new Git commit.
    * @param string $id The commit identifier.
    * @param string $message The commit message.
    */
