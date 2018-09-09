@@ -12,6 +12,7 @@ class GitRemoteTest extends TestCase {
 
   /**
    * Tests the `GitRemote::fromJson()` method.
+   * @test
    */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
@@ -29,6 +30,7 @@ class GitRemoteTest extends TestCase {
 
   /**
    * Tests the `GitRemote::jsonSerialize()` method.
+   * @test
    */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
@@ -46,6 +48,7 @@ class GitRemoteTest extends TestCase {
 
   /**
    * Tests the `GitRemote::__toString()` method.
+   * @test
    */
   function testToString(): void {
     $remote = (string) new GitRemote('origin', new Uri('https://github.com/cedx/coveralls.php.git'));

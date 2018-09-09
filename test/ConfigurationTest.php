@@ -11,6 +11,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `ArrayAccess` interface.
+   * @test
    */
   function testArrayAccess(): void {
     $config = new Configuration;
@@ -30,6 +31,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::count()` method.
+   * @test
    */
   function testCount(): void {
     // It should return zero for an empty configuration.
@@ -41,6 +43,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::fromEnvironment()` method.
+   * @test
    */
   function testFromEnvironment(): void {
     // It should return an empty configuration for an empty environment.
@@ -67,6 +70,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::fromYaml()` method.
+   * @test
    */
   function testFromYaml(): void {
     // It should return an initialized instance for a non-empty map.
@@ -83,6 +87,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::getIterator()` method.
+   * @test
    */
   function testGetIterator(): void {
     // It should return a done iterator if configuration is empty.
@@ -106,6 +111,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::getKeys()` method.
+   * @test
    */
   function testGetKeys(): void {
     // It should return an empty array for an empty configuration.
@@ -120,6 +126,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::jsonSerialize()` method.
+   * @test
    */
   function testJsonSerialize(): void {
     // It should return an empty map for a newly created instance.
@@ -135,6 +142,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::loadDefaults()` method.
+   * @test
    */
   function testLoadDefaults(): void {
     // It should properly initialize from a `.coveralls.yml` file.
@@ -151,6 +159,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::merge()` method.
+   * @test
    */
   function testMerge(): void {
     // It should have the same entries as the other configuration.
@@ -165,6 +174,7 @@ class ConfigurationTest extends TestCase {
 
   /**
    * Tests the `Configuration::__toString()` method.
+   * @test
    */
   function testToString(): void {
     $config = (string) new Configuration(['foo' => 'bar', 'bar' => 'baz']);

@@ -11,6 +11,7 @@ class ClientTest extends TestCase {
 
   /**
    * Tests the `Client::upload()` method.
+   * @test
    */
   function testUpload(): void {
     // It should throw an exception with an empty coverage report.
@@ -36,6 +37,7 @@ class ClientTest extends TestCase {
 
   /**
    * Tests the `Client::uploadJob()` method.
+   * @test
    */
   function testUploadJob(): void {
     // It should throw an exception with an empty coverage job.

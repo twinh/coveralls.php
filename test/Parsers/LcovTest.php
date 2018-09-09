@@ -12,6 +12,7 @@ class LcovTest extends TestCase {
 
   /**
    * Tests the `Lcov::parseReport()` method.
+   * @test
    */
   function testParseReport(): void {
     // It should properly parse LCOV reports.

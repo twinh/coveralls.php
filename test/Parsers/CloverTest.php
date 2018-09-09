@@ -12,6 +12,7 @@ class CloverTest extends TestCase {
 
   /**
    * Tests the `Clover::parseReport()` method.
+   * @test
    */
   function testParseReport(): void {
     // It should properly parse Clover reports.

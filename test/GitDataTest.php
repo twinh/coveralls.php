@@ -11,6 +11,7 @@ class GitDataTest extends TestCase {
 
   /**
    * Tests the `GitData::fromJson()` method.
+   * @test
    */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
@@ -45,6 +46,7 @@ class GitDataTest extends TestCase {
 
   /**
    * Tests the `GitData::fromRepository()` method.
+   * @test
    */
   function testFromRepository(): void {
     // It should retrieve the Git data from the executable output.
@@ -71,6 +73,7 @@ class GitDataTest extends TestCase {
 
   /**
    * Tests the `GitData::jsonSerialize()` method.
+   * @test
    */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
@@ -92,6 +95,7 @@ class GitDataTest extends TestCase {
 
   /**
    * Tests the `GitData::__toString()` method.
+   * @test
    */
   function testToString(): void {
     $data = (string) new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]);
