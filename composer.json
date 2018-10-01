@@ -35,7 +35,7 @@
     "ext-SimpleXML": "*",
     "ext-spl": "*",
     "cedx/lcov": "^6.0.0",
-    "cedx/which": "^7.0.0",
+    "cedx/which": "^7.0.1",
     "evenement/evenement": "^3.0.1",
     "guzzlehttp/guzzle": "^6.3.3",
     "nategood/commando": "^0.3.0",
