@@ -15,12 +15,8 @@
     "files": ["vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"],
     "psr-4": {"Coveralls\\": "test/"}
   },
-  "bin": [
-    "bin/coveralls"
-  ],
-  "config": {
-    "optimize-autoloader": true
-  },
+  "bin": ["bin/coveralls"],
+  "config": {"optimize-autoloader": true},
   "keywords": [
     "client",
     "clover",
@@ -43,7 +39,7 @@
     "evenement/evenement": "^3.0.1",
     "guzzlehttp/guzzle": "^6.3.3",
     "nategood/commando": "^0.3.0",
-    "symfony/yaml": "^4.1.4",
+    "symfony/yaml": "^4.1.5",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
