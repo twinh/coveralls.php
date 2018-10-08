@@ -53,7 +53,7 @@ class SourceFile implements \JsonSerializable {
   /**
    * Creates a new source file from the specified JSON map.
    * @param object $map A JSON map representing a source file.
-   * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
+   * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
     return new static(

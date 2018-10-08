@@ -77,7 +77,7 @@ class Job implements \JsonSerializable {
   /**
    * Creates a new job from the specified JSON map.
    * @param object $map A JSON map representing a job.
-   * @return self The instance corresponding to the specified JSON map, or `null` if a parsing error occurred.
+   * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
     $transform = function($files) {
@@ -204,7 +204,7 @@ class Job implements \JsonSerializable {
   /**
    * Sets the current SHA of the commit being built to override the `git` parameter.
    * @param string $value The new SHA of the commit being built.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setCommitSha(string $value): self {
     $this->commitSha = $value;
@@ -214,7 +214,7 @@ class Job implements \JsonSerializable {
   /**
    * Sets the Git data that can be used to display more information to users.
    * @param GitData|null $value The new Git data.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setGit(?GitData $value): self {
     $this->git = $value;
@@ -224,7 +224,7 @@ class Job implements \JsonSerializable {
   /**
    * Sets a value indicating whether the build will not be considered done until a webhook has been sent to Coveralls.
    * @param bool $value `true` if the build will not be considered done until a webhook has been sent to Coverall, otherwise `false`.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setParallel(bool $value): self {
     $this->isParallel = $value;
@@ -234,7 +234,7 @@ class Job implements \JsonSerializable {
   /**
    * Sets the secret token for the repository.
    * @param string $value The new secret token.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setRepoToken(string $value): self {
     $this->repoToken = $value;
@@ -244,7 +244,7 @@ class Job implements \JsonSerializable {
   /**
    * Sets the timestamp of when the job ran.
    * @param \DateTime|null $value The new timestamp.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setRunAt(?\DateTime $value): self {
     $this->runAt = $value;
@@ -254,7 +254,7 @@ class Job implements \JsonSerializable {
   /**
    * Gets the unique identifier of the job on the CI service.
    * @param string $value The new unique identifier of the job on the CI service.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setServiceJobId(string $value): self {
     $this->serviceJobId = $value;
@@ -264,7 +264,7 @@ class Job implements \JsonSerializable {
   /**
    * Gets the CI service or other environment in which the test suite was run.
    * @param string $value The new CI service in which the test suite was run.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setServiceName(string $value): self {
     $this->serviceName = $value;
@@ -274,7 +274,7 @@ class Job implements \JsonSerializable {
   /**
    * Gets the build number.
    * @param string $value The new build number.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setServiceNumber(string $value): self {
     $this->serviceNumber = $value;
@@ -284,7 +284,7 @@ class Job implements \JsonSerializable {
   /**
    * Gets the associated pull request identifier of the build.
    * @param string $value The new pull request identifier.
-   * @return self This instance.
+   * @return $this This instance.
    */
   function setServicePullRequest(string $value): self {
     $this->servicePullRequest = $value;
