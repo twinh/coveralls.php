@@ -118,7 +118,7 @@ class Job implements \JsonSerializable {
 
   /**
    * Gets the timestamp of when the job ran.
-   * @return \DateTime The timestamp of when the job ran.
+   * @return \DateTime|null The timestamp of when the job ran.
    */
   function getRunAt(): ?\DateTime {
     return $this->runAt;
