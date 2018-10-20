@@ -82,7 +82,7 @@ class GitData implements \JsonSerializable {
 
     $remotes = [];
     foreach (preg_split('/\r?\n/', $commands->remotes) ?: [] as $remote) {
-      $parts = explode(' ', preg_replace('/\s+/', ' ', $remote));
+      $parts = explode(' ', (string) preg_replace('/\s+/', ' ', $remote));
       if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? new Uri($parts[1]) : null);
     }
 
