@@ -23,7 +23,7 @@ class GitRemote implements \JsonSerializable {
   /**
    * Creates a new Git remote repository.
    * @param string $name The remote's name.
-   * @param UriInterface $url The remote's URL.
+   * @param UriInterface|null $url The remote's URL.
    */
   function __construct(string $name, UriInterface $url = null) {
     $this->name = $name;
@@ -61,7 +61,7 @@ class GitRemote implements \JsonSerializable {
 
   /**
    * Gets the URL of this remote.
-   * @return UriInterface The remote's URL.
+   * @return UriInterface|null The remote's URL.
    */
   function getUrl(): ?UriInterface {
     return $this->url;

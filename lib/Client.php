@@ -38,7 +38,7 @@ class Client {
 
   /**
    * Creates a new client.
-   * @param UriInterface $endPoint The URL of the API end point.
+   * @param UriInterface|null $endPoint The URL of the API end point.
    */
   function __construct(UriInterface $endPoint = null) {
     $this->endPoint = $endPoint ?? new Uri(static::DEFAULT_ENDPOINT);
