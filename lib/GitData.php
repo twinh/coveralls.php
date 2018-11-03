@@ -122,9 +122,7 @@ class GitData implements \JsonSerializable {
     return (object) [
       'branch' => $this->getBranch(),
       'head' => ($commit = $this->getCommit()) ? $commit->jsonSerialize() : null,
-      'remotes' => array_map(function(GitRemote $item): \stdClass {
-        return $item->jsonSerialize();
-      }, $this->getRemotes()->getArrayCopy())
+      'remotes' => array_map(function(GitRemote $item) { return $item->jsonSerialize(); }, $this->getRemotes()->getArrayCopy())
     ];
   }
 
