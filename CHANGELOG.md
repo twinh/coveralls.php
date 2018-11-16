@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [9.1.1](https://github.com/cedx/coveralls.php/compare/v9.1.0...v9.1.1)
+- Improved the handling of SSH-based [Git](https://git-scm.com) remotes.
+
 ## Version [9.1.0](https://github.com/cedx/coveralls.php/compare/v9.0.1...v9.1.0)
 - Replaced the [Phing](https://www.phing.info) build system by [Robo](https://robo.li).
 - Updated the package dependencies.
