@@ -23,9 +23,14 @@ class GitRemote implements \JsonSerializable {
   /**
    * Creates a new Git remote repository.
    * @param string $name The remote's name.
-   * @param UriInterface|null $url The remote's URL.
+   * @param UriInterface|string|null $url The remote's URL.
    */
-  function __construct(string $name, UriInterface $url = null) {
+  function __construct(string $name, $url = null) {
+    if (is_string($url)) {
+      $sshPattern = '/^([^@]+@)?([^:]+):(.+)$/';
+      $url = new Uri(preg_match($sshPattern, $url) ? (string) preg_replace($sshPattern, 'ssh://$1$2/$3', $url) : $url);
+    }
+
     $this->name = $name;
     $this->url = $url;
   }
@@ -47,7 +52,7 @@ class GitRemote implements \JsonSerializable {
   static function fromJson(object $map): self {
     return new static(
       isset($map->name) && is_string($map->name) ? $map->name : '',
-      isset($map->url) && is_string($map->url) ? new Uri($map->url) : null
+      isset($map->url) && is_string($map->url) ? $map->url : null
     );
   }
 
