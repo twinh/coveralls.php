@@ -1,5 +1,9 @@
 # Changelog
 
+## Version [9.1.0](https://github.com/cedx/coveralls.php/compare/v9.0.1...v9.1.0)
+- Replaced the [Phing](https://www.phing.info) build system by [Robo](https://robo.li).
+- Updated the package dependencies.
+
 ## Version [9.0.1](https://github.com/cedx/coveralls.php/compare/v9.0.0...v9.0.1)
 - Fixed the [issue #3](https://github.com/cedx/coveralls.php/issues/3): the CLI used the old signature of the `Client` constructor.
 
