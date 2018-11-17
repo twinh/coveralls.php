@@ -2,8 +2,6 @@
 declare(strict_types=1);
 namespace Coveralls;
 
-use GuzzleHttp\Psr7\{Uri};
-
 /**
  * Represents Git data that can be used to display more information to users.
  */
