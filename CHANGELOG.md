@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [9.1.2](https://github.com/cedx/coveralls.php/compare/v9.1.1...v9.1.2)
+- Fixed the [issue #5](https://github.com/cedx/coveralls.php/issues/5): an invalid output URL was generated when using a well-formed input URL.
+
 ## Version [9.1.1](https://github.com/cedx/coveralls.php/compare/v9.1.0...v9.1.1)
 - Improved the handling of SSH-based [Git](https://git-scm.com) remotes.
 
