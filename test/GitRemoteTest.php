@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Coveralls;
 
+use GuzzleHttp\Psr7\{Uri};
 use PHPUnit\Framework\{TestCase};
 
 /**
@@ -25,6 +26,9 @@ class GitRemoteTest extends TestCase {
     assertThat($remote, isInstanceOf(GitRemote::class));
     assertThat($remote->getName(), equalTo('origin'));
     assertThat((string) $remote->getUrl(), equalTo('ssh://git@github.com/cedx/coveralls.php.git'));
+
+    $remote = GitRemote::fromJson((object) ['name' => 'origin', 'url' => 'https://github.com/cedx/coveralls.php.git']);
+    assertThat((string) $remote->getUrl(), equalTo('https://github.com/cedx/coveralls.php.git'));
   }
 
   /**
@@ -43,6 +47,9 @@ class GitRemoteTest extends TestCase {
     assertThat(get_object_vars($map), countOf(2));
     assertThat($map->name, equalTo('origin'));
     assertThat($map->url, equalTo('ssh://git@github.com/cedx/coveralls.php.git'));
+
+    $map = (new GitRemote('origin', new Uri('https://github.com/cedx/coveralls.php.git')))->jsonSerialize();
+    assertThat($map->url, equalTo('https://github.com/cedx/coveralls.php.git'));
   }
 
   /**
@@ -57,5 +64,8 @@ class GitRemoteTest extends TestCase {
 
     // It should contain the instance properties.
     assertThat($remote, logicalAnd(stringContains('"name":"origin"'), stringContains('"url":"ssh://git@github.com/cedx/coveralls.php.git"')));
+
+    $remote = (string) new GitRemote('origin', new Uri('https://github.com/cedx/coveralls.php.git'));
+    assertThat($remote, stringContains('"url":"https://github.com/cedx/coveralls.php.git"'));
   }
 }
