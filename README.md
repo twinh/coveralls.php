@@ -3,11 +3,14 @@
 
 Send [Clover](https://www.atlassian.com/software/clover) and [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage reports to the [Coveralls](https://coveralls.io) service, in [PHP](https://secure.php.net).
 
-## Resources
-- [Documentation](https://dev.belin.io/coveralls.php)
+## Documentation
+- [User guide](https://dev.belin.io/coveralls.php)
 - [API reference](https://dev.belin.io/coveralls.php/api)
+
+## Development
+- [Git repository](https://git.belin.io/cedx/coveralls.php)
 - [Packagist package](https://packagist.org/packages/cedx/coveralls)
-- [GitHub repository](https://github.com/cedx/coveralls.php)
+- [Submit an issue](https://git.belin.io/cedx/coveralls.php/issues)
 
 ## License
 [Coveralls for PHP](https://dev.belin.io/coveralls.php) is distributed under the MIT License.

@@ -3,6 +3,7 @@
 ## Development
 - [API reference](https://dev.belin.io/coveralls.php/api)
 - [Packagist package](https://packagist.org/packages/cedx/coveralls)
+- [Submit an issue](https://git.belin.io/cedx/coveralls.php/issues)
 
 ## Testing
 - [Continuous integration](https://travis-ci.com/cedx/coveralls.php)
