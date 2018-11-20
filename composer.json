@@ -54,6 +54,6 @@
   },
   "support": {
     "docs": "https://dev.belin.io/coveralls.php/api",
-    "issues": "https://git.belin.io/cedx/coveralls.php/issues"
+    "issues": "https://github.com/cedx/coveralls.php/issues"
   }
 }
