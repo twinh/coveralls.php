@@ -10,7 +10,7 @@ Send [Clover](https://www.atlassian.com/software/clover) and [LCOV](http://ltp.s
 ## Development
 - [Git repository](https://git.belin.io/cedx/coveralls.php)
 - [Packagist package](https://packagist.org/packages/cedx/coveralls)
-- [Submit an issue](https://git.belin.io/cedx/coveralls.php/issues)
+- [Submit an issue](https://github.com/cedx/coveralls.php/issues)
 
 ## License
 [Coveralls for PHP](https://dev.belin.io/coveralls.php) is distributed under the MIT License.
