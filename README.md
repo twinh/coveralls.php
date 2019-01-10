@@ -8,7 +8,7 @@ Send [Clover](https://www.atlassian.com/software/clover) and [LCOV](http://ltp.s
 - [API reference](https://dev.belin.io/coveralls.php/api)
 
 ## Development
-- [Git repository](https://git.belin.io/cedx/coveralls.php)
+- [Git repository](https://github.com/cedx/coveralls.php)
 - [Packagist package](https://packagist.org/packages/cedx/coveralls)
 - [Submit an issue](https://github.com/cedx/coveralls.php/issues)
 

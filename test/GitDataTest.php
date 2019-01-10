@@ -69,9 +69,7 @@ class GitDataTest extends TestCase {
 
     assertThat($origin, countOf(1));
     assertThat((string) $origin[0]->getUrl(), logicalOr(
-      equalTo('https://git.belin.io/cedx/coveralls.php.git'),
       equalTo('https://github.com/cedx/coveralls.php.git'),
-      equalTo('ssh://git@git.belin.io/cedx/coveralls.php.git'),
       equalTo('ssh://git@github.com/cedx/coveralls.php.git')
     ));
   }
