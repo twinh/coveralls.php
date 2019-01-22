@@ -13,7 +13,7 @@ class GitData implements \JsonSerializable {
   private $branch;
 
   /**
-   * @var GitCommit The Git commit.
+   * @var GitCommit|null The Git commit.
    */
   private $commit;
 
