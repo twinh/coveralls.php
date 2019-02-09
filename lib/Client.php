@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use Coveralls\Parsers\{Clover, Lcov};
-use Evenement\{EventEmitterTrait};
+use Evenement\{EventEmitter};
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
 use Psr\Http\Message\{UriInterface};
@@ -13,8 +13,7 @@ use function Which\{which};
 /**
  * Uploads code coverage reports to the [Coveralls](https://coveralls.io) service.
  */
-class Client {
-  use EventEmitterTrait;
+class Client extends EventEmitter {
 
   /**
    * @var string The URL of the default API end point.
