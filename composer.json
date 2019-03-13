@@ -40,8 +40,8 @@
     "ext-spl": "*",
     "cedx/lcov": "^6.1.0",
     "cedx/which": "^7.0.1",
-    "evenement/evenement": "^3.0.1",
     "guzzlehttp/guzzle": "^6.3.3",
+    "league/event": "^2.2.0",
     "nategood/commando": "^0.3.0",
     "symfony/yaml": "^4.2.4",
     "webmozart/path-util": "^2.3.0"

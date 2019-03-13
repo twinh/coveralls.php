@@ -3,9 +3,9 @@ declare(strict_types=1);
 namespace Coveralls;
 
 use Coveralls\Parsers\{Clover, Lcov};
-use Evenement\{EventEmitter};
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
+use League\Event\{Emitter, Event};
 use Psr\Http\Message\{UriInterface};
 use Which\{FinderException};
 use function Which\{which};
@@ -13,7 +13,7 @@ use function Which\{which};
 /**
  * Uploads code coverage reports to the [Coveralls](https://coveralls.io) service.
  */
-class Client extends EventEmitter {
+class Client extends Emitter {
 
   /**
    * @var string The URL of the default API end point.
@@ -109,10 +109,10 @@ class Client extends EventEmitter {
 
     try {
       $request = new Request('POST', $uri, $headers, $body);
-      $this->emit(static::EVENT_REQUEST, [$request]);
+      $this->emit(Event::named(static::EVENT_REQUEST), $request);
 
       $response = (new HTTPClient())->send($request);
-      $this->emit(static::EVENT_RESPONSE, [$request, $response]);
+      $this->emit(Event::named(static::EVENT_RESPONSE), $request, $response);
     }
 
     catch (\Throwable $e) {

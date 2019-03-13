@@ -1,5 +1,9 @@
 # Changelog
 
+## Version [9.2.0](https://github.com/cedx/coveralls.php/compare/v9.1.1...v9.2.0)
+- Replaced [Événement](https://github.com/igorw/evenement) library by [PHP League](https://event.thephpleague.com) for event handling.
+- Updated the package dependencies.
+
 ## Version [9.1.2](https://github.com/cedx/coveralls.php/compare/v9.1.1...v9.1.2)
 - Fixed the [GitHub issue #5](https://github.com/cedx/coveralls.php/issues/5): an invalid output URL was generated when using a well-formed input URL.
 
