@@ -27,9 +27,8 @@ class GitRemote implements \JsonSerializable {
    */
   function __construct(string $name, $url = null) {
     $this->name = $name;
-    $this->url = is_string($url) ?
-      new Uri(preg_match('#^\w+://#', $url) ? $url : (string) preg_replace('/^([^@]+@)?([^:]+):(.+)$/', 'ssh://$1$2/$3', $url)) :
-      $url;
+    $this->url = !is_string($url) ? $url :
+      new Uri(preg_match('#^\w+://#', $url) ? $url : (string) preg_replace('/^([^@]+@)?([^:]+):(.+)$/', 'ssh://$1$2/$3', $url));
   }
 
   /**

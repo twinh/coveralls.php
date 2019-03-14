@@ -11,7 +11,7 @@ abstract class Surf {
 
   /**
    * Gets the configuration parameters from the environment.
-   * @param array<string, string> $env An array providing environment variables.
+   * @param array $env An array providing environment variables.
    * @return Configuration The configuration parameters.
    */
   static function getConfiguration(array $env): Configuration {

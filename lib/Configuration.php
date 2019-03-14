@@ -35,7 +35,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
   /**
    * Creates a new configuration from the variables of the specified environment.
-   * @param array<string, string> $env $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
+   * @param array $env $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
    * @return Configuration The newly created configuration.
    */
   static function fromEnvironment(array $env = null): self {

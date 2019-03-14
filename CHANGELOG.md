@@ -1,7 +1,8 @@
 # Changelog
 
 ## Version [10.0.0](https://github.com/cedx/coveralls.php/compare/v9.1.2...v10.0.0)
-- Replaced [Événement](https://github.com/igorw/evenement) library by [PHP League](https://event.thephpleague.com) for event handling.
+- Breaking change: replaced [Événement](https://github.com/igorw/evenement) library by [PHP League Event](https://robo.li) for event handling.
+- Added the `RequestEvent` and `ResponseEvent` classes.
 - Updated the package dependencies.
 
 ## Version [9.1.2](https://github.com/cedx/coveralls.php/compare/v9.1.1...v9.1.2)
