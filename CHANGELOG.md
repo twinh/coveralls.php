@@ -1,6 +1,6 @@
 # Changelog
 
-## Version [9.2.0](https://github.com/cedx/coveralls.php/compare/v9.1.1...v9.2.0)
+## Version [10.0.0](https://github.com/cedx/coveralls.php/compare/v9.1.2...v10.0.0)
 - Replaced [Événement](https://github.com/igorw/evenement) library by [PHP League](https://event.thephpleague.com) for event handling.
 - Updated the package dependencies.
 
