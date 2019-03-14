@@ -91,9 +91,9 @@ class GitDataTest extends TestCase {
     assertThat(get_object_vars($map), countOf(3));
     assertThat($map->branch, equalTo('develop'));
 
-    assertThat($map->head, attributeEqualTo('id', '2ef7bde608ce5404e97d5f042f95f89f1c232871'));
+    assertThat($map->head->id, equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));
     assertThat($map->remotes, countOf(1));
-    assertThat($map->remotes[0], attributeEqualTo('name', 'origin'));
+    assertThat($map->remotes[0]->name, equalTo('origin'));
   }
 
   /**

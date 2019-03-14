@@ -77,9 +77,9 @@ class JobTest extends TestCase {
     assertThat($map->repo_token, equalTo('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt'));
     assertThat($map->run_at, equalTo('2017-01-29T03:43:30+01:00'));
 
-    assertThat($map->git, attributeEqualTo('branch', 'develop'));
+    assertThat($map->git->branch, equalTo('develop'));
     assertThat($map->source_files, countOf(1));
-    assertThat($map->source_files[0], attributeEqualTo('name', '/home/cedx/coveralls.php'));
+    assertThat($map->source_files[0]->name, equalTo('/home/cedx/coveralls.php'));
   }
 
   /**
