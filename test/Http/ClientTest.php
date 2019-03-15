@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Coveralls;
+namespace Coveralls\Http;
 
+use Coveralls\{Job};
 use PHPUnit\Framework\{TestCase};
 
 /**

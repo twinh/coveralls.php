@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Coveralls;
+namespace Coveralls\Http;
 
 use League\Event\{AbstractEvent};
 use Psr\Http\Message\{RequestInterface};

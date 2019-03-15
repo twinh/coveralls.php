@@ -2,11 +2,11 @@ path: blob/master
 source: lib/Client.php
 
 # Application programming interface
-The hard way. Use the `Coveralls\Client` class to upload your coverage reports:
+The hard way. Use the `Coveralls\Http\Client` class to upload your coverage reports:
 
 ```php
 <?php
-use Coveralls\{Client, ClientException};
+use Coveralls\Http\{Client, ClientException};
 
 function main(): void {
   try {
@@ -23,30 +23,29 @@ function main(): void {
 ```
 
 The `Client::upload()` method throws an [`InvalidArgumentException`](https://secure.php.net/manual/en/class.invalidargumentexception.php)
-if the input report is invalid. It throws a `Coveralls\ClientException` if any error occurred while uploading the report.
+if the input report is invalid. It throws a `Coveralls\Http\ClientException` if any error occurred while uploading the report.
 
 ## Client events
-The `Coveralls\Client` class is an [`EventEmitter`](https://github.com/igorw/evenement/blob/master/src/Evenement/EventEmitter.php) that triggers some events during its life cycle:
+The `Coveralls\Client` class is a [`League\Event\Emitter`](https://event.thephpleague.com/2.0/emitter/basic-usage) that triggers some events during its life cycle:
 
 - `Client::EVENT_REQUEST` : emitted every time a request is made to the remote service.
 - `Client::EVENT_RESPONSE` : emitted every time a response is received from the remote service.
 
-You can subscribe to them using the `on()` method:
+You can subscribe to them using the `addListener()` method:
 
 ```php
 <?php
-use Coveralls\{Client};
-use Psr\Http\Message\{RequestInterface, ResponseInterface};
+use Coveralls\Http\{Client, RequestEvent, ResponseEvent};
 
 function main(): void {
   $client = new Client;
   
-  $client->addListener(Client::EVENT_REQUEST, function(RequestInterface $request) {
-    echo 'Client request: ', $request->getUri();
+  $client->addListener(Client::EVENT_REQUEST, function(RequestEvent $event) {
+    echo 'Client request: ', $event->getRequest()->getUri();
   });
 
-  $client->addListener(Client::EVENT_RESPONSE, function($request, ResponseInterface $response) {
-    echo 'Server response: ', $response->getStatusCode();
+  $client->addListener(Client::EVENT_RESPONSE, function(ResponseEvent $event) {
+    echo 'Server response: ', $event->getResponse()->getStatusCode();
   });
 }
 ```

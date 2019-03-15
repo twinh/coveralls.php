@@ -35,5 +35,5 @@ Now in your [PHP](https://secure.php.net) code, you can use:
 
 ```php
 <?php
-use Coveralls\{Client, ClientException};
+use Coveralls\Http\{Client, ClientException};
 ```

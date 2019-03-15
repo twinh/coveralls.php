@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-use Coveralls\{Client, ClientException};
+use Coveralls\Http\{Client, ClientException};
 
 /**
  * Uploads a coverage report.

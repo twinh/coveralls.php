@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Commando\{Command};
-use Coveralls\{Client};
+use Coveralls\Http\{Client};
 use GuzzleHttp\Psr7\{Uri};
 
 /**
  * @var string The version number of this package.
  */
-const VERSION = '9.1.2';
+const VERSION = '10.0.0';
 
 /**
  * Application entry point.

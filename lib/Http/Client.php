@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Coveralls;
+namespace Coveralls\Http;
 
+use Coveralls\{Configuration, GitCommit, GitData, Job};
 use Coveralls\Parsers\{Clover, Lcov};
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
