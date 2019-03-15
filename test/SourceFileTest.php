@@ -16,7 +16,6 @@ class SourceFileTest extends TestCase {
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $file = SourceFile::fromJson(new \stdClass);
-    assertThat($file, isInstanceOf(SourceFile::class));
     assertThat($file->getCoverage(), isEmpty());
     assertThat($file->getName(), isEmpty());
     assertThat($file->getSource(), isEmpty());
@@ -29,8 +28,6 @@ class SourceFileTest extends TestCase {
       'source' => 'function main() {}',
       'source_digest' => 'e23fb141da9a7b438479a48eac7b7249'
     ]);
-
-    assertThat($file, isInstanceOf(SourceFile::class));
 
     $coverage = $file->getCoverage();
     assertThat($coverage, countOf(7));

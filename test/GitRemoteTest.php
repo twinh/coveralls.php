@@ -17,13 +17,11 @@ class GitRemoteTest extends TestCase {
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $remote = GitRemote::fromJson(new \stdClass);
-    assertThat($remote, isInstanceOf(GitRemote::class));
     assertThat($remote->getName(), isEmpty());
     assertThat($remote->getUrl(), isNull());
 
     // It should return an initialized instance for a non-empty map.
     $remote = GitRemote::fromJson((object) ['name' => 'origin', 'url' => 'git@github.com:cedx/coveralls.php.git']);
-    assertThat($remote, isInstanceOf(GitRemote::class));
     assertThat($remote->getName(), equalTo('origin'));
     assertThat((string) $remote->getUrl(), equalTo('ssh://git@github.com/cedx/coveralls.php.git'));
 

@@ -16,7 +16,6 @@ class JobTest extends TestCase {
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $job = Job::fromJson(new \stdClass);
-    assertThat($job, isInstanceOf(Job::class));
     assertThat($job->getGit(), isNull());
     assertThat($job->isParallel(), isFalse());
     assertThat($job->getRepoToken(), isEmpty());
@@ -34,18 +33,15 @@ class JobTest extends TestCase {
       ]
     ]);
 
-    assertThat($job, isInstanceOf(Job::class));
     assertThat($job->isParallel(), isTrue());
     assertThat($job->getRepoToken(), equalTo('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt'));
 
     /** @var GitData $git */
     $git = $job->getGit();
-    assertThat($git, isInstanceOf(GitData::class));
     assertThat($git->getBranch(), equalTo('develop'));
 
     /** @var \DateTime $runAt */
     $runAt = $job->getRunAt();
-    assertThat($runAt, isInstanceOf(\DateTime::class));
     assertThat($runAt->format('c'), equalTo('2017-01-29T03:43:30+01:00'));
 
     $sourceFiles = $job->getSourceFiles();

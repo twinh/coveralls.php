@@ -16,8 +16,6 @@ class GitCommitTest extends TestCase {
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $commit = GitCommit::fromJson(new \stdClass);
-    assertThat($commit, isInstanceOf(GitCommit::class));
-
     assertThat($commit->getAuthorEmail(), isEmpty());
     assertThat($commit->getAuthorName(), isEmpty());
     assertThat($commit->getId(), isEmpty());
@@ -31,7 +29,6 @@ class GitCommitTest extends TestCase {
       'message' => 'Hello World!'
     ]);
 
-    assertThat($commit, isInstanceOf(GitCommit::class));
     assertThat($commit->getAuthorEmail(), equalTo('anonymous@secret.com'));
     assertThat($commit->getAuthorName(), equalTo('Anonymous'));
     assertThat($commit->getId(), equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));

@@ -16,7 +16,6 @@ class GitDataTest extends TestCase {
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $data = GitData::fromJson(new \stdClass);
-    assertThat($data, isInstanceOf(GitData::class));
     assertThat($data->getBranch(), isEmpty());
     assertThat($data->getCommit(), isNull());
     assertThat($data->getRemotes(), isEmpty());
@@ -30,12 +29,10 @@ class GitDataTest extends TestCase {
       ]
     ]);
 
-    assertThat($data, isInstanceOf(GitData::class));
     assertThat($data->getBranch(), equalTo('develop'));
 
     /** @var GitCommit $commit */
     $commit = $data->getCommit();
-    assertThat($commit, isInstanceOf(GitCommit::class));
     assertThat($commit->getId(), equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));
 
     $remotes = $data->getRemotes();
@@ -55,7 +52,6 @@ class GitDataTest extends TestCase {
 
     /** @var GitCommit $commit */
     $commit = $data->getCommit();
-    assertThat($commit, isInstanceOf(GitCommit::class));
     assertThat($commit->getId(), matchesRegularExpression('/^[a-f\d]{40}$/'));
 
     $remotes = $data->getRemotes();

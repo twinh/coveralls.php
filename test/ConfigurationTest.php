@@ -75,7 +75,6 @@ class ConfigurationTest extends TestCase {
   function testFromYaml(): void {
     // It should return an initialized instance for a non-empty map.
     $config = Configuration::fromYaml("repo_token: 0123456789abcdef\nservice_name: travis-ci");
-    assertThat($config, isInstanceOf(Configuration::class));
     assertThat($config, countOf(2));
     assertThat($config['repo_token'], equalTo('0123456789abcdef'));
     assertThat($config['service_name'], equalTo('travis-ci'));
