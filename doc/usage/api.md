@@ -1,5 +1,5 @@
 path: blob/master
-source: lib/Client.php
+source: lib/Http/Client.php
 
 # Application programming interface
 The hard way. Use the `Coveralls\Http\Client` class to upload your coverage reports:
@@ -26,7 +26,7 @@ The `Client::upload()` method throws an [`InvalidArgumentException`](https://sec
 if the input report is invalid. It throws a `Coveralls\Http\ClientException` if any error occurred while uploading the report.
 
 ## Client events
-The `Coveralls\Client` class is a [`League\Event\Emitter`](https://event.thephpleague.com/2.0/emitter/basic-usage) that triggers some events during its life cycle:
+The `Coveralls\Http\Client` class is a [`League\Event\Emitter`](https://event.thephpleague.com/2.0/emitter/basic-usage) that triggers some events during its life cycle:
 
 - `Client::EVENT_REQUEST` : emitted every time a request is made to the remote service.
 - `Client::EVENT_RESPONSE` : emitted every time a response is received from the remote service.
