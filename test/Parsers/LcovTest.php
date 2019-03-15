@@ -22,7 +22,7 @@ class LcovTest extends TestCase {
 
     $subset = [null, 2, 2, 2, 2, null];
     assertThat($files[0], isInstanceOf(SourceFile::class));
-    assertThat($files[0]->getName(), equalTo('lib/Client.php'));
+    assertThat($files[0]->getName(), equalTo('lib/Http/Client.php'));
     assertThat($files[0]->getSourceDigest(), logicalNot(isEmpty()));
     assertThat(array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()), equalTo($subset));
 

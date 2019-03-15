@@ -1,6 +1,6 @@
 TN:Example
 
-SF:lib/Client.php
+SF:lib/Http/Client.php
 FN:4,Client::upload
 FNDA:2,Client::upload
 FNF:1
