@@ -91,22 +91,4 @@ class GitDataTest extends TestCase {
     assertThat($map->remotes, countOf(1));
     assertThat($map->remotes[0]->name, equalTo('origin'));
   }
-
-  /**
-   * Tests the `GitData::__toString()` method.
-   * @test
-   */
-  function testToString(): void {
-    $data = (string) new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]);
-
-    // It should start with the class name.
-    assertThat($data, stringStartsWith('Coveralls\GitData {'));
-
-    // It should contain the instance properties.
-    assertThat($data, logicalAnd(
-      stringContains('"branch":"develop"'),
-      stringContains('"head":{'),
-      stringContains('"remotes":[{')
-    ));
-  }
 }

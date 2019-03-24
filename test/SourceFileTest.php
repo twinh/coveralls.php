@@ -70,22 +70,4 @@ class SourceFileTest extends TestCase {
     assertThat($map->source, equalTo('function main() {}'));
     assertThat($map->source_digest, equalTo('e23fb141da9a7b438479a48eac7b7249'));
   }
-
-  /**
-   * Tests the `SourceFile::__toString()` method.
-   * @test
-   */
-  function testToString(): void {
-    $remote = (string) new SourceFile('coveralls.php', 'e23fb141da9a7b438479a48eac7b7249', 'function main() {}', [null, 2, 0, null, 4, 15, null]);
-
-    // It should start with the class name.
-    assertThat($remote, stringStartsWith('Coveralls\SourceFile {'));
-
-    // It should contain the instance properties.
-    assertThat($remote, logicalAnd(
-      stringContains('"name":"coveralls.php"'),
-      stringContains('"source":"function main() {}"'),
-      stringContains('"source_digest":"e23fb141da9a7b438479a48eac7b7249"')
-    ));
-  }
 }

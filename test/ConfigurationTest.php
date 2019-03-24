@@ -170,18 +170,4 @@ class ConfigurationTest extends TestCase {
     assertThat($config['foo'], equalTo('bar'));
     assertThat($config['bar'], equalTo('baz'));
   }
-
-  /**
-   * Tests the `Configuration::__toString()` method.
-   * @test
-   */
-  function testToString(): void {
-    $config = (string) new Configuration(['foo' => 'bar', 'bar' => 'baz']);
-
-    // It should start with the class name.
-    assertThat($config, stringStartsWith('Coveralls\Configuration {'));
-
-    // It should contain the instance properties.
-    assertThat($config, logicalAnd(stringContains('"bar":"baz"'), stringContains('"foo":"bar"')));
-  }
 }

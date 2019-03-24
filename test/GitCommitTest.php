@@ -57,25 +57,4 @@ class GitCommitTest extends TestCase {
     assertThat($map->id, equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));
     assertThat($map->message, equalTo('Hello World!'));
   }
-
-  /**
-   * Tests the `GitCommit::__toString()` method.
-   * @test
-   */
-  function testToString(): void {
-    $commit = (string) (new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871', 'Hello World!'))
-      ->setAuthorEmail('anonymous@secret.com')
-      ->setAuthorName('Anonymous');
-
-    // It should start with the class name.
-    assertThat($commit, stringStartsWith('Coveralls\GitCommit {'));
-
-    // It should contain the instance properties.
-    assertThat($commit, logicalAnd(
-      stringContains('"author_email":"anonymous@secret.com"'),
-      stringContains('"author_name":"Anonymous"'),
-      stringContains('"id":"2ef7bde608ce5404e97d5f042f95f89f1c232871"'),
-      stringContains('"message":"Hello World!"')
-    ));
-  }
 }

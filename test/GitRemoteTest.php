@@ -49,21 +49,4 @@ class GitRemoteTest extends TestCase {
     $map = (new GitRemote('origin', new Uri('https://github.com/cedx/coveralls.php.git')))->jsonSerialize();
     assertThat($map->url, equalTo('https://github.com/cedx/coveralls.php.git'));
   }
-
-  /**
-   * Tests the `GitRemote::__toString()` method.
-   * @test
-   */
-  function testToString(): void {
-    $remote = (string) new GitRemote('origin', 'git@github.com:cedx/coveralls.php.git');
-
-    // It should start with the class name.
-    assertThat($remote, stringStartsWith('Coveralls\GitRemote {'));
-
-    // It should contain the instance properties.
-    assertThat($remote, logicalAnd(stringContains('"name":"origin"'), stringContains('"url":"ssh://git@github.com/cedx/coveralls.php.git"')));
-
-    $remote = (string) new GitRemote('origin', new Uri('https://github.com/cedx/coveralls.php.git'));
-    assertThat($remote, stringContains('"url":"https://github.com/cedx/coveralls.php.git"'));
-  }
 }

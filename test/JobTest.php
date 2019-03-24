@@ -77,28 +77,4 @@ class JobTest extends TestCase {
     assertThat($map->source_files, countOf(1));
     assertThat($map->source_files[0]->name, equalTo('/home/cedx/coveralls.php'));
   }
-
-  /**
-   * Tests the `Job::__toString()` method.
-   * @test
-   */
-  function testToString(): void {
-    $job = (string) (new Job([new SourceFile('/home/cedx/coveralls.php', '')]))
-      ->setGit(new GitData(new GitCommit(''), 'develop'))
-      ->setParallel(true)
-      ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
-      ->setRunAt(new \DateTime('2017-01-29T03:43:30+01:00'));
-
-    // It should start with the class name.
-    assertThat($job, stringStartsWith('Coveralls\Job {'));
-
-    // It should contain the instance properties.
-    assertThat($job, logicalAnd(
-      stringContains('"git":{'),
-      stringContains('"parallel":true'),
-      stringContains('"repo_token":"yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt"'),
-      stringContains('"run_at":"2017-01-29T03:43:30+01:00"'),
-      stringContains('"source_files":[{')
-    ));
-  }
 }
