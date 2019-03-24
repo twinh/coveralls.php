@@ -35,15 +35,6 @@ class GitData implements \JsonSerializable {
   }
 
   /**
-   * Returns a string representation of this object.
-   * @return string The string representation of this object.
-   */
-  function __toString(): string {
-    $json = json_encode($this, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    return static::class." $json";
-  }
-
-  /**
    * Creates a new Git data from the specified JSON map.
    * @param object $map A JSON map representing a Git data.
    * @return static The instance corresponding to the specified JSON map.
