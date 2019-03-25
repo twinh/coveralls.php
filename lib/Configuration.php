@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 namespace Coveralls;
 
 use Coveralls\Services\{AppVeyor, CircleCI, Codeship, GitLabCI, Jenkins, Semaphore, SolanoCI, Surf, TravisCI, Wercker};
