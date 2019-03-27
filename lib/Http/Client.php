@@ -18,7 +18,7 @@ class Client extends Emitter {
   /**
    * @var string The URL of the default API end point.
    */
-  const DEFAULT_ENDPOINT = 'https://coveralls.io/';
+  const DEFAULT_ENDPOINT = 'https://coveralls.io/api/v1/';
 
   /**
    * @var string An event that is triggered when a request is made to the remote service.
@@ -95,7 +95,7 @@ class Client extends Emitter {
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
-    $uri = $this->getEndPoint()->withPath('api/v1/jobs');
+    $uri = $this->getEndPoint()->withPath('jobs');
     $body = new MultipartStream([[
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
       'filename' => 'coveralls.json',
