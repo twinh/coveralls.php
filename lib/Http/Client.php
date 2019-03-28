@@ -4,7 +4,7 @@ namespace Coveralls\Http;
 use Coveralls\{Configuration, GitCommit, GitData, Job};
 use Coveralls\Parsers\{Clover, Lcov};
 use GuzzleHttp\{Client as HTTPClient};
-use GuzzleHttp\Psr7\{MultipartStream, Request, Uri};
+use GuzzleHttp\Psr7\{MultipartStream, Request, Uri, UriResolver};
 use League\Event\{Emitter};
 use Psr\Http\Message\{UriInterface};
 use Which\{FinderException};
@@ -95,7 +95,7 @@ class Client extends Emitter {
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
-    $uri = $this->getEndPoint()->withPath('jobs');
+    $uri = UriResolver::resolve($this->getEndPoint(), new Uri('jobs'));
     $body = new MultipartStream([[
       'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
       'filename' => 'coveralls.json',
