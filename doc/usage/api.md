@@ -1,5 +1,5 @@
 path: blob/master
-source: lib/Http/Client.php
+source: src/Http/Client.php
 
 # Application programming interface
 The hard way. Use the `Coveralls\Http\Client` class to upload your coverage reports:
