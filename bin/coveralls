@@ -7,7 +7,7 @@ use GuzzleHttp\Psr7\{Uri};
 /**
  * @var string The version number of this package.
  */
-const VERSION = '10.0.0';
+const VERSION = '10.1.0';
 
 /**
  * Application entry point.
@@ -52,7 +52,7 @@ try {
   main();
 }
 
-catch (\Throwable $error) {
+catch (Throwable $error) {
   echo $error, PHP_EOL;
   exit(1);
 }
