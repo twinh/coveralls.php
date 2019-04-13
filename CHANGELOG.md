@@ -3,6 +3,7 @@
 ## Version [10.1.0](https://github.com/cedx/coveralls.php/compare/v10.0.0...v10.1.0)
 - Modified the package layout.
 - Updated the package dependencies.
+- Updated the URL of the default API endpoint.
 
 ## Version [10.0.0](https://github.com/cedx/coveralls.php/compare/v9.1.2...v10.0.0)
 - Breaking change: moved the `Client` and `ClientException` classes to the `Coveralls\Http` namespace.
