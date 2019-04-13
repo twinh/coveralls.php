@@ -1,6 +1,7 @@
 # Changelog
 
 ## Version [10.1.0](https://github.com/cedx/coveralls.php/compare/v10.0.0...v10.1.0)
+- Merge [GitHub pull request #6](https://github.com/cedx/coveralls.php/pull/6): added new test cases.
 - Modified the package layout.
 - Updated the package dependencies.
 - Updated the URL of the default API endpoint.
