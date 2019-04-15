@@ -4,9 +4,7 @@ namespace Coveralls\Parsers;
 use Coveralls\{SourceFile};
 use PHPUnit\Framework\{TestCase};
 
-/**
- * Tests the features of the `Coveralls\Parsers\Clover` class.
- */
+/** Tests the features of the `Coveralls\Parsers\Clover` class. */
 class CloverTest extends TestCase {
 
   /**

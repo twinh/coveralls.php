@@ -3,9 +3,7 @@ namespace Coveralls;
 
 use PHPUnit\Framework\{TestCase};
 
-/**
- * Tests the features of the `Coveralls\Job` class.
- */
+/** Tests the features of the `Coveralls\Job` class. */
 class JobTest extends TestCase {
 
   /**

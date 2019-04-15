@@ -1,9 +1,7 @@
 <?php declare(strict_types=1);
 use Coveralls\Http\{Client, ClientException};
 
-/**
- * Uploads a coverage report.
- */
+/** Uploads a coverage report. */
 function main(): void {
   try {
     $coverage = file_get_contents('/path/to/coverage.report');

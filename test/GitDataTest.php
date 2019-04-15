@@ -3,9 +3,7 @@ namespace Coveralls;
 
 use PHPUnit\Framework\{TestCase};
 
-/**
- * Tests the features of the `Coveralls\GitData` class.
- */
+/** Tests the features of the `Coveralls\GitData` class. */
 class GitDataTest extends TestCase {
 
   /**

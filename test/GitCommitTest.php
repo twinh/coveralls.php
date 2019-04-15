@@ -3,9 +3,7 @@ namespace Coveralls;
 
 use PHPUnit\Framework\{TestCase};
 
-/**
- * Tests the features of the `Coveralls\GitCommit` class.
- */
+/** Tests the features of the `Coveralls\GitCommit` class. */
 class GitCommitTest extends TestCase {
 
   /**

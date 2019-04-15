@@ -4,9 +4,7 @@ namespace Coveralls\Http;
 use Coveralls\{Job};
 use PHPUnit\Framework\{TestCase};
 
-/**
- * Tests the features of the `Coveralls\Client` class.
- */
+/** Tests the features of the `Coveralls\Client` class. */
 class ClientTest extends TestCase {
 
   /**

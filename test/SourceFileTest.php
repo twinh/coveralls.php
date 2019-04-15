@@ -3,9 +3,7 @@ namespace Coveralls;
 
 use PHPUnit\Framework\{TestCase};
 
-/**
- * Tests the features of the `Coveralls\SourceFile` class.
- */
+/** Tests the features of the `Coveralls\SourceFile` class. */
 class SourceFileTest extends TestCase {
 
   /**

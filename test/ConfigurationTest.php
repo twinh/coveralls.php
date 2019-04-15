@@ -3,9 +3,7 @@ namespace Coveralls;
 
 use PHPUnit\Framework\{TestCase};
 
-/**
- * Tests the features of the `Coveralls\Configuration` class.
- */
+/** Tests the features of the `Coveralls\Configuration` class. */
 class ConfigurationTest extends TestCase {
 
   /**

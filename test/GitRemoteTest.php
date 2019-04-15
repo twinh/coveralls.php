@@ -4,9 +4,7 @@ namespace Coveralls;
 use GuzzleHttp\Psr7\{Uri};
 use PHPUnit\Framework\{TestCase};
 
-/**
- * Tests the features of the `Coveralls\GitRemote` class.
- */
+/** Tests the features of the `Coveralls\GitRemote` class. */
 class GitRemoteTest extends TestCase {
 
   /**
