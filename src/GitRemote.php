@@ -4,19 +4,13 @@ namespace Coveralls;
 use GuzzleHttp\Psr7\{Uri};
 use Psr\Http\Message\{UriInterface};
 
-/**
- * Represents a Git remote repository.
- */
+/** Represents a Git remote repository. */
 class GitRemote implements \JsonSerializable {
 
-  /**
-   * @var string The remote's name.
-   */
+  /** @var string The remote's name. */
   private $name;
 
-  /**
-   * @var UriInterface|null The remote's URL.
-   */
+  /** @var UriInterface|null The remote's URL. */
   private $url;
 
   /**

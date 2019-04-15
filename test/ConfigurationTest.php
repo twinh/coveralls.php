@@ -6,10 +6,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\Configuration` class. */
 class ConfigurationTest extends TestCase {
 
-  /**
-   * Tests the `ArrayAccess` interface.
-   * @test
-   */
+  /** @test Tests the `ArrayAccess` interface. */
   function testArrayAccess(): void {
     $config = new Configuration;
 
@@ -26,10 +23,7 @@ class ConfigurationTest extends TestCase {
     $config->offsetUnset('foo');
   }
 
-  /**
-   * Tests the `Configuration::count()` method.
-   * @test
-   */
+  /** @test Tests the `Configuration::count()` method. */
   function testCount(): void {
     // It should return zero for an empty configuration.
     assertThat(new Configuration, isEmpty());
@@ -38,10 +32,7 @@ class ConfigurationTest extends TestCase {
     assertThat(new Configuration(['foo' => 'bar', 'bar' => 'baz']), countOf(2));
   }
 
-  /**
-   * Tests the `Configuration::fromEnvironment()` method.
-   * @test
-   */
+  /** @test Tests the `Configuration::fromEnvironment()` method. */
   function testFromEnvironment(): void {
     // It should return an empty configuration for an empty environment.
     $config = Configuration::fromEnvironment([]);
@@ -65,10 +56,7 @@ class ConfigurationTest extends TestCase {
     assertThat($config['service_pull_request'], equalTo('123'));
   }
 
-  /**
-   * Tests the `Configuration::fromYaml()` method.
-   * @test
-   */
+  /** @test Tests the `Configuration::fromYaml()` method. */
   function testFromYaml(): void {
     // It should return an initialized instance for a non-empty map.
     $config = Configuration::fromYaml("repo_token: 0123456789abcdef\nservice_name: travis-ci");
@@ -82,10 +70,7 @@ class ConfigurationTest extends TestCase {
     Configuration::fromYaml('foo');
   }
 
-  /**
-   * Tests the `Configuration::getIterator()` method.
-   * @test
-   */
+  /** @test Tests the `Configuration::getIterator()` method. */
   function testGetIterator(): void {
     // It should return a done iterator if configuration is empty.
     $iterator = (new Configuration)->getIterator();
@@ -106,10 +91,7 @@ class ConfigurationTest extends TestCase {
     assertThat($iterator->valid(), isFalse());
   }
 
-  /**
-   * Tests the `Configuration::getKeys()` method.
-   * @test
-   */
+  /** @test Tests the `Configuration::getKeys()` method. */
   function testGetKeys(): void {
     // It should return an empty array for an empty configuration.
     assertThat((new Configuration)->getKeys(), isEmpty());
@@ -121,10 +103,7 @@ class ConfigurationTest extends TestCase {
     assertThat($keys[1], equalTo('bar'));
   }
 
-  /**
-   * Tests the `Configuration::jsonSerialize()` method.
-   * @test
-   */
+  /** @test Tests the `Configuration::jsonSerialize()` method. */
   function testJsonSerialize(): void {
     // It should return an empty map for a newly created instance.
     $map = (new Configuration)->jsonSerialize();
@@ -137,10 +116,7 @@ class ConfigurationTest extends TestCase {
     assertThat($map->bar, equalTo('baz'));
   }
 
-  /**
-   * Tests the `Configuration::loadDefaults()` method.
-   * @test
-   */
+  /** @test Tests the `Configuration::loadDefaults()` method. */
   function testLoadDefaults(): void {
     // It should properly initialize from a `.coveralls.yml` file.
     $config = Configuration::loadDefaults('test/fixtures/.coveralls.yml');
@@ -154,10 +130,7 @@ class ConfigurationTest extends TestCase {
     assertThat(get_object_vars($config->jsonSerialize()), equalTo(get_object_vars($defaults->jsonSerialize())));
   }
 
-  /**
-   * Tests the `Configuration::merge()` method.
-   * @test
-   */
+  /** @test Tests the `Configuration::merge()` method. */
   function testMerge(): void {
     // It should have the same entries as the other configuration.
     $config = new Configuration;

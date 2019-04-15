@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [AppVeyor](https://www.appveyor.com) configuration parameters from the environment.
- */
+/** Fetches the [AppVeyor](https://www.appveyor.com) configuration parameters from the environment. */
 abstract class AppVeyor {
 
   /**

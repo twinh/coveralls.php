@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [Codeship](https://circleci.com) configuration parameters from the environment.
- */
+/** Fetches the [Codeship](https://circleci.com) configuration parameters from the environment. */
 abstract class Codeship {
 
   /**

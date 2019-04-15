@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [Travis CI](https://travis-ci.com) configuration parameters from the environment.
- */
+/** Fetches the [Travis CI](https://travis-ci.com) configuration parameters from the environment. */
 abstract class TravisCI {
 
   /**

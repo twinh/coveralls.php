@@ -5,14 +5,10 @@ use Coveralls\Services\{AppVeyor, CircleCI, Codeship, GitLabCI, Jenkins, Semapho
 use Symfony\Component\Yaml\{Yaml};
 use Symfony\Component\Yaml\Exception\{ParseException};
 
-/**
- * Provides access to the coverage settings.
- */
+/** Provides access to the coverage settings. */
 class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable {
 
-  /**
-   * @var array The configuration parameters.
-   */
+  /** @var array The configuration parameters. */
   private $params;
 
   /**

@@ -1,59 +1,37 @@
 <?php declare(strict_types=1);
 namespace Coveralls;
 
-/**
- * Represents the coverage data from a single run of a test suite.
- */
+/** Represents the coverage data from a single run of a test suite. */
 class Job implements \JsonSerializable {
 
-  /**
-   * @var string The current SHA of the commit being built to override the `git` parameter.
-   */
+  /** @var string The current SHA of the commit being built to override the `git` parameter. */
   private $commitSha = '';
 
-  /**
-   * @var GitData|null The Git data that can be used to display more information to users.
-   */
+  /** @var GitData|null The Git data that can be used to display more information to users. */
   private $git;
 
-  /**
-   * @var bool Value indicating whether the build will not be considered done until a webhook has been sent to Coveralls.
-   */
+  /** @var bool Value indicating whether the build will not be considered done until a webhook has been sent to Coveralls. */
   private $isParallel = false;
 
-  /**
-   * @var string The secret token for the repository.
-   */
+  /** @var string The secret token for the repository. */
   private $repoToken = '';
 
-  /**
-   * @var \DateTime|null The timestamp of when the job ran.
-   */
+  /** @var \DateTime|null The timestamp of when the job ran. */
   private $runAt;
 
-  /**
-   * @var string The unique identifier of the job on the CI service.
-   */
+  /** @var string The unique identifier of the job on the CI service. */
   private $serviceJobId = '';
 
-  /**
-   * @var string The CI service or other environment in which the test suite was run.
-   */
+  /** @var string The CI service or other environment in which the test suite was run. */
   private $serviceName = '';
 
-  /**
-   * @var string The build number.
-   */
+  /** @var string The build number. */
   private $serviceNumber = '';
 
-  /**
-   * @var string The associated pull request identifier of the build.
-   */
+  /** @var string The associated pull request identifier of the build. */
   private $servicePullRequest = '';
 
-  /**
-   * @var \ArrayObject The list of source files.
-   */
+  /** @var \ArrayObject The list of source files. */
   private $sourceFiles;
 
   /**

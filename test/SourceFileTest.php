@@ -6,10 +6,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\SourceFile` class. */
 class SourceFileTest extends TestCase {
 
-  /**
-   * Tests the `SourceFile::fromJson()` method.
-   * @test
-   */
+  /** @test Tests the `SourceFile::fromJson()` method. */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $file = SourceFile::fromJson(new \stdClass);
@@ -36,10 +33,7 @@ class SourceFileTest extends TestCase {
     assertThat($file->getSourceDigest(), equalTo('e23fb141da9a7b438479a48eac7b7249'));
   }
 
-  /**
-   * Tests the `SourceFile::jsonSerialize()` method.
-   * @test
-   */
+  /** @test Tests the `SourceFile::jsonSerialize()` method. */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new SourceFile('', ''))->jsonSerialize();

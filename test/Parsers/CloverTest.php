@@ -7,10 +7,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\Parsers\Clover` class. */
 class CloverTest extends TestCase {
 
-  /**
-   * Tests the `Clover::parseReport()` method.
-   * @test
-   */
+  /** @test Tests the `Clover::parseReport()` method. */
   function testParseReport(): void {
     // It should properly parse Clover reports.
     $job = Clover::parseReport((string) file_get_contents('test/fixtures/clover.xml'));

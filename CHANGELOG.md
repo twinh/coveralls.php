@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [11.0.0](https://github.com/cedx/coveralls.php/compare/v10.1.0...v11.0.0)
+- Breaking change: using camelcase instead of all caps for constants.
+
 ## Version [10.1.0](https://github.com/cedx/coveralls.php/compare/v10.0.0...v10.1.0)
 - Merge [GitHub pull request #6](https://github.com/cedx/coveralls.php/pull/6): added new test cases.
 - Modified the package layout.

@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [Solano CI](https://ci.solanolabs.com) configuration parameters from the environment.
- */
+/** Fetches the [Solano CI](https://ci.solanolabs.com) configuration parameters from the environment. */
 abstract class SolanoCI {
 
   /**

@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [Jenkins](https://jenkins.io) configuration parameters from the environment.
- */
+/** Fetches the [Jenkins](https://jenkins.io) configuration parameters from the environment. */
 abstract class Jenkins {
 
   /**

@@ -6,10 +6,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\GitData` class. */
 class GitDataTest extends TestCase {
 
-  /**
-   * Tests the `GitData::fromJson()` method.
-   * @test
-   */
+  /** @test Tests the `GitData::fromJson()` method. */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $data = GitData::fromJson(new \stdClass);
@@ -38,10 +35,7 @@ class GitDataTest extends TestCase {
     assertThat($remotes[0]->getName(), equalTo('origin'));
   }
 
-  /**
-   * Tests the `GitData::fromRepository()` method.
-   * @test
-   */
+  /** @test Tests the `GitData::fromRepository()` method. */
   function testFromRepository(): void {
     // It should retrieve the Git data from the executable output.
     $data = GitData::fromRepository();
@@ -67,10 +61,7 @@ class GitDataTest extends TestCase {
     ));
   }
 
-  /**
-   * Tests the `GitData::jsonSerialize()` method.
-   * @test
-   */
+  /** @test Tests the `GitData::jsonSerialize()` method. */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new GitData(new GitCommit('')))->jsonSerialize();

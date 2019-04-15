@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [CircleCI](https://circleci.com) configuration parameters from the environment.
- */
+/** Fetches the [CircleCI](https://circleci.com) configuration parameters from the environment. */
 abstract class CircleCI {
 
   /**

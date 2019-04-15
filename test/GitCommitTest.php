@@ -6,10 +6,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\GitCommit` class. */
 class GitCommitTest extends TestCase {
 
-  /**
-   * Tests the `GitCommit::fromJson()` method.
-   * @test
-   */
+  /** @test Tests the `GitCommit::fromJson()` method. */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $commit = GitCommit::fromJson(new \stdClass);
@@ -32,10 +29,7 @@ class GitCommitTest extends TestCase {
     assertThat($commit->getMessage(), equalTo('Hello World!'));
   }
 
-  /**
-   * Tests the `GitCommit::jsonSerialize()` method.
-   * @test
-   */
+  /** @test Tests the `GitCommit::jsonSerialize()` method. */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new GitCommit(''))->jsonSerialize();

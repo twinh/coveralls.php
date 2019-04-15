@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [Wercker](http://www.wercker.com) configuration parameters from the environment.
- */
+/** Fetches the [Wercker](http://www.wercker.com) configuration parameters from the environment. */
 abstract class Wercker {
 
   /**

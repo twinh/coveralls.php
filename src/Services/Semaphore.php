@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [Semaphore](https://semaphoreci.com) configuration parameters from the environment.
- */
+/** Fetches the [Semaphore](https://semaphoreci.com) configuration parameters from the environment. */
 abstract class Semaphore {
 
   /**

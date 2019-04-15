@@ -1,29 +1,19 @@
 <?php declare(strict_types=1);
 namespace Coveralls;
 
-/**
- * Represents a source code file and its coverage data for a single job.
- */
+/** Represents a source code file and its coverage data for a single job. */
 class SourceFile implements \JsonSerializable {
 
-  /**
-   * @var \ArrayObject The coverage data for this file's job.
-   */
+  /** @var \ArrayObject The coverage data for this file's job. */
   private $coverage;
 
-  /**
-   * @var string The file path of this source file.
-   */
+  /** @var string The file path of this source file. */
   private $name;
 
-  /**
-   * @var string The contents of this source file.
-   */
+  /** @var string The contents of this source file. */
   private $source;
 
-  /**
-   * @var string The MD5 digest of the full source code of this file.
-   */
+  /** @var string The MD5 digest of the full source code of this file. */
   private $sourceDigest;
 
   /**

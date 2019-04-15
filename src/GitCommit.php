@@ -1,39 +1,25 @@
 <?php declare(strict_types=1);
 namespace Coveralls;
 
-/**
- * Represents a Git commit.
- */
+/** Represents a Git commit. */
 class GitCommit implements \JsonSerializable {
 
-  /**
-   * @var string The author mail address.
-   */
+  /** @var string The author mail address. */
   private $authorEmail = '';
 
-  /**
-   * @var string The author name.
-   */
+  /** @var string The author name. */
   private $authorName = '';
 
-  /**
-   * @var string The committer mail address.
-   */
+  /** @var string The committer mail address. */
   private $committerEmail = '';
 
-  /**
-   * @var string The committer name.
-   */
+  /** @var string The committer name. */
   private $committerName = '';
 
-  /**
-   * @var string The commit identifier.
-   */
+  /** @var string The commit identifier. */
   private $id;
 
-  /**
-   * @var string The commit message.
-   */
+  /** @var string The commit message. */
   private $message;
 
   /**

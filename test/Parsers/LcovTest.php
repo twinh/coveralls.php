@@ -7,10 +7,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\Parsers\Lcov` class. */
 class LcovTest extends TestCase {
 
-  /**
-   * Tests the `Lcov::parseReport()` method.
-   * @test
-   */
+  /** @test Tests the `Lcov::parseReport()` method. */
   function testParseReport(): void {
     // It should properly parse LCOV reports.
     $job = Lcov::parseReport((string) file_get_contents('test/fixtures/lcov.info'));

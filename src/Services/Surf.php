@@ -3,9 +3,7 @@ namespace Coveralls\Services;
 
 use Coveralls\{Configuration};
 
-/**
- * Fetches the [Surf](https://github.com/surf-build/surf) configuration parameters from the environment.
- */
+/** Fetches the [Surf](https://github.com/surf-build/surf) configuration parameters from the environment. */
 abstract class Surf {
 
   /**

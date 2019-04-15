@@ -4,13 +4,10 @@ namespace Coveralls\Http;
 use Coveralls\{Job};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\Client` class. */
+/** Tests the features of the `Coveralls\Http\Client` class. */
 class ClientTest extends TestCase {
 
-  /**
-   * Tests the `Client::upload()` method.
-   * @test
-   */
+  /** @test Tests the `Client::upload()` method. */
   function testUpload(): void {
     // It should throw an exception with an empty coverage report.
     try {
@@ -33,10 +30,7 @@ class ClientTest extends TestCase {
     }
   }
 
-  /**
-   * Tests the `Client::uploadJob()` method.
-   * @test
-   */
+  /** @test Tests the `Client::uploadJob()` method. */
   function testUploadJob(): void {
     // It should throw an exception with an empty coverage job.
     try {

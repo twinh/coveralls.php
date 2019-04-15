@@ -5,9 +5,7 @@ use Coveralls\{Job, SourceFile};
 use Lcov\{Record, Report};
 use Webmozart\PathUtil\{Path};
 
-/**
- * Parses [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage reports.
- */
+/** Parses [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage reports. */
 abstract class Lcov {
 
   /**

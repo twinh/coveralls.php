@@ -1,13 +1,12 @@
 #!/usr/bin/env php
 <?php declare(strict_types=1);
+
 use Commando\{Command};
 use Coveralls\Http\{Client};
 use GuzzleHttp\Psr7\{Uri};
 
-/**
- * @var string The version number of this package.
- */
-const VERSION = '10.1.0';
+/** @var string The version number of this package. */
+const packageVersion = '10.1.0';
 
 /**
  * Application entry point.
@@ -29,7 +28,7 @@ function main() {
     ->file();
 
   if ($program['version']) {
-    echo VERSION, PHP_EOL;
+    echo packageVersion, PHP_EOL;
     exit(0);
   }
 
@@ -40,7 +39,7 @@ function main() {
 
   // Run the program.
   $env = $_ENV ?: $_SERVER;
-  $client = new Client(new Uri($env['COVERALLS_ENDPOINT'] ?? Client::DEFAULT_ENDPOINT));
+  $client = new Client(new Uri($env['COVERALLS_ENDPOINT'] ?? Client::defaultEndPoint));
   echo '[Coveralls] Submitting to ', $client->getEndPoint(), PHP_EOL;
   $client->upload((string) @file_get_contents($program[0]));
 }

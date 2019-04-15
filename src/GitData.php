@@ -1,24 +1,16 @@
 <?php declare(strict_types=1);
 namespace Coveralls;
 
-/**
- * Represents Git data that can be used to display more information to users.
- */
+/** Represents Git data that can be used to display more information to users. */
 class GitData implements \JsonSerializable {
 
-  /**
-   * @var string The branch name.
-   */
+  /** @var string The branch name. */
   private $branch;
 
-  /**
-   * @var GitCommit|null The Git commit.
-   */
+  /** @var GitCommit|null The Git commit. */
   private $commit;
 
-  /**
-   * @var \ArrayObject The remote repositories.
-   */
+  /** @var \ArrayObject The remote repositories. */
   private $remotes;
 
   /**
