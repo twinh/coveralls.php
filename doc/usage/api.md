@@ -26,24 +26,32 @@ The `Client::upload()` method throws an [`InvalidArgumentException`](https://sec
 if the input report is invalid. It throws a `Coveralls\Http\ClientException` if any error occurred while uploading the report.
 
 ## Client events
-The `Coveralls\Http\Client` class is a [`League\Event\Emitter`](https://event.thephpleague.com/2.0/emitter/basic-usage) that triggers some events during its life cycle:
+The `Coveralls\Http\Client` class is a [`League\Event\Emitter`](https://event.thephpleague.com/2.0/emitter/basic-usage) that triggers some events during its life cycle.
 
-- `Client::eventRequest` : emitted every time a request is made to the remote service.
-- `Client::eventResponse` : emitted every time a response is received from the remote service.
-
-You can subscribe to them using the `addListener()` method:
+### The `Client::eventRequest` event
+Emitted every time a request is made to the remote service:
 
 ```php
 <?php
-use Coveralls\Http\{Client, RequestEvent, ResponseEvent};
+use Coveralls\Http\{Client, RequestEvent};
 
 function main(): void {
   $client = new Client;
-  
   $client->addListener(Client::eventRequest, function(RequestEvent $event) {
     echo 'Client request: ', $event->getRequest()->getUri();
   });
+}
+```
 
+### The `Client::eventResponse` event
+Emitted every time a response is received from the remote service:
+
+```php
+<?php
+use Coveralls\Http\{Client, ResponseEvent};
+
+function main(): void {
+  $client = new Client;
   $client->addListener(Client::eventResponse, function(ResponseEvent $event) {
     echo 'Server response: ', $event->getResponse()->getStatusCode();
   });
