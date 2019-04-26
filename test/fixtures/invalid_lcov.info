@@ -1,6 +1,6 @@
 TN:Example
 
-SF:src/Http/NotFound.php
+SF:lib/Http/NotFound.php
 FN:4,Client::upload
 FNDA:2,Client::upload
 FNF:1
