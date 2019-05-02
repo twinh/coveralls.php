@@ -6,7 +6,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\Job` class. */
 class JobTest extends TestCase {
 
-  /** @test Tests the `Job::fromJson()` method. */
+  /** @test Job::fromJson() */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $job = Job::fromJson(new \stdClass);
@@ -44,7 +44,7 @@ class JobTest extends TestCase {
     assertThat($sourceFiles[0]->getName(), equalTo('/home/cedx/coveralls.php'));
   }
 
-  /** @test Tests the `Job::jsonSerialize()` method. */
+  /** @test Job->jsonSerialize() */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new Job)->jsonSerialize();

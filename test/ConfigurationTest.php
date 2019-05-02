@@ -6,33 +6,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\Configuration` class. */
 class ConfigurationTest extends TestCase {
 
-  /** @test Tests the `ArrayAccess` interface. */
-  function testArrayAccess(): void {
-    $config = new Configuration;
-
-    // It should handle the existence of an element.
-    assertThat($config->offsetExists('foo'), isFalse());
-    $config->offsetSet('foo', 'bar');
-    assertThat($config->offsetExists('foo'), isTrue());
-    $config->offsetUnset('foo');
-
-    // It should handle the fetch of an element.
-    assertThat($config->offsetGet('foo'), isNull());
-    $config->offsetSet('foo', 'bar');
-    assertThat($config->offsetGet('foo'), equalTo('bar'));
-    $config->offsetUnset('foo');
-  }
-
-  /** @test Tests the `Configuration::count()` method. */
-  function testCount(): void {
-    // It should return zero for an empty configuration.
-    assertThat(new Configuration, isEmpty());
-
-    // It should return the number of entries for a non-empty configuration.
-    assertThat(new Configuration(['foo' => 'bar', 'bar' => 'baz']), countOf(2));
-  }
-
-  /** @test Tests the `Configuration::fromEnvironment()` method. */
+  /** @test Configuration::fromEnvironment() */
   function testFromEnvironment(): void {
     // It should return an empty configuration for an empty environment.
     $config = Configuration::fromEnvironment([]);
@@ -56,7 +30,7 @@ class ConfigurationTest extends TestCase {
     assertThat($config['service_pull_request'], equalTo('123'));
   }
 
-  /** @test Tests the `Configuration::fromYaml()` method. */
+  /** @test Configuration::fromYaml() */
   function testFromYaml(): void {
     // It should return an initialized instance for a non-empty map.
     $config = Configuration::fromYaml("repo_token: 0123456789abcdef\nservice_name: travis-ci");
@@ -70,7 +44,30 @@ class ConfigurationTest extends TestCase {
     Configuration::fromYaml('foo');
   }
 
-  /** @test Tests the `Configuration::getIterator()` method. */
+  /** @test Configuration::loadDefaults() */
+  function testLoadDefaults(): void {
+    // It should properly initialize from a `.coveralls.yml` file.
+    $config = Configuration::loadDefaults('test/fixtures/.coveralls.yml');
+    assertThat(count($config), greaterThanOrEqual(2));
+    assertThat($config['repo_token'], equalTo('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt'));
+    assertThat($config['service_name'], equalTo('travis-pro'));
+
+    // It should use the environment defaults if the `.coveralls.yml` file is not found.
+    $defaults = Configuration::fromEnvironment();
+    $config = Configuration::loadDefaults('.dummy/config.yml');
+    assertThat(get_object_vars($config->jsonSerialize()), equalTo(get_object_vars($defaults->jsonSerialize())));
+  }
+
+  /** @test Configuration->count() */
+  function testCount(): void {
+    // It should return zero for an empty configuration.
+    assertThat(new Configuration, isEmpty());
+
+    // It should return the number of entries for a non-empty configuration.
+    assertThat(new Configuration(['foo' => 'bar', 'bar' => 'baz']), countOf(2));
+  }
+
+  /** @test Configuration->getIterator() */
   function testGetIterator(): void {
     // It should return a done iterator if configuration is empty.
     $iterator = (new Configuration)->getIterator();
@@ -91,7 +88,7 @@ class ConfigurationTest extends TestCase {
     assertThat($iterator->valid(), isFalse());
   }
 
-  /** @test Tests the `Configuration::getKeys()` method. */
+  /** @test Configuration->getKeys() */
   function testGetKeys(): void {
     // It should return an empty array for an empty configuration.
     assertThat((new Configuration)->getKeys(), isEmpty());
@@ -103,7 +100,7 @@ class ConfigurationTest extends TestCase {
     assertThat($keys[1], equalTo('bar'));
   }
 
-  /** @test Tests the `Configuration::jsonSerialize()` method. */
+  /** @test Configuration->jsonSerialize() */
   function testJsonSerialize(): void {
     // It should return an empty map for a newly created instance.
     $map = (new Configuration)->jsonSerialize();
@@ -116,21 +113,7 @@ class ConfigurationTest extends TestCase {
     assertThat($map->bar, equalTo('baz'));
   }
 
-  /** @test Tests the `Configuration::loadDefaults()` method. */
-  function testLoadDefaults(): void {
-    // It should properly initialize from a `.coveralls.yml` file.
-    $config = Configuration::loadDefaults('test/fixtures/.coveralls.yml');
-    assertThat(count($config), greaterThanOrEqual(2));
-    assertThat($config['repo_token'], equalTo('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt'));
-    assertThat($config['service_name'], equalTo('travis-pro'));
-
-    // It should use the environment defaults if the `.coveralls.yml` file is not found.
-    $defaults = Configuration::fromEnvironment();
-    $config = Configuration::loadDefaults('.dummy/config.yml');
-    assertThat(get_object_vars($config->jsonSerialize()), equalTo(get_object_vars($defaults->jsonSerialize())));
-  }
-
-  /** @test Tests the `Configuration::merge()` method. */
+  /** @test Configuration->merge() */
   function testMerge(): void {
     // It should have the same entries as the other configuration.
     $config = new Configuration;
@@ -140,5 +123,41 @@ class ConfigurationTest extends TestCase {
     assertThat($config, countOf(2));
     assertThat($config['foo'], equalTo('bar'));
     assertThat($config['bar'], equalTo('baz'));
+  }
+
+  /** @test Configuration->offsetExists() */
+  function testOffsetExists(): void {
+    // It should handle the existence of an element.
+    $config = new Configuration;
+    assertThat($config->offsetExists('foo'), isFalse());
+    $config['foo'] = 'bar';
+    assertThat($config->offsetExists('foo'), isTrue());
+  }
+
+  /** @test Configuration->offsetGet() */
+  function testOffsetGet(): void {
+    // It should handle the fetch of an element.
+    $config = new Configuration;
+    assertThat($config->offsetGet('foo'), isNull());
+    $config['foo'] = 'bar';
+    assertThat($config->offsetGet('foo'), equalTo('bar'));
+  }
+
+  /** @test Configuration->offsetSet() */
+  function testOffsetSet(): void {
+    // It should handle the setting of an element.
+    $config = new Configuration;
+    assertThat($config['foo'], isNull());
+    $config->offsetSet('foo', 'bar');
+    assertThat($config['foo'], equalTo('bar'));
+  }
+
+  /** @test Configuration->offsetUnset() */
+  function testOffsetUnset(): void {
+    // It should handle the unsetting of an element.
+    $config = new Configuration(['foo' => 'bar']);
+    assertThat(isset($config['foo']), isTrue());
+    $config->offsetUnset('foo');
+    assertThat(isset($config['foo']), isFalse());
   }
 }

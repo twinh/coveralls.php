@@ -7,7 +7,7 @@ use PHPUnit\Framework\{TestCase};
 /** Tests the features of the `Coveralls\GitRemote` class. */
 class GitRemoteTest extends TestCase {
 
-  /** @test Tests the `GitRemote::fromJson()` method. */
+  /** @test GitRemote::fromJson() */
   function testFromJson(): void {
     // It should return an instance with default values for an empty map.
     $remote = GitRemote::fromJson(new \stdClass);
@@ -23,7 +23,7 @@ class GitRemoteTest extends TestCase {
     assertThat((string) $remote->getUrl(), equalTo('https://github.com/cedx/coveralls.php.git'));
   }
 
-  /** @test Tests the `GitRemote::jsonSerialize()` method. */
+  /** @test GitRemote->jsonSerialize() */
   function testJsonSerialize(): void {
     // It should return a map with default values for a newly created instance.
     $map = (new GitRemote(''))->jsonSerialize();
