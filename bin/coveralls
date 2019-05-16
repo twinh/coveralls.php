@@ -8,9 +8,7 @@ use GuzzleHttp\Psr7\{Uri};
 /** @var string The version number of this package. */
 const packageVersion = '10.1.0';
 
-/**
- * Application entry point.
- */
+/** Application entry point. */
 function main() {
   // Initialize the application.
   @cli_set_process_title('Coveralls.php');
