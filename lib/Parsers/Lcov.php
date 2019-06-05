@@ -25,7 +25,6 @@ abstract class Lcov {
         throw new \RuntimeException("Source file not found: $sourceFile");
       }
 
-      /** @var \SplFixedArray<int, int> $coverage */
       $coverage = new \SplFixedArray(count(preg_split('/\r?\n/', $source) ?: []));
       if ($lines = $record->getLines())
         foreach ($lines->getData() as $lineData) $coverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
