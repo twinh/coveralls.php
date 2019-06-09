@@ -5,9 +5,6 @@ use Commando\{Command};
 use Coveralls\Http\{Client};
 use GuzzleHttp\Psr7\{Uri};
 
-/** @var string The version number of this package. */
-const packageVersion = '10.1.0';
-
 /** Application entry point. */
 function main() {
   // Initialize the application.
@@ -26,7 +23,7 @@ function main() {
     ->file();
 
   if ($program['version']) {
-    echo packageVersion, PHP_EOL;
+    echo require __DIR__.'/../lib/version.g.php', PHP_EOL;
     exit(0);
   }
 
