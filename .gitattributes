@@ -1,6 +1,7 @@
 * text=auto
 
 .* text
+*.http text
 *.info text
 *.json text
 *.md text
@@ -12,4 +13,6 @@
 *.yml text
 
 *.ico binary
+*.jpg binary
+*.pdf binary
 *.png binary
