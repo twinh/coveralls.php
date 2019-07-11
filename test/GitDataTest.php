@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Coveralls;
 
+use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /** Tests the features of the `Coveralls\GitData` class. */
@@ -8,75 +9,80 @@ class GitDataTest extends TestCase {
 
   /** @test GitData::fromJson() */
   function testFromJson(): void {
-    // It should return an instance with default values for an empty map.
-    $data = GitData::fromJson(new \stdClass);
-    assertThat($data->getBranch(), isEmpty());
-    assertThat($data->getCommit(), isNull());
-    assertThat($data->getRemotes(), isEmpty());
+    it('should return an instance with default values for an empty map', function() {
+      $data = GitData::fromJson(new \stdClass);
+      expect($data->getBranch())->to->be->empty;
+      expect($data->getCommit())->to->be->null;
+      expect($data->getRemotes())->to->be->empty;
+    });
 
-    // It should return an initialized instance for a non-empty map.
-    $data = GitData::fromJson((object) [
-      'branch' => 'develop',
-      'head' => (object) ['id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871'],
-      'remotes' => [
-        (object) ['name' => 'origin']
-      ]
-    ]);
+    it('should return an initialized instance for a non-empty map', function() {
+      $data = GitData::fromJson((object) [
+        'branch' => 'develop',
+        'head' => (object) ['id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871'],
+        'remotes' => [
+          (object) ['name' => 'origin']
+        ]
+      ]);
 
-    assertThat($data->getBranch(), equalTo('develop'));
+      expect($data->getBranch())->to->equal('develop');
 
-    /** @var GitCommit $commit */
-    $commit = $data->getCommit();
-    assertThat($commit->getId(), equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));
+      /** @var GitCommit $commit */
+      $commit = $data->getCommit();
+      expect($commit->getId())->to->equal('2ef7bde608ce5404e97d5f042f95f89f1c232871');
 
-    $remotes = $data->getRemotes();
-    assertThat($remotes, countOf(1));
-    assertThat($remotes[0], isInstanceOf(GitRemote::class));
-    assertThat($remotes[0]->getName(), equalTo('origin'));
+      $remotes = $data->getRemotes();
+      expect($remotes)->to->have->lengthOf(1);
+      expect($remotes[0])->to->be->an->instanceOf(GitRemote::class);
+      expect($remotes[0]->getName())->to->equal('origin');
+    });
   }
 
   /** @test GitData::fromRepository() */
   function testFromRepository(): void {
-    // It should retrieve the Git data from the executable output.
-    $data = GitData::fromRepository();
-    assertThat($data->getBranch(), logicalNot(isEmpty()));
+    it('should retrieve the Git data from the executable output', function() {
+      $data = GitData::fromRepository();
+      expect($data->getBranch())->to->not->be->empty;
 
-    /** @var GitCommit $commit */
-    $commit = $data->getCommit();
-    assertThat($commit->getId(), matchesRegularExpression('/^[a-f\d]{40}$/'));
+      /** @var GitCommit $commit */
+      $commit = $data->getCommit();
+      expect($commit->getId())->to->match('/^[a-f\d]{40}$/');
 
-    $remotes = $data->getRemotes();
-    assertThat($remotes, logicalNot(isEmpty()));
-    assertThat($remotes[0], isInstanceOf(GitRemote::class));
+      $remotes = $data->getRemotes();
+      expect($remotes)->to->not->be->empty;
+      expect($remotes[0])->to->be->an->instanceOf(GitRemote::class);
 
-    /** @var GitRemote[] $origin */
-    $origin = array_values(array_filter($remotes->getArrayCopy(), function(GitRemote $remote): bool {
-      return $remote->getName() == 'origin';
-    }));
+      /** @var GitRemote[] $origin */
+      $origin = array_values(array_filter($remotes->getArrayCopy(), function(GitRemote $remote): bool {
+        return $remote->getName() == 'origin';
+      }));
 
-    assertThat($origin, countOf(1));
-    assertThat((string) $origin[0]->getUrl(), logicalOr(
-      equalTo('https://github.com/cedx/coveralls.php.git'),
-      equalTo('ssh://git@github.com/cedx/coveralls.php.git')
-    ));
+      expect($origin)->to->have->lengthOf(1);
+      expect((string) $origin[0]->getUrl())->to->be->oneOf([
+        'https://github.com/cedx/coveralls.php.git',
+        'ssh://git@github.com/cedx/coveralls.php.git'
+      ]);
+    });
   }
 
   /** @test GitData->jsonSerialize() */
   function testJsonSerialize(): void {
-    // It should return a map with default values for a newly created instance.
-    $map = (new GitData(new GitCommit('')))->jsonSerialize();
-    assertThat(get_object_vars($map), countOf(3));
-    assertThat($map->branch, isEmpty());
-    assertThat($map->head, isInstanceOf(\stdClass::class));
-    assertThat($map->remotes, isEmpty());
+    it('should return a map with default values for a newly created instance', function() {
+      $map = (new GitData(new GitCommit('')))->jsonSerialize();
+      expect(get_object_vars($map))->to->have->lengthOf(3);
+      expect($map->branch)->to->be->empty;
+      expect($map->head)->to->be->an->instanceOf(\stdClass::class);
+      expect($map->remotes)->to->be->empty;
+    });
 
-    // It should return a non-empty map for an initialized instance.
-    $map = (new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]))->jsonSerialize();
-    assertThat(get_object_vars($map), countOf(3));
-    assertThat($map->branch, equalTo('develop'));
+    it('should return a non-empty map for an initialized instance', function() {
+      $map = (new GitData(new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871'), 'develop', [new GitRemote('origin')]))->jsonSerialize();
+      expect(get_object_vars($map))->to->have->lengthOf(3);
+      expect($map->branch)->to->equal('develop');
 
-    assertThat($map->head->id, equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));
-    assertThat($map->remotes, countOf(1));
-    assertThat($map->remotes[0]->name, equalTo('origin'));
+      expect($map->head->id)->to->equal('2ef7bde608ce5404e97d5f042f95f89f1c232871');
+      expect($map->remotes)->to->have->lengthOf(1);
+      expect($map->remotes[0]->name)->to->equal('origin');
+    });
   }
 }

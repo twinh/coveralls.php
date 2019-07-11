@@ -20,10 +20,8 @@ abstract class Lcov {
 
     return new Job(array_map(function(Record $record) use ($workingDir) {
       $sourceFile = $record->getSourceFile();
-      $source = (string)@file_get_contents($sourceFile);
-      if (!mb_strlen($source)) {
-        throw new \RuntimeException("Source file not found: $sourceFile");
-      }
+      $source = (string) @file_get_contents($sourceFile);
+      if (!mb_strlen($source)) throw new \RuntimeException("Source file not found: $sourceFile");
 
       $coverage = new \SplFixedArray(count(preg_split('/\r?\n/', $source) ?: []));
       if ($lines = $record->getLines())

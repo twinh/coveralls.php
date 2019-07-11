@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Coveralls\Http;
 
+use function PHPUnit\Expect\{expect, it};
 use Coveralls\{Job};
 use PHPUnit\Framework\{TestCase};
 
@@ -9,37 +10,19 @@ class ClientTest extends TestCase {
 
   /** @test Client->upload() */
   function testUpload(): void {
-    // It should throw an exception with an empty coverage report.
-    try {
-      (new Client)->upload('');
-      $this->fail('Exception not thrown.');
-    }
+    it('should throw an exception with an empty coverage report', function() {
+      expect(function() { (new Client)->upload(''); })->to->throw(\InvalidArgumentException::class);
+    });
 
-    catch (\Throwable $e) {
-      assertThat($e, isInstanceOf(\InvalidArgumentException::class));
-    }
-
-    // It should throw an error with an invalid coverage report.
-    try {
-      (new Client)->upload('end_of_record');
-      $this->fail('Exception not thrown.');
-    }
-
-    catch (\Throwable $e) {
-      assertThat($e, isInstanceOf(\InvalidArgumentException::class));
-    }
+    it('should throw an error with an invalid coverage report', function() {
+      expect(function() { (new Client)->upload('end_of_record'); })->to->throw(\InvalidArgumentException::class);
+    });
   }
 
   /** @test Client->uploadJob() */
   function testUploadJob(): void {
-    // It should throw an exception with an empty coverage job.
-    try {
-      (new Client)->uploadJob(new Job);
-      $this->fail('Exception not thrown.');
-    }
-
-    catch (\Throwable $e) {
-      assertThat($e, isInstanceOf(\InvalidArgumentException::class));
-    }
+    it('should throw an exception with an empty coverage job', function() {
+      expect(function() { (new Client)->uploadJob(new Job); })->to->throw(\InvalidArgumentException::class);
+    });
   }
 }

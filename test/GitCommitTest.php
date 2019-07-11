@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Coveralls;
 
+use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
 /** Tests the features of the `Coveralls\GitCommit` class. */
@@ -8,44 +9,48 @@ class GitCommitTest extends TestCase {
 
   /** @test GitCommit::fromJson() */
   function testFromJson(): void {
-    // It should return an instance with default values for an empty map.
-    $commit = GitCommit::fromJson(new \stdClass);
-    assertThat($commit->getAuthorEmail(), isEmpty());
-    assertThat($commit->getAuthorName(), isEmpty());
-    assertThat($commit->getId(), isEmpty());
-    assertThat($commit->getMessage(), isEmpty());
+    it('should return an instance with default values for an empty map', function() {
+      $commit = GitCommit::fromJson(new \stdClass);
+      expect($commit->getAuthorEmail())->to->be->empty;
+      expect($commit->getAuthorName())->to->be->empty;
+      expect($commit->getId())->to->be->empty;
+      expect($commit->getMessage())->to->be->empty;
+    });
 
-    // It should return an initialized instance for a non-empty map.
-    $commit = GitCommit::fromJson((object) [
-      'author_email' => 'anonymous@secret.com',
-      'author_name' => 'Anonymous',
-      'id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871',
-      'message' => 'Hello World!'
-    ]);
+    it('should return an initialized instance for a non-empty map', function() {
+      $commit = GitCommit::fromJson((object) [
+        'author_email' => 'anonymous@secret.com',
+        'author_name' => 'Anonymous',
+        'id' => '2ef7bde608ce5404e97d5f042f95f89f1c232871',
+        'message' => 'Hello World!'
+      ]);
 
-    assertThat($commit->getAuthorEmail(), equalTo('anonymous@secret.com'));
-    assertThat($commit->getAuthorName(), equalTo('Anonymous'));
-    assertThat($commit->getId(), equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));
-    assertThat($commit->getMessage(), equalTo('Hello World!'));
+      expect($commit->getAuthorEmail())->to->equal('anonymous@secret.com');
+      expect($commit->getAuthorName())->to->equal('Anonymous');
+      expect($commit->getId())->to->equal('2ef7bde608ce5404e97d5f042f95f89f1c232871');
+      expect($commit->getMessage())->to->equal('Hello World!');
+    });
   }
 
   /** @test GitCommit->jsonSerialize() */
   function testJsonSerialize(): void {
-    // It should return a map with default values for a newly created instance.
-    $map = (new GitCommit(''))->jsonSerialize();
-    assertThat(get_object_vars($map), countOf(1));
-    assertThat($map->id, isEmpty());
+    it('should return a map with default values for a newly created instance', function() {
+      $map = (new GitCommit(''))->jsonSerialize();
+      expect(get_object_vars($map))->to->have->lengthOf(1);
+      expect($map->id)->to->be->empty;
+    });
 
-    // It should return a non-empty map for an initialized instance.
-    $map = (new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871', 'Hello World!'))
-      ->setAuthorEmail('anonymous@secret.com')
-      ->setAuthorName('Anonymous')
-      ->jsonSerialize();
+    it('should return a non-empty map for an initialized instance', function() {
+      $map = (new GitCommit('2ef7bde608ce5404e97d5f042f95f89f1c232871', 'Hello World!'))
+        ->setAuthorEmail('anonymous@secret.com')
+        ->setAuthorName('Anonymous')
+        ->jsonSerialize();
 
-    assertThat(get_object_vars($map), countOf(4));
-    assertThat($map->author_email, equalTo('anonymous@secret.com'));
-    assertThat($map->author_name, equalTo('Anonymous'));
-    assertThat($map->id, equalTo('2ef7bde608ce5404e97d5f042f95f89f1c232871'));
-    assertThat($map->message, equalTo('Hello World!'));
+      expect(get_object_vars($map))->to->have->lengthOf(4);
+      expect($map->author_email)->to->equal('anonymous@secret.com');
+      expect($map->author_name)->to->equal('Anonymous');
+      expect($map->id)->to->equal('2ef7bde608ce5404e97d5f042f95f89f1c232871');
+      expect($map->message)->to->equal('Hello World!');
+    });
   }
 }
