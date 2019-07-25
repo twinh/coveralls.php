@@ -34,7 +34,7 @@
     "ext-pcre": "*",
     "ext-SimpleXML": "*",
     "ext-spl": "*",
-    "cedx/lcov": "^6.2.0",
+    "cedx/lcov": "^7.0.0",
     "cedx/which": "^7.2.0",
     "guzzlehttp/guzzle": "^6.3.3",
     "league/event": "^2.2.0",
