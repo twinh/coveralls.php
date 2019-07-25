@@ -18,14 +18,11 @@ $ coveralls --help
 
 Send a coverage report to the Coveralls service.
 
-file
-     The coverage report to upload.
+Usage: coveralls [options] <file>
 
---help
-     Show the help page for this command.
-
--v/--version
-     Output the version number.
+Options:
+-h, --help       Output usage information.
+-v, --version    Output the version number.
 ```
 
 For example:
