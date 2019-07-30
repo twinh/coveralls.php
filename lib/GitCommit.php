@@ -38,7 +38,7 @@ class GitCommit implements \JsonSerializable {
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return (new static(isset($map->id) && is_string($map->id) ? $map->id : '', isset($map->message) && is_string($map->message) ? $map->message : ''))
+    return (new self(isset($map->id) && is_string($map->id) ? $map->id : '', isset($map->message) && is_string($map->message) ? $map->message : ''))
       ->setAuthorEmail(isset($map->author_email) && is_string($map->author_email) ? $map->author_email : '')
       ->setAuthorName(isset($map->author_name) && is_string($map->author_name) ? $map->author_name : '')
       ->setCommitterEmail(isset($map->committer_email) && is_string($map->committer_email) ? $map->committer_email : '')

@@ -31,7 +31,7 @@ class GitData implements \JsonSerializable {
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return new static(
+    return new self(
       isset($map->head) && is_object($map->head) ? GitCommit::fromJson($map->head) : null,
       isset($map->branch) && is_string($map->branch) ? $map->branch : '',
       isset($map->remotes) && is_array($map->remotes) ? array_map([GitRemote::class, 'fromJson'], $map->remotes) : []
@@ -67,7 +67,7 @@ class GitData implements \JsonSerializable {
     }
 
     chdir($workingDir);
-    return new static(GitCommit::fromJson($commands), $commands->branch, array_values($remotes));
+    return new self(GitCommit::fromJson($commands), $commands->branch, array_values($remotes));
   }
 
   /**

@@ -26,7 +26,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    */
   static function fromEnvironment(array $env = null): self {
     if (!is_array($env)) $env = $_ENV ?: $_SERVER;
-    $config = new static;
+    $config = new self;
 
     // Standard.
     $serviceName = $env['CI_NAME'] ?? '';
@@ -92,7 +92,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     try {
       $yaml = Yaml::parse($document);
       if (!is_array($yaml)) throw new \InvalidArgumentException('The specified YAML document is invalid.');
-      return new static($yaml);
+      return new self($yaml);
     }
 
     catch (ParseException $e) {

@@ -36,7 +36,7 @@ class SourceFile implements \JsonSerializable {
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return new static(
+    return new self(
       isset($map->name) && is_string($map->name) ? $map->name : '',
       isset($map->source_digest) && is_string($map->source_digest) ? $map->source_digest : '',
       isset($map->source) && is_string($map->source) ? $map->source : '',

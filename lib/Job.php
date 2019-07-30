@@ -48,7 +48,7 @@ class Job implements \JsonSerializable {
    * @return static The instance corresponding to the specified JSON map.
    */
   static function fromJson(object $map): self {
-    return (new static(isset($map->source_files) && is_array($map->source_files) ? array_map([SourceFile::class, 'fromJson'], $map->source_files) : []))
+    return (new self(isset($map->source_files) && is_array($map->source_files) ? array_map([SourceFile::class, 'fromJson'], $map->source_files) : []))
       ->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
       ->setGit(isset($map->git) && is_object($map->git) ? GitData::fromJson($map->git) : null)
       ->setParallel(isset($map->parallel) && is_bool($map->parallel) ? $map->parallel : false)
