@@ -22,7 +22,7 @@ function main(): void {
 }
 ```
 
-The `Client::upload()` method throws an [`InvalidArgumentException`](https://secure.php.net/manual/en/class.invalidargumentexception.php)
+The `Client::upload()` method throws an [`InvalidArgumentException`](https://www.php.net/manual/en/class.invalidargumentexception.php)
 if the input report is invalid. It throws a `Coveralls\Http\ClientException` if any error occurred while uploading the report.
 
 ## Client events

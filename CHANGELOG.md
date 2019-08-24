@@ -52,7 +52,7 @@
 
 ## Version [7.0.0](https://github.com/cedx/coveralls.php/compare/v6.0.0...v7.0.0)
 - Breaking change: changed the signature of the `Client` events.
-- Breaking change: raised the required [PHP](https://secure.php.net) version.
+- Breaking change: raised the required [PHP](https://www.php.net) version.
 - Breaking change: using PHP 7.1 features, like nullable types and void functions.
 - Added the `ClientException` class.
 - Added a user guide based on [MkDocs](http://www.mkdocs.org).
