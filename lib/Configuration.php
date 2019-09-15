@@ -83,7 +83,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   /**
    * Creates a new configuration from the specified YAML document.
    * @param string $document A YAML document providing configuration parameters.
-   * @return static The instance corresponding to the specified YAML document.
+   * @return self The instance corresponding to the specified YAML document.
    * @throws \InvalidArgumentException The specified document is invalid.
    */
   static function fromYaml(string $document): self {
