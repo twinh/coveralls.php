@@ -11,7 +11,7 @@ class CloverTest extends TestCase {
   /** @test Clover::parseReport() */
   function testParseReport(): void {
     it('should properly parse Clover reports', function() {
-      $job = Clover::parseReport((string) file_get_contents('test/fixtures/clover.xml'));
+      $job = Clover::parseReport((string) @file_get_contents('test/fixtures/clover.xml'));
       $files = $job->getSourceFiles();
       expect($files)->to->have->lengthOf(3);
 
