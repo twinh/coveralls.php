@@ -59,8 +59,8 @@ class GitDataTest extends TestCase {
 
       expect($origin)->to->have->lengthOf(1);
       expect((string) $origin[0]->getUrl())->to->be->oneOf([
-        'https://github.com/cedx/coveralls.php.git',
-        'ssh://git@github.com/cedx/coveralls.php.git'
+        'https://github.com/cedx/coveralls.php',
+        'https://github.com/cedx/coveralls.php.git'
       ]);
     });
   }
