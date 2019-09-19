@@ -63,7 +63,11 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     if (isset($env['GIT_MESSAGE'])) $config['git_message'] = $env['GIT_MESSAGE'];
 
     // CI services.
-    if (isset($env['APPVEYOR'])) $config->merge(AppVeyor::getConfiguration($env));
+    if (isset($env['TRAVIS'])) {
+      $config->merge(TravisCI::getConfiguration($env));
+      if (mb_strlen($serviceName) && $serviceName != 'travis-ci') $config['service_name'] = $serviceName;
+    }
+    else if (isset($env['APPVEYOR'])) $config->merge(AppVeyor::getConfiguration($env));
     else if (isset($env['CIRCLECI'])) $config->merge(CircleCI::getConfiguration($env));
     else if ($serviceName == 'codeship') $config->merge(Codeship::getConfiguration($env));
     else if (isset($env['GITHUB_WORKFLOW'])) $config->merge(GitHub::getConfiguration($env));
@@ -72,7 +76,6 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     else if (isset($env['SEMAPHORE'])) $config->merge(Semaphore::getConfiguration($env));
     else if (isset($env['SURF_SHA1'])) $config->merge(Surf::getConfiguration($env));
     else if (isset($env['TDDIUM'])) $config->merge(SolanoCI::getConfiguration($env));
-    else if (isset($env['TRAVIS'])) $config->merge(TravisCI::getConfiguration($env));
     else if (isset($env['WERCKER'])) $config->merge(Wercker::getConfiguration($env));
 
     return $config;
