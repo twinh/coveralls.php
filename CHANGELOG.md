@@ -1,5 +1,10 @@
 # Changelog
 
+## Version [11.1.0](https://github.com/cedx/coveralls.php/compare/v11.0.0...v11.1.0)
+- Added support for [GitHub Actions](https://github.com/features/actions).
+- Added the `Job->flagName` property.
+- Updated the package dependencies.
+
 ## Version [11.0.0](https://github.com/cedx/coveralls.php/compare/v10.1.0...v11.0.0)
 - Breaking change: using camelcase instead of all caps for constants.
 - Removed the dependency on [Commando](https://github.com/nategood/commando) library.
