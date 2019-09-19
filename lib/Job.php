@@ -7,6 +7,9 @@ class Job implements \JsonSerializable {
   /** @var string The current SHA of the commit being built to override the `git` parameter. */
   private $commitSha = '';
 
+  /** @var string The job name. */
+  private $flagName = '';
+
   /** @var GitData|null The Git data that can be used to display more information to users. */
   private $git;
 
@@ -50,6 +53,7 @@ class Job implements \JsonSerializable {
   static function fromJson(object $map): self {
     return (new self(isset($map->source_files) && is_array($map->source_files) ? array_map([SourceFile::class, 'fromJson'], $map->source_files) : []))
       ->setCommitSha(isset($map->commit_sha) && is_string($map->commit_sha) ? $map->commit_sha : '')
+      ->setFlagName(isset($map->flag_name) && is_string($map->flag_name) ? $map->flag_name : '')
       ->setGit(isset($map->git) && is_object($map->git) ? GitData::fromJson($map->git) : null)
       ->setParallel(isset($map->parallel) && is_bool($map->parallel) ? $map->parallel : false)
       ->setRepoToken(isset($map->repo_token) && is_string($map->repo_token) ? $map->repo_token : '')
@@ -66,6 +70,14 @@ class Job implements \JsonSerializable {
    */
   function getCommitSha(): string {
     return $this->commitSha;
+  }
+
+  /**
+   * Gets the job name.
+   * @return string The job name.
+   */
+  function getFlagName(): string {
+    return $this->flagName;
   }
 
   /**
@@ -147,7 +159,12 @@ class Job implements \JsonSerializable {
   function jsonSerialize(): \stdClass {
     $map = new \stdClass;
 
+    if (mb_strlen($commitSha = $this->getCommitSha())) $map->commit_sha = $commitSha;
+    if (mb_strlen($flagName = $this->getFlagName())) $map->flag_name = $flagName;
+    if ($git = $this->getGit()) $map->git = $git->jsonSerialize();
+    if ($this->isParallel()) $map->parallel = true;
     if (mb_strlen($repoToken = $this->getRepoToken())) $map->repo_token = $repoToken;
+    if ($runAt = $this->getRunAt()) $map->run_at = $runAt->format('c');
     if (mb_strlen($serviceName = $this->getServiceName())) $map->service_name = $serviceName;
     if (mb_strlen($serviceNumber = $this->getServiceNumber())) $map->service_number = $serviceNumber;
     if (mb_strlen($serviceJobId = $this->getServiceJobId())) $map->service_job_id = $serviceJobId;
@@ -156,11 +173,6 @@ class Job implements \JsonSerializable {
     $map->source_files = array_map(function(SourceFile $item) {
       return $item->jsonSerialize();
     }, $this->getSourceFiles()->getArrayCopy());
-
-    if ($this->isParallel()) $map->parallel = true;
-    if ($git = $this->getGit()) $map->git = $git->jsonSerialize();
-    if (mb_strlen($commitSha = $this->getCommitSha())) $map->commit_sha = $commitSha;
-    if ($runAt = $this->getRunAt()) $map->run_at = $runAt->format('c');
 
     return $map;
   }
@@ -172,6 +184,16 @@ class Job implements \JsonSerializable {
    */
   function setCommitSha(string $value): self {
     $this->commitSha = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the job name.
+   * @param string $value The new job name.
+   * @return $this This instance.
+   */
+  function setFlagName(string $value): self {
+    $this->flagName = $value;
     return $this;
   }
 
