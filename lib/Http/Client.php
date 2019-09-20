@@ -4,6 +4,7 @@ namespace Coveralls\Http;
 use Coveralls\{Configuration, GitCommit, GitData, Job};
 use Coveralls\Parsers\{Clover, Lcov};
 use GuzzleHttp\{Client as HTTPClient};
+use GuzzleHttp\Exception\{BadResponseException};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri, UriResolver};
 use League\Event\{Emitter};
 use Psr\Http\Message\{UriInterface};
@@ -105,8 +106,12 @@ class Client extends Emitter {
       $this->emit(new ResponseEvent($response, $request));
     }
 
+    catch (BadResponseException $e) {
+      throw new ClientException((string) $e->getResponse()->getBody(), $uri, $e);
+    }
+
     catch (\Throwable $e) {
-      throw new ClientException('An error occurred while uploading the report.', $uri, $e);
+      throw new ClientException($e->getMessage(), $uri, $e);
     }
   }
 
