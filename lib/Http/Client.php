@@ -107,7 +107,9 @@ class Client extends Emitter {
     }
 
     catch (BadResponseException $e) {
-      throw new ClientException((string) $e->getResponse()->getBody(), $uri, $e);
+      /** @var \Psr\Http\Message\ResponseInterface $response */
+      $response = $e->getResponse();
+      throw new ClientException((string) $response->getBody(), $uri, $e);
     }
 
     catch (\Throwable $e) {
