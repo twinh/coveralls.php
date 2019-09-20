@@ -1,0 +1,25 @@
+name: Continuous integration
+on:
+  push:
+  schedule:
+    - cron: '0 0 1 * *'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: |
+          php --version
+          composer --version
+      - name: Fetch the sources
+        uses: actions/checkout@v1
+      - name: Install the dependencies
+        run: composer install --no-interaction
+      - name: Run the tests
+        run: composer run-script test
+      - name: Collect the code coverage
+        env:
+          CI: true
+          COVERALLS_REPO_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        if: success()
+        run: composer run-script coverage
