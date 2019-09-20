@@ -7,10 +7,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug
-        run: |
-          php --version
-          composer --version
       - name: Fetch the sources
         uses: actions/checkout@v1
       - name: Install the dependencies
