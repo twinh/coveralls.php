@@ -23,7 +23,7 @@ class ConfigurationTest extends TestCase {
         'TRAVIS_BRANCH' => 'develop'
       ]);
 
-      expect($config['commit_sha'])->to->equal('HEAD');
+      expect($config['commit_sha'])->to->be->null;
       expect($config['git_message'])->to->equal('Hello World!');
       expect($config['repo_token'])->to->equal('0123456789abcdef');
       expect($config['service_branch'])->to->equal('develop');

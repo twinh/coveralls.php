@@ -47,6 +47,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
       $config['repo_token'] = $env['COVERALLS_REPO_TOKEN'] ?? $env['COVERALLS_TOKEN'];
 
     if (isset($env['COVERALLS_COMMIT_SHA'])) $config['commit_sha'] = $env['COVERALLS_COMMIT_SHA'];
+    if (isset($env['COVERALLS_FLAG_NAME'])) $config['flag_name'] = $env['COVERALLS_FLAG_NAME'];
     if (isset($env['COVERALLS_PARALLEL'])) $config['parallel'] = $env['COVERALLS_PARALLEL'];
     if (isset($env['COVERALLS_RUN_AT'])) $config['run_at'] = $env['COVERALLS_RUN_AT'];
     if (isset($env['COVERALLS_SERVICE_BRANCH'])) $config['service_branch'] = $env['COVERALLS_SERVICE_BRANCH'];
@@ -153,11 +154,12 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   }
 
   /**
-   * Adds all entries of the specified configuration to this one.
+   * Adds all entries of the specified configuration to this one, ignoring `null` values.
    * @param self $config The configuration to be merged.
    */
   function merge(self $config): void {
-    foreach ($config as $key => $value) $this[$key] = $value;
+    foreach ($config as $key => $value)
+      if ($value !== null) $this[$key] = $value;
   }
 
   /**
