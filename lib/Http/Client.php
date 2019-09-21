@@ -53,8 +53,8 @@ class Client extends Emitter {
     if (!mb_strlen($report)) throw new \InvalidArgumentException('The specified coverage report is empty.');
 
     $job = null;
-    $isClover = mb_substr($report, 0, 5) == '<?xml' || mb_substr($report, 0, 10) == '<coverage';
-    if ($isClover) $job = Clover::parseReport($report);
+    if (mb_substr($report, 0, 5) == '<?xml' || mb_substr($report, 0, 9) == '<coverage')
+      $job = Clover::parseReport($report);
     else {
       $token = mb_substr($report, 0, 3);
       if ($token == 'TN:' || $token == 'SF:') $job = Lcov::parseReport($report);
