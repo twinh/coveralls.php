@@ -13,8 +13,11 @@ abstract class TravisCI {
    */
   static function getConfiguration(array $env): Configuration {
     $config = new Configuration([
-      'commit_sha' => 'HEAD',
+      'commit_sha' => $env['TRAVIS_COMMIT'] ?? null,
+      'flag_name' => $env['TRAVIS_JOB_NAME'] ?? null,
+      'git_message' => $env['TRAVIS_COMMIT_MESSAGE'] ?? null,
       'service_branch' => $env['TRAVIS_BRANCH'] ?? null,
+      'service_build_url' => $env['TRAVIS_BUILD_WEB_URL'] ?? null,
       'service_job_id' => $env['TRAVIS_JOB_ID'] ?? null,
       'service_name' => 'travis-ci'
     ]);
