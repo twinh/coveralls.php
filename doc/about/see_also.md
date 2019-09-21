@@ -6,7 +6,7 @@
 - [Submit an issue](https://github.com/cedx/coveralls.php/issues)
 
 ## Testing
-- [Continuous integration](https://travis-ci.com/cedx/coveralls.php)
+- [Continuous integration](https://github.com/cedx/coveralls.php/actions)
 - [Code coverage](https://coveralls.io/github/cedx/coveralls.php/)
 
 ## Other implementations
