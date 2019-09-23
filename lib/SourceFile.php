@@ -4,6 +4,9 @@ namespace Coveralls;
 /** Represents a source code file and its coverage data for a single job. */
 class SourceFile implements \JsonSerializable {
 
+  /** @var \ArrayObject The branch data for this file's job. */
+  private $branches;
+
   /** @var \ArrayObject The coverage data for this file's job. */
   private $coverage;
 
@@ -22,12 +25,14 @@ class SourceFile implements \JsonSerializable {
    * @param string $sourceDigest The MD5 digest of the full source code of this file.
    * @param string $source The contents of this source file.
    * @param array<int|null> $coverage The coverage data for this file's job.
+   * @param int[] $branches The branch data for this file's job.
    */
-  function __construct(string $name, string $sourceDigest, string $source = '', array $coverage = []) {
+  function __construct(string $name, string $sourceDigest, string $source = '', array $coverage = [], array $branches = []) {
+    $this->branches = new \ArrayObject($branches);
+    $this->coverage = new \ArrayObject($coverage);
     $this->name = $name;
     $this->sourceDigest = $sourceDigest;
     $this->source = $source;
-    $this->coverage = new \ArrayObject($coverage);
   }
 
   /**
@@ -40,8 +45,17 @@ class SourceFile implements \JsonSerializable {
       isset($map->name) && is_string($map->name) ? $map->name : '',
       isset($map->source_digest) && is_string($map->source_digest) ? $map->source_digest : '',
       isset($map->source) && is_string($map->source) ? $map->source : '',
-      isset($map->coverage) && is_array($map->coverage) ? $map->coverage : []
+      isset($map->coverage) && is_array($map->coverage) ? $map->coverage : [],
+      isset($map->branches) && is_array($map->branches) ? $map->branches : []
     );
+  }
+
+  /**
+   * Gets the branch data for this file's job.
+   * @return \ArrayObject The branch data.
+   */
+  function getBranches(): \ArrayObject {
+    return $this->branches;
   }
 
   /**
@@ -82,10 +96,31 @@ class SourceFile implements \JsonSerializable {
    */
   function jsonSerialize(): \stdClass {
     $map = new \stdClass;
+    $map->coverage = $this->getCoverage()->getArrayCopy();
     $map->name = $this->getName();
     $map->source_digest = $this->getSourceDigest();
-    $map->coverage = $this->getCoverage()->getArrayCopy();
+    if (count($branches = $this->getBranches())) $map->branches = $branches->getArrayCopy();
     if (mb_strlen($source = $this->getSource())) $map->source = $source;
     return $map;
+  }
+
+  /**
+   * Gets the branch data for this file's job.
+   * @param array<int|null> $value The branch data.
+   * @return $this This instance.
+   */
+  function setBranches(array $value): self {
+    $this->branches->exchangeArray($value);
+    return $this;
+  }
+
+  /**
+   * Gets the coverage data for this file's job.
+   * @param int[] $value The coverage data.
+   * @return $this This instance.
+   */
+  function setCoverage(array $value): self {
+    $this->coverage->exchangeArray($value);
+    return $this;
   }
 }
