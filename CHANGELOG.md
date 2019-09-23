@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [11.2.0](https://github.com/cedx/coveralls.php/compare/v11.1.0...v11.2.0)
+- Added support for branch coverage when using [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) reports.
+
 ## Version [11.1.0](https://github.com/cedx/coveralls.php/compare/v11.0.0...v11.1.0)
 - Added support for [GitHub Actions](https://github.com/features/actions).
 - Added the `Job->flagName` property.
