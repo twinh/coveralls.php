@@ -16,7 +16,7 @@ abstract class Lcov {
    */
   static function parseReport(string $report): Job {
     $records = Report::fromCoverage($report)->getRecords()->getArrayCopy();
-    $workingDir = getcwd() ?: '.';
+    $workingDir = (string) getcwd();
 
     return new Job(array_map(function(Record $record) use ($workingDir) {
       $sourceFile = $record->getSourceFile();
