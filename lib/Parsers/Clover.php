@@ -20,7 +20,7 @@ abstract class Clover {
       throw new \InvalidArgumentException('The specified Clover report is invalid.');
 
     $files = array_merge($xml->xpath('/coverage/project/file') ?: [], $xml->xpath('/coverage/project/package/file') ?: []);
-    $workingDir = getcwd() ?: '.';
+    $workingDir = (string) getcwd();
 
     return new Job(array_map(function(\SimpleXMLElement $file) use ($workingDir) {
       if (!isset($file['name'])) throw new \InvalidArgumentException("Invalid file data: {$file->asXML()}");
