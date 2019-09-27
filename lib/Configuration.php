@@ -22,7 +22,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
   /**
    * Creates a new configuration from the variables of the specified environment.
    * @param array $env $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
-   * @return Configuration The newly created configuration.
+   * @return self The newly created configuration.
    */
   static function fromEnvironment(array $env = null): self {
     if (!is_array($env)) $env = $_ENV ?: $_SERVER;
@@ -106,7 +106,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
    * Loads the default configuration.
    * The default values are read from the environment variables and an optional `.coveralls.yml` file.
    * @param string $coverallsFile The path to the `.coveralls.yml` file. Defaults to the file found in the current directory.
-   * @return Configuration The default configuration.
+   * @return self The default configuration.
    */
   static function loadDefaults(string $coverallsFile = '.coveralls.yml'): self {
     $defaults = static::fromEnvironment();
