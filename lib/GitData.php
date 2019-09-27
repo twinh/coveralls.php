@@ -42,7 +42,7 @@ class GitData implements \JsonSerializable {
    * Creates a new Git data from a local repository.
    * This method relies on the availability of the Git executable in the system path.
    * @param string $path The path to the repository folder. Defaults to the current working directory.
-   * @return static The newly created Git data.
+   * @return self The newly created Git data.
    */
   static function fromRepository(string $path = ''): self {
     $workingDir = getcwd() ?: '.';
