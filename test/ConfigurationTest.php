@@ -4,10 +4,10 @@ namespace Coveralls;
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\Configuration` class. */
+/** @testdox Coveralls\Configuration */
 class ConfigurationTest extends TestCase {
 
-  /** @test Configuration::fromEnvironment() */
+  /** @testdox ::fromEnvironment() */
   function testFromEnvironment(): void {
     it('should return an empty configuration for an empty environment', function() {
       expect(Configuration::fromEnvironment([]))->to->be->empty;
@@ -32,7 +32,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration::fromYaml() */
+  /** @testdox ::fromYaml() */
   function testFromYaml(): void {
     it('should return an initialized instance for a non-empty map', function() {
       $config = Configuration::fromYaml("repo_token: 0123456789abcdef\nservice_name: travis-ci");
@@ -46,7 +46,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration::loadDefaults() */
+  /** @testdox ::loadDefaults() */
   function testLoadDefaults(): void {
     it('should properly initialize from a `.coveralls.yml` file', function() {
       $config = Configuration::loadDefaults('test/fixtures/.coveralls.yml');
@@ -62,7 +62,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->count() */
+  /** @testdox ->count() */
   function testCount(): void {
     it('should return zero for an empty configuration', function() {
       expect(new Configuration)->to->be->empty;
@@ -73,7 +73,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->getIterator() */
+  /** @testdox ->getIterator() */
   function testGetIterator(): void {
     it('should return a done iterator if configuration is empty', function() {
       $iterator = (new Configuration)->getIterator();
@@ -96,7 +96,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->getKeys() */
+  /** @testdox ->getKeys() */
   function testGetKeys(): void {
     it('should return an empty array for an empty configuration', function() {
       expect((new Configuration)->getKeys())->to->be->empty;
@@ -110,7 +110,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->jsonSerialize() */
+  /** @testdox ->jsonSerialize() */
   function testJsonSerialize(): void {
     it('should return an empty map for a newly created instance', function() {
       $map = (new Configuration)->jsonSerialize();
@@ -125,7 +125,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->merge() */
+  /** @testdox ->merge() */
   function testMerge(): void {
     it('should have the same entries as the other configuration', function() {
       $config = new Configuration;
@@ -138,7 +138,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->offsetExists() */
+  /** @testdox ->offsetExists() */
   function testOffsetExists(): void {
     it('should handle the existence of an element', function() {
       $config = new Configuration;
@@ -148,7 +148,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->offsetGet() */
+  /** @testdox ->offsetGet() */
   function testOffsetGet(): void {
     it('should handle the fetch of an element', function() {
       $config = new Configuration;
@@ -158,7 +158,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->offsetSet() */
+  /** @testdox ->offsetSet() */
   function testOffsetSet(): void {
     it('should handle the setting of an element', function() {
       $config = new Configuration;
@@ -168,7 +168,7 @@ class ConfigurationTest extends TestCase {
     });
   }
 
-  /** @test Configuration->offsetUnset() */
+  /** @testdox ->offsetUnset() */
   function testOffsetUnset(): void {
     it('should handle the unsetting of an element', function() {
       $config = new Configuration(['foo' => 'bar']);

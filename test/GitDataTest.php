@@ -4,10 +4,10 @@ namespace Coveralls;
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\GitData` class. */
+/** @testdox Coveralls\GitData */
 class GitDataTest extends TestCase {
 
-  /** @test GitData::fromJson() */
+  /** @testdox ::fromJson() */
   function testFromJson(): void {
     it('should return an instance with default values for an empty map', function() {
       $data = GitData::fromJson(new \stdClass);
@@ -38,7 +38,7 @@ class GitDataTest extends TestCase {
     });
   }
 
-  /** @test GitData::fromRepository() */
+  /** @testdox ::fromRepository() */
   function testFromRepository(): void {
     it('should retrieve the Git data from the executable output', function() {
       $data = GitData::fromRepository();
@@ -65,7 +65,7 @@ class GitDataTest extends TestCase {
     });
   }
 
-  /** @test GitData->jsonSerialize() */
+  /** @testdox ->jsonSerialize() */
   function testJsonSerialize(): void {
     it('should return a map with default values for a newly created instance', function() {
       $map = (new GitData(new GitCommit('')))->jsonSerialize();

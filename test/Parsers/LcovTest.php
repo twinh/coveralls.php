@@ -5,10 +5,10 @@ use function PHPUnit\Expect\{expect, it};
 use Coveralls\{SourceFile};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\Parsers\Lcov` class. */
+/** @testdox Coveralls\Parsers\Lcov */
 class LcovTest extends TestCase {
 
-  /** @test Lcov::parseReport() */
+  /** @testdox ::parseReport() */
   function testParseReport(): void {
     it('should properly parse LCOV reports', function() {
       $job = Lcov::parseReport((string) @file_get_contents('test/fixtures/lcov.info'));

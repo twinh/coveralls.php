@@ -5,10 +5,10 @@ use function PHPUnit\Expect\{expect, it};
 use Coveralls\{SourceFile};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\Parsers\Clover` class. */
+/** @testdox Coveralls\Parsers\Clover */
 class CloverTest extends TestCase {
 
-  /** @test Clover::parseReport() */
+  /** @testdox ::parseReport() */
   function testParseReport(): void {
     it('should properly parse Clover reports', function() {
       $job = Clover::parseReport((string) @file_get_contents('test/fixtures/clover.xml'));

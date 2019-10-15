@@ -5,10 +5,10 @@ use function PHPUnit\Expect\{expect, it};
 use Coveralls\{Job};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\Http\Client` class. */
+/** @testdox Coveralls\Http\Client */
 class ClientTest extends TestCase {
 
-  /** @test Client->upload() */
+  /** @testdox ->upload() */
   function testUpload(): void {
     it('should throw an exception with an empty coverage report', function() {
       expect(function() { (new Client)->upload(''); })->to->throw(\InvalidArgumentException::class);
@@ -19,7 +19,7 @@ class ClientTest extends TestCase {
     });
   }
 
-  /** @test Client->uploadJob() */
+  /** @testdox ->uploadJob() */
   function testUploadJob(): void {
     it('should throw an exception with an empty coverage job', function() {
       expect(function() { (new Client)->uploadJob(new Job); })->to->throw(\InvalidArgumentException::class);

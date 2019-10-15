@@ -5,10 +5,10 @@ use function PHPUnit\Expect\{expect, it};
 use GuzzleHttp\Psr7\{Uri};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\GitRemote` class. */
+/** @testdox Coveralls\GitRemote */
 class GitRemoteTest extends TestCase {
 
-  /** @test GitRemote::fromJson() */
+  /** @testdox ::fromJson() */
   function testFromJson(): void {
     it('should return an instance with default values for an empty map', function() {
       $remote = GitRemote::fromJson(new \stdClass);
@@ -26,7 +26,7 @@ class GitRemoteTest extends TestCase {
     });
   }
 
-  /** @test GitRemote->jsonSerialize() */
+  /** @testdox ->jsonSerialize() */
   function testJsonSerialize(): void {
     it('should return a map with default values for a newly created instance', function() {
       $map = (new GitRemote(''))->jsonSerialize();

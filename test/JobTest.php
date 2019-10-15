@@ -4,10 +4,10 @@ namespace Coveralls;
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\Job` class. */
+/** @testdox Coveralls\Job */
 class JobTest extends TestCase {
 
-  /** @test Job::fromJson() */
+  /** @testdox ::fromJson() */
   function testFromJson(): void {
     it('should return an instance with default values for an empty map', function() {
       $job = Job::fromJson(new \stdClass);
@@ -47,7 +47,7 @@ class JobTest extends TestCase {
     });
   }
 
-  /** @test Job->jsonSerialize() */
+  /** @testdox ->jsonSerialize() */
   function testJsonSerialize(): void {
     it('should return a map with default values for a newly created instance', function() {
       $map = (new Job)->jsonSerialize();

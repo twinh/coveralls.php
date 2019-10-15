@@ -4,10 +4,10 @@ namespace Coveralls;
 use function PHPUnit\Expect\{expect, it};
 use PHPUnit\Framework\{TestCase};
 
-/** Tests the features of the `Coveralls\GitCommit` class. */
+/** @testdox Coveralls\GitCommit */
 class GitCommitTest extends TestCase {
 
-  /** @test GitCommit::fromJson() */
+  /** @testdox ::fromJson() */
   function testFromJson(): void {
     it('should return an instance with default values for an empty map', function() {
       $commit = GitCommit::fromJson(new \stdClass);
@@ -32,7 +32,7 @@ class GitCommitTest extends TestCase {
     });
   }
 
-  /** @test GitCommit->jsonSerialize() */
+  /** @testdox ->jsonSerialize() */
   function testJsonSerialize(): void {
     it('should return a map with default values for a newly created instance', function() {
       $map = (new GitCommit(''))->jsonSerialize();
