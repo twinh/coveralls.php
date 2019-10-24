@@ -38,7 +38,7 @@
     "ext-spl": "*",
     "cedx/lcov": "^7.0.0",
     "cedx/which": "^7.2.0",
-    "guzzlehttp/guzzle": "^6.3.3",
+    "guzzlehttp/guzzle": "^6.4.1",
     "league/event": "^2.2.0",
     "symfony/yaml": "^4.3.5",
     "webmozart/path-util": "^2.3.0"
