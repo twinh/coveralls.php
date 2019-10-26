@@ -5,37 +5,37 @@ namespace Coveralls;
 class Job implements \JsonSerializable {
 
   /** @var string The current SHA of the commit being built to override the `git` parameter. */
-  private $commitSha = '';
+  private string $commitSha = '';
 
   /** @var string The job name. */
-  private $flagName = '';
+  private string $flagName = '';
 
   /** @var GitData|null The Git data that can be used to display more information to users. */
-  private $git;
+  private ?GitData $git = null;
 
   /** @var bool Value indicating whether the build will not be considered done until a webhook has been sent to Coveralls. */
-  private $isParallel = false;
+  private bool $isParallel = false;
 
   /** @var string The secret token for the repository. */
-  private $repoToken = '';
+  private string $repoToken = '';
 
   /** @var \DateTime|null The timestamp of when the job ran. */
-  private $runAt;
+  private ?\DateTime $runAt = null;
 
   /** @var string The unique identifier of the job on the CI service. */
-  private $serviceJobId = '';
+  private string $serviceJobId = '';
 
   /** @var string The CI service or other environment in which the test suite was run. */
-  private $serviceName = '';
+  private string $serviceName = '';
 
   /** @var string The build number. */
-  private $serviceNumber = '';
+  private string $serviceNumber = '';
 
   /** @var string The associated pull request identifier of the build. */
-  private $servicePullRequest = '';
+  private string $servicePullRequest = '';
 
   /** @var \ArrayObject The list of source files. */
-  private $sourceFiles;
+  private \ArrayObject $sourceFiles;
 
   /**
    * Creates a new job.

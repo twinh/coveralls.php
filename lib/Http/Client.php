@@ -24,13 +24,13 @@ class Client extends Emitter {
   const eventResponse = ResponseEvent::class;
 
   /** @var UriInterface The URL of the API end point. */
-  private $endPoint;
+  private UriInterface $endPoint;
 
   /**
    * Creates a new client.
    * @param UriInterface|null $endPoint The URL of the API end point.
    */
-  function __construct(UriInterface $endPoint = null) {
+  function __construct(?UriInterface $endPoint = null) {
     $this->endPoint = $endPoint ?? new Uri(static::defaultEndPoint);
   }
 

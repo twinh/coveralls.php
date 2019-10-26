@@ -5,13 +5,13 @@ namespace Coveralls;
 class GitData implements \JsonSerializable {
 
   /** @var string The branch name. */
-  private $branch;
+  private string $branch;
 
   /** @var GitCommit|null The Git commit. */
-  private $commit;
+  private ?GitCommit $commit;
 
   /** @var \ArrayObject The remote repositories. */
-  private $remotes;
+  private \ArrayObject $remotes;
 
   /**
    * Creates a new Git data.

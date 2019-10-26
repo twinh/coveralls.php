@@ -5,19 +5,19 @@ namespace Coveralls;
 class SourceFile implements \JsonSerializable {
 
   /** @var \ArrayObject The branch data for this file's job. */
-  private $branches;
+  private \ArrayObject $branches;
 
   /** @var \ArrayObject The coverage data for this file's job. */
-  private $coverage;
+  private \ArrayObject $coverage;
 
   /** @var string The file path of this source file. */
-  private $name;
+  private string $name;
 
   /** @var string The contents of this source file. */
-  private $source;
+  private string $source;
 
   /** @var string The MD5 digest of the full source code of this file. */
-  private $sourceDigest;
+  private string $sourceDigest;
 
   /**
    * Creates a new source file.

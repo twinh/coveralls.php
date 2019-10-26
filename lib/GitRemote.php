@@ -8,10 +8,10 @@ use Psr\Http\Message\{UriInterface};
 class GitRemote implements \JsonSerializable {
 
   /** @var string The remote's name. */
-  private $name;
+  private string $name;
 
   /** @var UriInterface|null The remote's URL. */
-  private $url;
+  private ?UriInterface $url;
 
   /**
    * Creates a new Git remote repository.

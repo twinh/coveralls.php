@@ -5,22 +5,22 @@ namespace Coveralls;
 class GitCommit implements \JsonSerializable {
 
   /** @var string The author mail address. */
-  private $authorEmail = '';
+  private string $authorEmail = '';
 
   /** @var string The author name. */
-  private $authorName = '';
+  private string $authorName = '';
 
   /** @var string The committer mail address. */
-  private $committerEmail = '';
+  private string $committerEmail = '';
 
   /** @var string The committer name. */
-  private $committerName = '';
+  private string $committerName = '';
 
   /** @var string The commit identifier. */
-  private $id;
+  private string $id;
 
   /** @var string The commit message. */
-  private $message;
+  private string $message;
 
   /**
    * Creates a new Git commit.

@@ -9,7 +9,7 @@ use Symfony\Component\Yaml\Exception\{ParseException};
 class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable {
 
   /** @var array The configuration parameters. */
-  private $params;
+  private array $params;
 
   /**
    * Creates a new configuration.
