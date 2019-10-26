@@ -28,12 +28,13 @@ abstract class Lcov {
         $lineCoverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
 
       $branchCoverage = [];
-      if ($branches = $record->getBranches()) foreach ($branches->getData() as $branchData) array_push($branchCoverage, ...[
+      if ($branches = $record->getBranches()) foreach ($branches->getData() as $branchData) array_push(
+        $branchCoverage,
         $branchData->getLineNumber(),
         $branchData->getBlockNumber(),
         $branchData->getBranchNumber(),
         $branchData->getTaken()
-      ]);
+      );
 
       $filename = Path::makeRelative($sourceFile, $workingDir);
       return new SourceFile($filename, md5($source), $source, $lineCoverage->toArray(), $branchCoverage);

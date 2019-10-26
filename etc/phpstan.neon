@@ -1,4 +1,6 @@
 parameters:
-  ignoreErrors: ['/Cannot call method toArray() on array<.+>|SplFixedArray/']
   level: max
-  paths: [bin, lib, test]
+  paths: [lib, test]
+  ignoreErrors:
+    - '/Cannot call method toArray() on array<.+>|SplFixedArray/'
+    - '/Result of method .* \(void\) is used/'
