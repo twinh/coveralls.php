@@ -33,7 +33,7 @@ function main(): int {
     return 64;
   }
 
-  if (!is_file($rest[0])) throw new \RuntimeException('The specified coverage report is not found.');
+  if (!is_file($rest[0])) throw new RuntimeException('The specified coverage report is not found.');
 
   // Run the program.
   $env = $_ENV ?: $_SERVER;
