@@ -133,10 +133,7 @@ class Client extends Emitter {
     if (isset($config['service_number'])) $job->setServiceNumber($config['service_number']);
     if (isset($config['service_pull_request'])) $job->setServicePullRequest($config['service_pull_request']);
 
-    $hasGitData = count(array_filter($config->getKeys(), function($key) {
-      return $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_';
-    })) > 0;
-
+    $hasGitData = count(array_filter($config->getKeys(), fn($key) => $key == 'service_branch' || mb_substr($key, 0, 4) == 'git_')) > 0;
     if (!$hasGitData) $job->setCommitSha($config['commit_sha'] ?: '');
     else {
       $commit = new GitCommit($config['commit_sha'] ?: '', $config['git_message'] ?: '');

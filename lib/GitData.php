@@ -49,7 +49,7 @@ class GitData implements \JsonSerializable {
     if (!mb_strlen($path)) $path = $workingDir;
     chdir($path);
 
-    $commands = (object) array_map(function($command) { return trim(`git $command`); }, [
+    $commands = (object) array_map(fn($command) => trim(`git $command`), [
       'author_email' => 'log -1 --pretty=format:%ae',
       'author_name' => 'log -1 --pretty=format:%aN',
       'branch' => 'rev-parse --abbrev-ref HEAD',
@@ -63,7 +63,7 @@ class GitData implements \JsonSerializable {
     $remotes = [];
     foreach (preg_split('/\r?\n/', $commands->remotes) ?: [] as $remote) {
       $parts = explode(' ', (string) preg_replace('/\s+/', ' ', $remote));
-      if (!isset($remotes[$parts[0]])) $remotes[$parts[0]] = new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : null);
+      $remotes[$parts[0]] ??= new GitRemote($parts[0], count($parts) > 1 ? $parts[1] : null);
     }
 
     chdir($workingDir);
@@ -102,7 +102,7 @@ class GitData implements \JsonSerializable {
     return (object) [
       'branch' => $this->getBranch(),
       'head' => ($commit = $this->getCommit()) ? $commit->jsonSerialize() : null,
-      'remotes' => array_map(function(GitRemote $item) { return $item->jsonSerialize(); }, $this->getRemotes()->getArrayCopy())
+      'remotes' => array_map(fn(GitRemote $item) => $item->jsonSerialize(), $this->getRemotes()->getArrayCopy())
     ];
   }
 

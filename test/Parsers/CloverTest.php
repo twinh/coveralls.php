@@ -33,7 +33,7 @@ class CloverTest extends TestCase {
     });
 
     it('should throw an exception if the Clover report is invalid or empty', function() {
-      expect(function() { Clover::parseReport('<coverage><foo/></coverage>'); })->to->throw(\InvalidArgumentException::class);
+      expect(fn() => Clover::parseReport('<coverage><foo/></coverage>'))->to->throw(\InvalidArgumentException::class);
     });
   }
 }
