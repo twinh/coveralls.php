@@ -28,7 +28,7 @@
     "lcov"
   ],
   "require": {
-    "php": ">=7.2.0",
+    "php": ">=7.4.0",
     "ext-curl": "*",
     "ext-date": "*",
     "ext-json": "*",
@@ -36,8 +36,8 @@
     "ext-pcre": "*",
     "ext-SimpleXML": "*",
     "ext-spl": "*",
-    "cedx/lcov": "^7.0.0",
-    "cedx/which": "^7.2.0",
+    "cedx/lcov": "^8.0.0",
+    "cedx/which": "^8.0.0",
     "guzzlehttp/guzzle": "^6.4.1",
     "league/event": "^2.2.0",
     "symfony/yaml": "^4.3.5",
