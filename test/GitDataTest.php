@@ -52,13 +52,13 @@ class GitDataTest extends TestCase {
       expect($remotes)->to->not->be->empty;
       expect($remotes[0])->to->be->an->instanceOf(GitRemote::class);
 
-      /** @var GitRemote[] $origin */
-      $origin = array_values(array_filter($remotes->getArrayCopy(), function(GitRemote $remote): bool {
+      /** @var GitRemote[] $origins */
+      $origins = array_values(array_filter($remotes->getArrayCopy(), function(GitRemote $remote): bool {
         return $remote->getName() == 'origin';
       }));
 
-      expect($origin)->to->have->lengthOf(1);
-      expect((string) $origin[0]->getUrl())->to->be->oneOf([
+      expect($origins)->to->have->lengthOf(1);
+      expect((string) $origins[0]->getUrl())->to->be->oneOf([
         'https://github.com/cedx/coveralls.php',
         'https://github.com/cedx/coveralls.php.git'
       ]);
