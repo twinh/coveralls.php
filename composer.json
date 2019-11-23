@@ -40,7 +40,7 @@
     "cedx/which": "^7.2.0",
     "guzzlehttp/guzzle": "^6.4.1",
     "league/event": "^2.2.0",
-    "symfony/yaml": "^4.3.8",
+    "symfony/yaml": "^4.4.0",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
