@@ -19,7 +19,7 @@ abstract class Clover {
     if (!$xml || !$xml->count() || !$xml->project->count())
       throw new \InvalidArgumentException('The specified Clover report is invalid.');
 
-    $files = array_merge($xml->xpath('/coverage/project/file') ?: [], $xml->xpath('/coverage/project/package/file') ?: []);
+    $files = [...($xml->xpath('/coverage/project/file') ?: []), ...($xml->xpath('/coverage/project/package/file') ?: [])];
     $workingDir = (string) getcwd();
 
     return new Job(array_map(function(\SimpleXMLElement $file) use ($workingDir) {
