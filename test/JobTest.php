@@ -36,7 +36,7 @@ class JobTest extends TestCase {
       $git = $job->getGit();
       expect($git->getBranch())->to->equal('develop');
 
-      /** @var \DateTime $runAt */
+      /** @var \DateTimeInterface $runAt */
       $runAt = $job->getRunAt();
       expect($runAt->format('c'))->to->equal('2017-01-29T03:43:30+01:00');
 
@@ -60,7 +60,7 @@ class JobTest extends TestCase {
         ->setGit(new GitData(new GitCommit(''), 'develop'))
         ->setParallel(true)
         ->setRepoToken('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt')
-        ->setRunAt(new \DateTime('2017-01-29T03:43:30+01:00'))
+        ->setRunAt(new \DateTimeImmutable('2017-01-29T03:43:30+01:00'))
         ->jsonSerialize();
 
       expect(get_object_vars($map))->to->have->lengthOf(5);

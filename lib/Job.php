@@ -19,8 +19,8 @@ class Job implements \JsonSerializable {
   /** @var string The secret token for the repository. */
   private string $repoToken = '';
 
-  /** @var \DateTime|null The timestamp of when the job ran. */
-  private ?\DateTime $runAt = null;
+  /** @var \DateTimeInterface|null The timestamp of when the job ran. */
+  private ?\DateTimeInterface $runAt = null;
 
   /** @var string The unique identifier of the job on the CI service. */
   private string $serviceJobId = '';
@@ -57,7 +57,7 @@ class Job implements \JsonSerializable {
       ->setGit(isset($map->git) && is_object($map->git) ? GitData::fromJson($map->git) : null)
       ->setParallel(isset($map->parallel) && is_bool($map->parallel) ? $map->parallel : false)
       ->setRepoToken(isset($map->repo_token) && is_string($map->repo_token) ? $map->repo_token : '')
-      ->setRunAt(isset($map->run_at) && is_string($map->run_at) ? new \DateTime($map->run_at) : null)
+      ->setRunAt(isset($map->run_at) && is_string($map->run_at) ? new \DateTimeImmutable($map->run_at) : null)
       ->setServiceJobId(isset($map->service_job_id) && is_string($map->service_job_id) ? $map->service_job_id : '')
       ->setServiceName(isset($map->service_name) && is_string($map->service_name) ? $map->service_name : '')
       ->setServiceNumber(isset($map->service_number) && is_string($map->service_number) ? $map->service_number : '')
@@ -98,9 +98,9 @@ class Job implements \JsonSerializable {
 
   /**
    * Gets the timestamp of when the job ran.
-   * @return \DateTime|null The timestamp of when the job ran.
+   * @return \DateTimeInterface|null The timestamp of when the job ran.
    */
-  function getRunAt(): ?\DateTime {
+  function getRunAt(): ?\DateTimeInterface {
     return $this->runAt;
   }
 
@@ -226,10 +226,10 @@ class Job implements \JsonSerializable {
 
   /**
    * Sets the timestamp of when the job ran.
-   * @param \DateTime|null $value The new timestamp.
+   * @param \DateTimeInterface|null $value The new timestamp.
    * @return $this This instance.
    */
-  function setRunAt(?\DateTime $value): self {
+  function setRunAt(?\DateTimeInterface $value): self {
     $this->runAt = $value;
     return $this;
   }
