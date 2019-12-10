@@ -83,13 +83,8 @@ class Client extends Emitter {
    * @throws ClientException An error occurred while uploading the report.
    */
   function uploadJob(Job $job): void {
-    if (!$job->getRepoToken() && !$job->getServiceName()) {
-      throw new \InvalidArgumentException('The job does not meet the requirements.'
-        .PHP_EOL.$job->getRepoToken()
-        .PHP_EOL.$job->getServiceName()
-        .PHP_EOL.print_r($_ENV, true)
-      );
-    }
+    if (!$job->getRepoToken() && !$job->getServiceName())
+      throw new \InvalidArgumentException('The job does not meet the requirements.');
 
     $uri = UriResolver::resolve($this->getEndPoint(), new Uri('jobs'));
     $body = new MultipartStream([[

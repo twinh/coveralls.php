@@ -32,6 +32,8 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
     if (!is_array($env)) $env = $_ENV ?: $_SERVER;
     $config = new self;
 
+    print_r($env);
+
     // Standard.
     $serviceName = $env['CI_NAME'] ?? '';
     if (mb_strlen($serviceName)) $config['service_name'] = $serviceName;
