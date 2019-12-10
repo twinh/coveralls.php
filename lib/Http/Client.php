@@ -84,7 +84,7 @@ class Client extends Emitter {
    */
   function uploadJob(Job $job): void {
     if (!$job->getRepoToken() && !$job->getServiceName())
-      throw new \InvalidArgumentException('The job does not meet the requirements.');
+      throw new \InvalidArgumentException('The job does not meet the requirements.'.PHP_EOL.print_r($job->jsonSerialize(), true));
 
     $uri = UriResolver::resolve($this->getEndPoint(), new Uri('jobs'));
     $body = new MultipartStream([[
