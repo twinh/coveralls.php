@@ -4,10 +4,10 @@ namespace Coveralls;
 /** Represents a source code file and its coverage data for a single job. */
 class SourceFile implements \JsonSerializable {
 
-  /** @var \ArrayObject The branch data for this file's job. */
+  /** @var \ArrayObject<int, int> The branch data for this file's job. */
   private \ArrayObject $branches;
 
-  /** @var \ArrayObject The coverage data for this file's job. */
+  /** @var \ArrayObject<int, int|null> The coverage data for this file's job. */
   private \ArrayObject $coverage;
 
   /** @var string The file path of this source file. */
@@ -52,7 +52,7 @@ class SourceFile implements \JsonSerializable {
 
   /**
    * Gets the branch data for this file's job.
-   * @return \ArrayObject The branch data.
+   * @return \ArrayObject<int, int> The branch data.
    */
   function getBranches(): \ArrayObject {
     return $this->branches;
@@ -60,7 +60,7 @@ class SourceFile implements \JsonSerializable {
 
   /**
    * Gets the coverage data for this file's job.
-   * @return \ArrayObject The coverage data.
+   * @return \ArrayObject<int, int|null> The coverage data.
    */
   function getCoverage(): \ArrayObject {
     return $this->coverage;

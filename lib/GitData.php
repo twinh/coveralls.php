@@ -10,7 +10,7 @@ class GitData implements \JsonSerializable {
   /** @var GitCommit|null The Git commit. */
   private ?GitCommit $commit;
 
-  /** @var \ArrayObject The remote repositories. */
+  /** @var \ArrayObject<int, GitRemote> The remote repositories. */
   private \ArrayObject $remotes;
 
   /**
@@ -88,7 +88,7 @@ class GitData implements \JsonSerializable {
 
   /**
    * Gets the remote repositories.
-   * @return \ArrayObject The remote repositories.
+   * @return \ArrayObject<int, GitRemote> The remote repositories.
    */
   function getRemotes(): \ArrayObject {
     return $this->remotes;

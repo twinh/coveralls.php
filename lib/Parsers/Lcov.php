@@ -24,17 +24,22 @@ abstract class Lcov {
       if (!mb_strlen($source)) throw new \RuntimeException("Source file not found: $sourceFile");
 
       $lineCoverage = new \SplFixedArray(count(preg_split('/\r?\n/', $source) ?: []));
-      if ($lines = $record->getLines()) foreach ($lines->getData() as $lineData)
+      if ($lines = $record->getLines()) foreach ($lines->getData() as $lineData) {
+        /** @var \Lcov\LineData $lineData */
         $lineCoverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
+      }
 
       $branchCoverage = [];
-      if ($branches = $record->getBranches()) foreach ($branches->getData() as $branchData) array_push(
-        $branchCoverage,
-        $branchData->getLineNumber(),
-        $branchData->getBlockNumber(),
-        $branchData->getBranchNumber(),
-        $branchData->getTaken()
-      );
+      if ($branches = $record->getBranches()) foreach ($branches->getData() as $branchData) {
+        /** @var \Lcov\BranchData $branchData */
+        array_push(
+          $branchCoverage,
+          $branchData->getLineNumber(),
+          $branchData->getBlockNumber(),
+          $branchData->getBranchNumber(),
+          $branchData->getTaken()
+        );
+      }
 
       $filename = Path::makeRelative($sourceFile, $workingDir);
       return new SourceFile($filename, md5($source), $source, $lineCoverage->toArray(), $branchCoverage);

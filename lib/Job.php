@@ -34,7 +34,7 @@ class Job implements \JsonSerializable {
   /** @var string The associated pull request identifier of the build. */
   private string $servicePullRequest = '';
 
-  /** @var \ArrayObject The list of source files. */
+  /** @var \ArrayObject<int, SourceFile> The list of source files. */
   private \ArrayObject $sourceFiles;
 
   /**
@@ -138,7 +138,7 @@ class Job implements \JsonSerializable {
 
   /**
    * Gets the list of source files.
-   * @return \ArrayObject The source files.
+   * @return \ArrayObject<int, SourceFile> The source files.
    */
   function getSourceFiles(): \ArrayObject {
     return $this->sourceFiles;

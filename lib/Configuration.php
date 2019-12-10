@@ -5,15 +5,19 @@ use Coveralls\Services\{AppVeyor, CircleCI, Codeship, GitHub, GitLabCI, Jenkins,
 use Symfony\Component\Yaml\{Yaml};
 use Symfony\Component\Yaml\Exception\{ParseException};
 
-/** Provides access to the coverage settings. */
+/**
+ * Provides access to the coverage settings.
+ * @implements \ArrayAccess<string, string|null>
+ * @implements \IteratorAggregate<string, string|null>
+ */
 class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable {
 
-  /** @var array The configuration parameters. */
+  /** @var array<string, string|null> The configuration parameters. */
   private array $params;
 
   /**
    * Creates a new configuration.
-   * @param array $params The configuration parameters.
+   * @param array<string, string|null> $params The configuration parameters.
    */
   function __construct(array $params = []) {
     $this->params = $params;
@@ -21,7 +25,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
   /**
    * Creates a new configuration from the variables of the specified environment.
-   * @param array $env $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
+   * @param array<string, string|null> $env $env An array providing environment variables. Defaults to `$_ENV` if not empty, otherwise `$_SERVER`.
    * @return self The newly created configuration.
    */
   static function fromEnvironment(array $env = null): self {
@@ -131,7 +135,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
   /**
    * Returns a new iterator that allows iterating the elements of this configuration.
-   * @return \Iterator An iterator for the elements of this configuration.
+   * @return \Iterator<string, string|null> An iterator for the elements of this configuration.
    */
   function getIterator(): \Iterator {
     return new \ArrayIterator($this->params);
