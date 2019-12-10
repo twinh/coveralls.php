@@ -3,6 +3,7 @@
 ## Version [12.0.0](https://github.com/cedx/coveralls.php/compare/v11.2.0...v12.0.0)
 - Breaking change: raised the required [PHP](https://www.php.net) version.
 - Breaking change: using PHP 7.4 features, like arrow functions and typed properties.
+- Updated the package dependencies.
 
 ## Version [11.2.0](https://github.com/cedx/coveralls.php/compare/v11.1.0...v11.2.0)
 - Added support for branch coverage when using [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) reports.
