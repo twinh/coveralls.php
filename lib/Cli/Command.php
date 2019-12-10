@@ -32,7 +32,7 @@ class Command extends \Symfony\Component\Console\Command\Command {
     if (!is_file($file)) throw new RuntimeException("File not found: $file");
 
     $client = new Client(new Uri($_SERVER['COVERALLS_ENDPOINT'] ?? Client::defaultEndPoint));
-    $output->writeln('[Coveralls] Submitting to '.(string) $client->getEndPoint());
+    $output->writeln("[Coveralls] Submitting to {$client->getEndPoint()}");
     $client->upload((string) @file_get_contents($file));
     return 0;
   }
