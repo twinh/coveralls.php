@@ -38,7 +38,7 @@ class LcovTest extends TestCase {
     });
 
     it('should throw an exception when parsing reports with invalid source file', function() {
-      expect(function() { Lcov::parseReport((string) @file_get_contents('test/fixtures/invalid_lcov.info')); })->to->throw(\RuntimeException::class);
+      expect(fn() => Lcov::parseReport((string) @file_get_contents('test/fixtures/invalid_lcov.info')))->to->throw(\RuntimeException::class);
     });
   }
 }

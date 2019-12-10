@@ -42,7 +42,7 @@ class ConfigurationTest extends TestCase {
     });
 
     it('should throw an exception with a non-object value', function() {
-      expect(function() { Configuration::fromYaml('foo'); })->to->throw(\InvalidArgumentException::class);
+      expect(fn() => Configuration::fromYaml('foo'))->to->throw(\InvalidArgumentException::class);
     });
   }
 

@@ -5,13 +5,13 @@ namespace Coveralls;
 class GitData implements \JsonSerializable {
 
   /** @var string The branch name. */
-  private $branch;
+  private string $branch;
 
   /** @var GitCommit|null The Git commit. */
-  private $commit;
+  private ?GitCommit $commit;
 
-  /** @var \ArrayObject The remote repositories. */
-  private $remotes;
+  /** @var \ArrayObject<int, GitRemote> The remote repositories. */
+  private \ArrayObject $remotes;
 
   /**
    * Creates a new Git data.
@@ -49,7 +49,7 @@ class GitData implements \JsonSerializable {
     if (!mb_strlen($path)) $path = $workingDir;
     chdir($path);
 
-    $commands = (object) array_map(function($command) { return trim(`git $command`); }, [
+    $commands = (object) array_map(fn($command) => trim(`git $command`), [
       'author_email' => 'log -1 --pretty=format:%ae',
       'author_name' => 'log -1 --pretty=format:%aN',
       'branch' => 'rev-parse --abbrev-ref HEAD',
@@ -88,7 +88,7 @@ class GitData implements \JsonSerializable {
 
   /**
    * Gets the remote repositories.
-   * @return \ArrayObject The remote repositories.
+   * @return \ArrayObject<int, GitRemote> The remote repositories.
    */
   function getRemotes(): \ArrayObject {
     return $this->remotes;
@@ -102,7 +102,7 @@ class GitData implements \JsonSerializable {
     return (object) [
       'branch' => $this->getBranch(),
       'head' => ($commit = $this->getCommit()) ? $commit->jsonSerialize() : null,
-      'remotes' => array_map(function(GitRemote $item) { return $item->jsonSerialize(); }, $this->getRemotes()->getArrayCopy())
+      'remotes' => array_map(fn(GitRemote $item) => $item->jsonSerialize(), $this->getRemotes()->getArrayCopy())
     ];
   }
 

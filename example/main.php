@@ -9,7 +9,7 @@ function main(): void {
     echo 'The report was sent successfully.';
   }
 
-  catch (\Throwable $e) {
+  catch (Throwable $e) {
     echo 'An error occurred: ', $e->getMessage();
     if ($e instanceof ClientException) echo 'From: ', $e->getUri(), PHP_EOL;
   }

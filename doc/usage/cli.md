@@ -16,13 +16,23 @@ Then use it to upload your coverage reports:
 ```shell
 $ coveralls --help
 
-Send a coverage report to the Coveralls service.
+Description:
+  Send a coverage report to the Coveralls service.
 
-Usage: coveralls [options] <file>
+Usage:
+  coveralls <file>
+
+Arguments:
+  file                  The path of the coverage report to upload
 
 Options:
--h, --help       Output usage information.
--v, --version    Output the version number.
+  -h, --help            Display this help message
+  -q, --quiet           Do not output any message
+  -V, --version         Display this application version
+      --ansi            Force ANSI output
+      --no-ansi         Disable ANSI output
+  -n, --no-interaction  Do not ask any interactive question
+  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 ```
 
 For example:
