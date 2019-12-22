@@ -38,10 +38,10 @@
     "ext-spl": "*",
     "cedx/lcov": "^8.0.0",
     "cedx/which": "^8.0.0",
-    "guzzlehttp/guzzle": "^6.5.0",
+    "guzzlehttp/guzzle": "^6.5.1",
     "league/event": "^2.2.0",
-    "symfony/console": "^4.4.1 || ^5.0.1",
-    "symfony/yaml": "^4.4.1 || ^5.0.1",
+    "symfony/console": "^4.4.2 || ^5.0.2",
+    "symfony/yaml": "^4.4.2 || ^5.0.2",
     "webmozart/path-util": "^2.3.0"
   },
   "require-dev": {
