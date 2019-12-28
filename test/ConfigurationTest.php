@@ -14,7 +14,7 @@ class ConfigurationTest extends TestCase {
     });
 
     it('should return an initialized instance for a non-empty environment', function() {
-      $config = Configuration::fromEnvironment([
+      $configuration = Configuration::fromEnvironment([
         'CI_NAME' => 'travis-pro',
         'CI_PULL_REQUEST' => 'PR #123',
         'COVERALLS_REPO_TOKEN' => '0123456789abcdef',
@@ -23,22 +23,22 @@ class ConfigurationTest extends TestCase {
         'TRAVIS_BRANCH' => 'develop'
       ]);
 
-      expect($config['commit_sha'])->to->be->null;
-      expect($config['git_message'])->to->equal('Hello World!');
-      expect($config['repo_token'])->to->equal('0123456789abcdef');
-      expect($config['service_branch'])->to->equal('develop');
-      expect($config['service_name'])->to->equal('travis-pro');
-      expect($config['service_pull_request'])->to->equal('123');
+      expect($configuration['commit_sha'])->to->be->null;
+      expect($configuration['git_message'])->to->equal('Hello World!');
+      expect($configuration['repo_token'])->to->equal('0123456789abcdef');
+      expect($configuration['service_branch'])->to->equal('develop');
+      expect($configuration['service_name'])->to->equal('travis-pro');
+      expect($configuration['service_pull_request'])->to->equal('123');
     });
   }
 
   /** @testdox ::fromYaml() */
   function testFromYaml(): void {
     it('should return an initialized instance for a non-empty map', function() {
-      $config = Configuration::fromYaml("repo_token: 0123456789abcdef\nservice_name: travis-ci");
-      expect($config)->to->have->lengthOf(2);
-      expect($config['repo_token'])->to->equal('0123456789abcdef');
-      expect($config['service_name'])->to->equal('travis-ci');
+      $configuration = Configuration::fromYaml("repo_token: 0123456789abcdef\nservice_name: travis-ci");
+      expect($configuration)->to->have->lengthOf(2);
+      expect($configuration['repo_token'])->to->equal('0123456789abcdef');
+      expect($configuration['service_name'])->to->equal('travis-ci');
     });
 
     it('should throw an exception with a non-object value', function() {
@@ -49,16 +49,16 @@ class ConfigurationTest extends TestCase {
   /** @testdox ::loadDefaults() */
   function testLoadDefaults(): void {
     it('should properly initialize from a `.coveralls.yml` file', function() {
-      $config = Configuration::loadDefaults('test/fixtures/.coveralls.yml');
-      expect($config)->to->have->length->of->at->least(2);
-      expect($config['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
-      expect($config['service_name'])->to->equal('travis-pro');
+      $configuration = Configuration::loadDefaults('test/fixtures/.coveralls.yml');
+      expect($configuration)->to->have->length->of->at->least(2);
+      expect($configuration['repo_token'])->to->equal('yYPv4mMlfjKgUK0rJPgN0AwNXhfzXpVwt');
+      expect($configuration['service_name'])->to->equal('travis-pro');
     });
 
     it('should use the environment defaults if the `.coveralls.yml` file is not found', function() {
+      $configuration = Configuration::loadDefaults('.dummy/config.yml');
       $defaults = Configuration::fromEnvironment();
-      $config = Configuration::loadDefaults('.dummy/config.yml');
-      expect(get_object_vars($config->jsonSerialize()))->to->equal(get_object_vars($defaults->jsonSerialize()));
+      expect(get_object_vars($configuration->jsonSerialize()))->to->equal(get_object_vars($defaults->jsonSerialize()));
     });
   }
 
@@ -128,53 +128,53 @@ class ConfigurationTest extends TestCase {
   /** @testdox ->merge() */
   function testMerge(): void {
     it('should have the same entries as the other configuration', function() {
-      $config = new Configuration;
-      expect($config)->to->be->empty;
+      $configuration = new Configuration;
+      expect($configuration)->to->be->empty;
 
-      $config->merge(new Configuration(['foo' => 'bar', 'bar' => 'baz']));
-      expect($config)->to->have->lengthOf(2);
-      expect($config['foo'])->to->equal('bar');
-      expect($config['bar'])->to->equal('baz');
+      $configuration->merge(new Configuration(['foo' => 'bar', 'bar' => 'baz']));
+      expect($configuration)->to->have->lengthOf(2);
+      expect($configuration['foo'])->to->equal('bar');
+      expect($configuration['bar'])->to->equal('baz');
     });
   }
 
   /** @testdox ->offsetExists() */
   function testOffsetExists(): void {
     it('should handle the existence of an element', function() {
-      $config = new Configuration;
-      expect($config->offsetExists('foo'))->to->be->false;
-      $config['foo'] = 'bar';
-      expect($config->offsetExists('foo'))->to->be->true;
+      $configuration = new Configuration;
+      expect($configuration->offsetExists('foo'))->to->be->false;
+      $configuration['foo'] = 'bar';
+      expect($configuration->offsetExists('foo'))->to->be->true;
     });
   }
 
   /** @testdox ->offsetGet() */
   function testOffsetGet(): void {
     it('should handle the fetch of an element', function() {
-      $config = new Configuration;
-      expect($config->offsetGet('foo'))->to->be->null;
-      $config['foo'] = 'bar';
-      expect($config->offsetGet('foo'))->to->equal('bar');
+      $configuration = new Configuration;
+      expect($configuration->offsetGet('foo'))->to->be->null;
+      $configuration['foo'] = 'bar';
+      expect($configuration->offsetGet('foo'))->to->equal('bar');
     });
   }
 
   /** @testdox ->offsetSet() */
   function testOffsetSet(): void {
     it('should handle the setting of an element', function() {
-      $config = new Configuration;
-      expect($config['foo'])->to->be->null;
-      $config->offsetSet('foo', 'bar');
-      expect($config['foo'])->to->equal('bar');
+      $configuration = new Configuration;
+      expect($configuration['foo'])->to->be->null;
+      $configuration->offsetSet('foo', 'bar');
+      expect($configuration['foo'])->to->equal('bar');
     });
   }
 
   /** @testdox ->offsetUnset() */
   function testOffsetUnset(): void {
     it('should handle the unsetting of an element', function() {
-      $config = new Configuration(['foo' => 'bar']);
-      expect(isset($config['foo']))->to->be->true;
-      $config->offsetUnset('foo');
-      expect(isset($config['foo']))->to->be->false;
+      $configuration = new Configuration(['foo' => 'bar']);
+      expect(isset($configuration['foo']))->to->be->true;
+      $configuration->offsetUnset('foo');
+      expect(isset($configuration['foo']))->to->be->false;
     });
   }
 }

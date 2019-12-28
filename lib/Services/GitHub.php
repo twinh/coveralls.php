@@ -8,14 +8,14 @@ abstract class GitHub {
 
   /**
    * Gets the configuration parameters from the environment.
-   * @param array<string, string|null> $env An array providing environment variables.
+   * @param array<string, string|null> $environment An array providing environment variables.
    * @return Configuration The configuration parameters.
    */
-  static function getConfiguration(array $env): Configuration {
-    $commitSha = $env['GITHUB_SHA'] ?? '';
-    $repository = $env['GITHUB_REPOSITORY'] ?? '';
+  static function getConfiguration(array $environment): Configuration {
+    $commitSha = $environment['GITHUB_SHA'] ?? '';
+    $repository = $environment['GITHUB_REPOSITORY'] ?? '';
 
-    $gitRef = $env['GITHUB_REF'] ?? '';
+    $gitRef = $environment['GITHUB_REF'] ?? '';
     $gitRegex = '#^refs/\w+/#';
 
     return new Configuration([
