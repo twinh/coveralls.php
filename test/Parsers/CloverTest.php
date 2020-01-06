@@ -15,21 +15,27 @@ class CloverTest extends TestCase {
       $files = $job->getSourceFiles();
       expect($files)->to->have->lengthOf(3);
 
+      /** @var SourceFile $file */
+      $file = $files[0];
       $subset = [null, 2, 2, 2, 2, null];
-      expect($files[0])->to->be->an->instanceOf(SourceFile::class);
-      expect($files[0]->getName())->to->equal('lib/Http/Client.php');
-      expect($files[0]->getSourceDigest())->to->not->be->empty;
-      expect(array_intersect($subset, $files[0]->getCoverage()->getArrayCopy()))->to->equal($subset);
+      expect($file)->to->be->an->instanceOf(SourceFile::class);
+      expect($file->getName())->to->equal('lib/Http/Client.php');
+      expect($file->getSourceDigest())->to->not->be->empty;
+      expect(array_intersect($subset, $file->getCoverage()->getArrayCopy()))->to->equal($subset);
 
+      /** @var SourceFile $file */
+      $file = $files[1];
       $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-      expect($files[1]->getName())->to->equal('lib/Configuration.php');
-      expect($files[1]->getSourceDigest())->to->not->be->empty;
-      expect(array_intersect($subset, $files[1]->getCoverage()->getArrayCopy()))->to->equal($subset);
+      expect($file->getName())->to->equal('lib/Configuration.php');
+      expect($file->getSourceDigest())->to->not->be->empty;
+      expect(array_intersect($subset, $file->getCoverage()->getArrayCopy()))->to->equal($subset);
 
+      /** @var SourceFile $file */
+      $file = $files[2];
       $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-      expect($files[2]->getName())->to->equal('lib/GitCommit.php');
-      expect($files[2]->getSourceDigest())->to->not->be->empty;
-      expect(array_intersect($subset, $files[2]->getCoverage()->getArrayCopy()))->to->equal($subset);
+      expect($file->getName())->to->equal('lib/GitCommit.php');
+      expect($file->getSourceDigest())->to->not->be->empty;
+      expect(array_intersect($subset, $file->getCoverage()->getArrayCopy()))->to->equal($subset);
     });
 
     it('should throw an exception if the Clover report is invalid or empty', function() {

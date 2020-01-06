@@ -33,8 +33,11 @@ class GitDataTest extends TestCase {
 
       $remotes = $data->getRemotes();
       expect($remotes)->to->have->lengthOf(1);
-      expect($remotes[0])->to->be->an->instanceOf(GitRemote::class);
-      expect($remotes[0]->getName())->to->equal('origin');
+
+      /** @var GitRemote $remote */
+      $remote = $remotes[0];
+      expect($remote)->to->be->an->instanceOf(GitRemote::class);
+      expect($remote->getName())->to->equal('origin');
     });
   }
 

@@ -15,26 +15,32 @@ class LcovTest extends TestCase {
       $files = $job->getSourceFiles();
       expect($files)->to->have->lengthOf(3);
 
+      /** @var SourceFile $file */
+      $file = $files[0];
       $coverage = [null, 2, 2, 2, 2, null];
-      expect($files[0])->to->be->an->instanceOf(SourceFile::class);
-      expect($files[0]->getName())->to->equal('lib/Http/Client.php');
-      expect($files[0]->getSourceDigest())->to->not->be->empty;
-      expect($files[0]->getBranches()->getArrayCopy())->to->be->empty;
-      expect(array_intersect($coverage, $files[0]->getCoverage()->getArrayCopy()))->to->equal($coverage);
+      expect($file)->to->be->an->instanceOf(SourceFile::class);
+      expect($file->getName())->to->equal('lib/Http/Client.php');
+      expect($file->getSourceDigest())->to->not->be->empty;
+      expect($file->getBranches()->getArrayCopy())->to->be->empty;
+      expect(array_intersect($coverage, $file->getCoverage()->getArrayCopy()))->to->equal($coverage);
 
+      /** @var SourceFile $file */
+      $file = $files[1];
       $branches = [8, 0, 0, 2, 8, 0, 1, 2, 11, 0, 0, 2, 11, 0, 1, 2];
       $coverage = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-      expect($files[1]->getName())->to->equal('lib/Configuration.php');
-      expect($files[1]->getSourceDigest())->to->not->be->empty;
-      expect(array_intersect($branches, $files[1]->getBranches()->getArrayCopy()))->to->equal($branches);
-      expect(array_intersect($coverage, $files[1]->getCoverage()->getArrayCopy()))->to->equal($coverage);
+      expect($file->getName())->to->equal('lib/Configuration.php');
+      expect($file->getSourceDigest())->to->not->be->empty;
+      expect(array_intersect($branches, $file->getBranches()->getArrayCopy()))->to->equal($branches);
+      expect(array_intersect($coverage, $file->getCoverage()->getArrayCopy()))->to->equal($coverage);
 
+      /** @var SourceFile $file */
+      $file = $files[2];
       $branches = [8, 0, 0, 2, 8, 0, 1, 0, 11, 0, 0, 0, 11, 0, 1, 2];
       $coverage = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-      expect($files[2]->getName())->to->equal('lib/GitCommit.php');
-      expect($files[2]->getSourceDigest())->to->not->be->empty;
-      expect(array_intersect($branches, $files[2]->getBranches()->getArrayCopy()))->to->equal($branches);
-      expect(array_intersect($coverage, $files[2]->getCoverage()->getArrayCopy()))->to->equal($coverage);
+      expect($file->getName())->to->equal('lib/GitCommit.php');
+      expect($file->getSourceDigest())->to->not->be->empty;
+      expect(array_intersect($branches, $file->getBranches()->getArrayCopy()))->to->equal($branches);
+      expect(array_intersect($coverage, $file->getCoverage()->getArrayCopy()))->to->equal($coverage);
     });
 
     it('should throw an exception when parsing reports with invalid source file', function() {

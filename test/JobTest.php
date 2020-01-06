@@ -42,8 +42,11 @@ class JobTest extends TestCase {
 
       $sourceFiles = $job->getSourceFiles();
       expect($sourceFiles)->to->have->lengthOf(1);
-      expect($sourceFiles[0])->to->be->an->instanceOf(SourceFile::class);
-      expect($sourceFiles[0]->getName())->to->equal('/home/cedx/coveralls.php');
+
+      /** @var SourceFile $sourceFile */
+      $sourceFile = $sourceFiles[0];
+      expect($sourceFile)->to->be->an->instanceOf(SourceFile::class);
+      expect($sourceFile->getName())->to->equal('/home/cedx/coveralls.php');
     });
   }
 
