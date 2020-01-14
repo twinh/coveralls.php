@@ -36,8 +36,8 @@ abstract class Clover {
         $coverage[$lineNumber - 1] = max(0, (int) $line['count']);
       }
 
-      $filename = Path::isAbsolute($sourceFile) ? Path::makeRelative($sourceFile, $workingDir) : $sourceFile;
-      return new SourceFile($filename, md5($source), $source, $coverage->toArray());
+      $filename = Path::isAbsolute($sourceFile) ? Path::makeRelative($sourceFile, $workingDir) : Path::canonicalize($sourceFile);
+      return new SourceFile(str_replace('/', DIRECTORY_SEPARATOR, $filename), md5($source), $source, $coverage->toArray());
     }, $files));
   }
 }

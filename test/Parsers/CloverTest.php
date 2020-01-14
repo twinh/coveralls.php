@@ -19,21 +19,21 @@ class CloverTest extends TestCase {
       $file = $files[0];
       $subset = [null, 2, 2, 2, 2, null];
       expect($file)->to->be->an->instanceOf(SourceFile::class);
-      expect($file->getName())->to->equal('lib/Http/Client.php');
+      expect($file->getName())->to->equal(str_replace('/', DIRECTORY_SEPARATOR, 'lib/Http/Client.php'));
       expect($file->getSourceDigest())->to->not->be->empty;
       expect(array_intersect($subset, $file->getCoverage()->getArrayCopy()))->to->equal($subset);
 
       /** @var SourceFile $file */
       $file = $files[1];
       $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
-      expect($file->getName())->to->equal('lib/Configuration.php');
+      expect($file->getName())->to->equal(str_replace('/', DIRECTORY_SEPARATOR, 'lib/Configuration.php'));
       expect($file->getSourceDigest())->to->not->be->empty;
       expect(array_intersect($subset, $file->getCoverage()->getArrayCopy()))->to->equal($subset);
 
       /** @var SourceFile $file */
       $file = $files[2];
       $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
-      expect($file->getName())->to->equal('lib/GitCommit.php');
+      expect($file->getName())->to->equal(str_replace('/', DIRECTORY_SEPARATOR, 'lib/GitCommit.php'));
       expect($file->getSourceDigest())->to->not->be->empty;
       expect(array_intersect($subset, $file->getCoverage()->getArrayCopy()))->to->equal($subset);
     });
