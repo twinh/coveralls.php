@@ -94,8 +94,8 @@ class Client extends Emitter {
     ]]);
 
     $headers = [
-      'content-length' => $body->getSize(),
-      'content-type' => "multipart/form-data; boundary={$body->getBoundary()}"
+      'Content-Length' => $body->getSize(),
+      'Content-Type' => "multipart/form-data; boundary={$body->getBoundary()}"
     ];
 
     try {
