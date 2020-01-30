@@ -10,10 +10,6 @@ class ClientTest extends TestCase {
 
   /** @testdox ->upload() */
   function testUpload(): void {
-    it('should throw an exception with an empty coverage report', function() {
-      expect(fn() => (new Client)->upload(''))->to->throw(\InvalidArgumentException::class);
-    });
-
     it('should throw an error with an invalid coverage report', function() {
       expect(fn() => (new Client)->upload('end_of_record'))->to->throw(\InvalidArgumentException::class);
     });
