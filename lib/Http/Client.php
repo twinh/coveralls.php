@@ -46,13 +46,13 @@ class Client extends Emitter {
    * Uploads the specified code coverage report to the Coveralls service.
    * @param string $coverage A coverage report.
    * @param Configuration $configuration The environment settings.
-   * @throws \InvalidArgumentException The specified coverage report is empty or its format is not supported.
+   * @throws \InvalidArgumentException The format of the specified coverage report is not supported.
    */
   function upload(string $coverage, Configuration $configuration = null): void {
-    $report = trim($coverage);
-    if (!mb_strlen($report)) throw new \InvalidArgumentException('The specified coverage report is empty.');
+    assert(mb_strlen($coverage) > 0);
 
     $job = null;
+    $report = trim($coverage);
     if (mb_substr($report, 0, 5) == '<?xml' || mb_substr($report, 0, 9) == '<coverage')
       $job = Clover::parseReport($report);
     else {
