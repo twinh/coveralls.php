@@ -106,12 +106,6 @@ class Client extends Emitter {
       $this->emit(new ResponseEvent($response, $request));
     }
 
-    catch (BadResponseException $e) {
-      /** @var \Psr\Http\Message\ResponseInterface $response */
-      $response = $e->getResponse();
-      throw new ClientException((string) $response->getBody(), $uri, $e);
-    }
-
     catch (\Throwable $e) {
       throw new ClientException($e->getMessage(), $uri, $e);
     }
