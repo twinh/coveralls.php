@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
-namespace Coveralls\Http;
+namespace Coveralls;
 
 use function PHPUnit\Expect\{expect, it};
-use Coveralls\{Job};
 use PHPUnit\Framework\{TestCase};
 
-/** @testdox Coveralls\Http\Client */
+/** @testdox Coveralls\Client */
 class ClientTest extends TestCase {
 
   /** @testdox ->upload() */

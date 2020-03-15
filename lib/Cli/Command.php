@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace Coveralls\Cli;
 
-use Coveralls\Http\{Client};
+use Coveralls\{Client};
 use GuzzleHttp\Psr7\{Uri};
 use Symfony\Component\Console\Exception\{RuntimeException};
 use Symfony\Component\Console\Input\{InputArgument, InputInterface};

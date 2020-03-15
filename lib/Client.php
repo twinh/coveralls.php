@@ -1,10 +1,8 @@
 <?php declare(strict_types=1);
-namespace Coveralls\Http;
+namespace Coveralls;
 
-use Coveralls\{Configuration, GitCommit, GitData, Job};
 use Coveralls\Parsers\{Clover, Lcov};
 use GuzzleHttp\{Client as HTTPClient};
-use GuzzleHttp\Exception\{BadResponseException};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri, UriResolver};
 use League\Event\{Emitter};
 use Psr\Http\Message\{UriInterface};
