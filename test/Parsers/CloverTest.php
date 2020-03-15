@@ -19,7 +19,7 @@ class CloverTest extends TestCase {
       $file = $files[0];
       $subset = [null, 2, 2, 2, 2, null];
       expect($file)->to->be->an->instanceOf(SourceFile::class);
-      expect($file->getName())->to->equal(str_replace('/', DIRECTORY_SEPARATOR, 'lib/Http/Client.php'));
+      expect($file->getName())->to->equal(str_replace('/', DIRECTORY_SEPARATOR, 'lib/Client.php'));
       expect($file->getSourceDigest())->to->not->be->empty;
       expect(array_intersect($subset, $file->getCoverage()->getArrayCopy()))->to->equal($subset);
 
