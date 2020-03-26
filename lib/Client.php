@@ -4,22 +4,19 @@ namespace Coveralls;
 use Coveralls\Parsers\{Clover, Lcov};
 use GuzzleHttp\{Client as HTTPClient};
 use GuzzleHttp\Psr7\{MultipartStream, Request, Uri, UriResolver};
-use League\Event\{Emitter};
 use Psr\Http\Message\{UriInterface};
+use Symfony\Component\EventDispatcher\{EventDispatcher};
 use Which\{FinderException};
 use function Which\{which};
 
 /** Uploads code coverage reports to the [Coveralls](https://coveralls.io) service. */
-class Client extends Emitter {
+class Client {
 
   /** @var string The URL of the default API end point. */
   const defaultEndPoint = 'https://coveralls.io/api/v1/';
 
-  /** @var string An event that is triggered when a request is made to the remote service. */
-  const eventRequest = RequestEvent::class;
-
-  /** @var string An event that is triggered when a response is received from the remote service. */
-  const eventResponse = ResponseEvent::class;
+  /** @var EventDispatcher The event dispatcher. */
+  private EventDispatcher $dispatcher;
 
   /** @var UriInterface The URL of the API end point. */
   private UriInterface $endPoint;
@@ -29,7 +26,7 @@ class Client extends Emitter {
    * @param UriInterface|null $endPoint The URL of the API end point.
    */
   function __construct(?UriInterface $endPoint = null) {
-    $this->endPoint = $endPoint ?? new Uri(static::defaultEndPoint);
+    $this->dispatcher = new EventDispatcher;
   }
 
   /**
@@ -38,6 +35,22 @@ class Client extends Emitter {
    */
   function getEndPoint(): UriInterface {
     return $this->endPoint;
+  }
+
+  /**
+   * Subscribes to the `request` events.
+   * @param callable $listener The listener to register.
+   */
+  function onRequest(callable $listener): void {
+    $this->dispatcher->addListener(RequestEvent::class, $listener);
+  }
+
+  /**
+   * Subscribes to the `response` events.
+   * @param callable $listener The listener to register.
+   */
+  function onResponse(callable $listener): void {
+    $this->dispatcher->addListener(ResponseEvent::class, $listener);
   }
 
   /**
