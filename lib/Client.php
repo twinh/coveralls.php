@@ -112,12 +112,12 @@ class Client {
 
     try {
       $request = ($this->http->createRequest('POST', $uri))->withBody($this->http->createStream($formData->bodyToString()));
-      foreach ($formData->getPreparedHeaders()->toArray() as $name => $value) $request = $request->withHeader($name, $value);
+      foreach ($formData->getPreparedHeaders()->all() as $header) {
+        /** @var \Symfony\Component\Mime\Header\HeaderInterface $header */
+        $request = $request->withHeader($header->getName(), $header->getBodyAsString());
+      }
 
-      // TODO remove debug
-      var_dump($request);
       $this->dispatcher->dispatch(new RequestEvent($request));
-
       $response = $this->http->sendRequest($request);
       $this->dispatcher->dispatch(new ResponseEvent($response, $request));
     }
