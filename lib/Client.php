@@ -2,10 +2,11 @@
 namespace Coveralls;
 
 use Coveralls\Parsers\{Clover, Lcov};
-use GuzzleHttp\{Client as HTTPClient};
-use GuzzleHttp\Psr7\{MultipartStream, Request, Uri, UriResolver};
 use Psr\Http\Message\{UriInterface};
 use Symfony\Component\EventDispatcher\{EventDispatcher};
+use Symfony\Component\HttpClient\{Psr18Client};
+use Symfony\Component\Mime\Part\{DataPart};
+use Symfony\Component\Mime\Part\Multipart\{FormDataPart};
 use Which\{FinderException};
 use function Which\{which};
 
@@ -21,12 +22,17 @@ class Client {
   /** @var UriInterface The URL of the API end point. */
   private UriInterface $endPoint;
 
+  /** @var Psr18Client The HTTP client. */
+  private Psr18Client $http;
+
   /**
    * Creates a new client.
    * @param UriInterface|null $endPoint The URL of the API end point.
    */
   function __construct(?UriInterface $endPoint = null) {
     $this->dispatcher = new EventDispatcher;
+    $this->http = new Psr18Client;
+    $this->endPoint = $endPoint ?? $this->http->createUri(static::defaultEndPoint);
   }
 
   /**
@@ -97,24 +103,23 @@ class Client {
     if (!$job->getRepoToken() && !$job->getServiceName())
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
-    $uri = UriResolver::resolve($this->getEndPoint(), new Uri('jobs'));
-    $body = new MultipartStream([[
-      'contents' => json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-      'filename' => 'coveralls.json',
-      'name' => 'json_file'
-    ]]);
+    $endPoint = $this->getEndPoint();
+    $basePath = rtrim($endPoint->getPath(), '/');
+    $uri = $endPoint->withPath("$basePath/jobs");
 
-    $headers = [
-      'Content-Length' => $body->getSize(),
-      'Content-Type' => "multipart/form-data; boundary={$body->getBoundary()}"
-    ];
+    $jsonFile = new DataPart((string) json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 'coveralls.json', 'application/json');
+    $formData = new FormDataPart(['json_file' => $jsonFile]);
 
     try {
-      $request = new Request('POST', $uri, $headers, $body);
-      $this->emit(new RequestEvent($request));
+      $request = ($this->http->createRequest('POST', $uri))->withBody($this->http->createStream($formData->bodyToString()));
+      foreach ($formData->getPreparedHeaders()->toArray() as $name => $value) $request = $request->withHeader($name, $value);
 
-      $response = (new HTTPClient())->send($request);
-      $this->emit(new ResponseEvent($response, $request));
+      // TODO remove debug
+      var_dump($request);
+      $this->dispatcher->dispatch(new RequestEvent($request));
+
+      $response = $this->http->sendRequest($request);
+      $this->dispatcher->dispatch(new ResponseEvent($response, $request));
     }
 
     catch (\Throwable $e) {

@@ -2,7 +2,7 @@
 namespace Coveralls\Cli;
 
 use Coveralls\{Client};
-use GuzzleHttp\Psr7\{Uri};
+use Nyholm\Psr7\{Uri};
 use Symfony\Component\Console\Exception\{RuntimeException};
 use Symfony\Component\Console\Input\{InputArgument, InputInterface};
 use Symfony\Component\Console\Output\{OutputInterface};
