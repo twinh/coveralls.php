@@ -136,9 +136,9 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
   /**
    * Returns a new iterator that allows iterating the elements of this configuration.
-   * @return \Iterator<string, string|null> An iterator for the elements of this configuration.
+   * @return \Traversable<string, string|null> An iterator for the elements of this configuration.
    */
-  function getIterator(): \Iterator {
+  function getIterator(): \Traversable {
     return new \ArrayIterator($this->params);
   }
 
