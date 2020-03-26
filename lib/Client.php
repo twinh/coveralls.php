@@ -107,7 +107,7 @@ class Client {
     $basePath = rtrim($endPoint->getPath(), '/');
     $uri = $endPoint->withPath("$basePath/jobs");
 
-    $jsonFile = new DataPart((string) json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 'coveralls.json', 'application/json');
+    $jsonFile = new DataPart((string) json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 'coveralls.json');
     $formData = new FormDataPart(['json_file' => $jsonFile]);
 
     try {
