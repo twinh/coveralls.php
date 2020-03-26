@@ -39,8 +39,8 @@ class ConfigurationTest extends TestCase {
     assertThat($config['service_name'], equalTo('travis-ci'));
 
     // It should throw an exception with a non-object value.
-    Configuration::fromYaml('foo');
     $this->expectException(\InvalidArgumentException::class);
+    Configuration::fromYaml('foo');
   }
 
   /** @testdox ::loadDefaults() */
