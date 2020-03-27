@@ -104,8 +104,7 @@ class Client {
       throw new \InvalidArgumentException('The job does not meet the requirements.');
 
     $endPoint = $this->getEndPoint();
-    $basePath = rtrim($endPoint->getPath(), '/');
-    $uri = $endPoint->withPath("$basePath/jobs");
+    $uri = $endPoint->withPath("{$endPoint->getPath()}jobs");
 
     try {
       $jsonFile = json_encode($job, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
