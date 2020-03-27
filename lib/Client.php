@@ -107,10 +107,10 @@ class Client {
     $basePath = rtrim($endPoint->getPath(), '/');
     $uri = $endPoint->withPath("$basePath/jobs");
 
-    $jsonFile = new DataPart((string) json_encode($job, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 'coveralls.json');
-    $formData = new FormDataPart(['json_file' => $jsonFile]);
-
     try {
+      $jsonFile = json_encode($job, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+      $formData = new FormDataPart(['json_file' => new DataPart($jsonFile, 'coveralls.json')]);
+
       $request = ($this->http->createRequest('POST', $uri))->withBody($this->http->createStream($formData->bodyToString()));
       foreach ($formData->getPreparedHeaders()->all() as $header) {
         /** @var \Symfony\Component\Mime\Header\HeaderInterface $header */
