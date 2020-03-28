@@ -26,25 +26,33 @@ The `Client->upload()` method throws an [`InvalidArgumentException`](https://www
 if the input report is invalid. It throws a `Coveralls\ClientException` if any error occurred while uploading the report.
 
 ## Client events
-The `Coveralls\Client` class triggers some events during its life cycle:
+The `Coveralls\Client` class is an [EventDispatcher](https://symfony.com/doc/current/components/event_dispatcher.html) that triggers some events during its life cycle.
 
-- `request` : emitted every time a request is made to the remote service.
-- `response` : emitted every time a response is received from the remote service.
-
-You can subscribe to these events using the `on<EventName>()` methods:
+### The `Client::eventRequest` event
+Emitted every time a request is made to the remote service:
 
 ```php
 <?php
-use Coveralls\{Client, RequestEvent, ResponseEvent};
+use Coveralls\{Client, RequestEvent};
 
 function main(): void {
   $client = new Client;
-
-  $client->onRequest(function(RequestEvent $event) {
+  $client->addListener(Client::eventRequest, function(RequestEvent $event) {
     echo 'Client request: ', $event->getRequest()->getUri();
   });
+}
+```
 
-  $client->onResponse(function(ResponseEvent $event) {
+### The `Client::eventResponse` event
+Emitted every time a response is received from the remote service:
+
+```php
+<?php
+use Coveralls\{Client, ResponseEvent};
+
+function main(): void {
+  $client = new Client;
+  $client->addListener(Client::eventResponse, function(ResponseEvent $event) {
     echo 'Server response: ', $event->getResponse()->getStatusCode();
   });
 }
