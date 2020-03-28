@@ -2,9 +2,7 @@
 
 ## Version [13.0.0](https://github.com/cedx/coveralls.php/compare/v12.0.0...v13.0.0)
 - Breaking change: moved all classes to the `Coveralls` root namespace.
-- Breaking change: removed the `eventRequest` and `eventResponse` constants from the `Client` class.
 - Breaking change: replaced [PHP League Event](https://event.thephpleague.com) library by [Symfony EventDispatcher](https://symfony.com/doc/current/components/event_dispatcher.html) for event handling.
-- Added the `onRequest()` and `onResponse()` methods to the `Client` class.
 - Replaced the [Guzzle HTTP client](http://docs.guzzlephp.org) by the [Symfony one](https://symfony.com/doc/current/components/http_client.html).
 - Updated the package dependencies.
 
