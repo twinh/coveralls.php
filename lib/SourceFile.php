@@ -103,14 +103,4 @@ class SourceFile implements \JsonSerializable {
     if (mb_strlen($source = $this->getSource())) $map->source = $source;
     return $map;
   }
-
-  /**
-   * Gets the coverage data for this file's job.
-   * @param int[] $value The coverage data.
-   * @return $this This instance.
-   */
-  function setCoverage(array $value): self {
-    $this->coverage->exchangeArray($value);
-    return $this;
-  }
 }
