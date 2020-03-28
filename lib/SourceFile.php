@@ -105,16 +105,6 @@ class SourceFile implements \JsonSerializable {
   }
 
   /**
-   * Gets the branch data for this file's job.
-   * @param array<int|null> $value The branch data.
-   * @return $this This instance.
-   */
-  function setBranches(array $value): self {
-    $this->branches->exchangeArray($value);
-    return $this;
-  }
-
-  /**
    * Gets the coverage data for this file's job.
    * @param int[] $value The coverage data.
    * @return $this This instance.
