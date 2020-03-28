@@ -20,7 +20,7 @@ class CloverTest extends TestCase {
     $subset = [null, 2, 2, 2, 2, null];
     assertThat($file, isInstanceOf(SourceFile::class));
     assertThat($file->getBranches(), isEmpty());
-    assertThat(array_intersect($subset, $file->getCoverage()->getArrayCopy()), equalTo($subset));
+    assertThat(array_intersect($subset, (array) $file->getCoverage()), equalTo($subset));
     assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'lib/Client.php')));
     assertThat($file->getSourceDigest(), logicalNot(isEmpty()));
 
@@ -29,7 +29,7 @@ class CloverTest extends TestCase {
     $subset = [null, 4, 4, 2, 2, 4, 2, 2, 4, 4, null];
     assertThat($file, isInstanceOf(SourceFile::class));
     assertThat($file->getBranches(), isEmpty());
-    assertThat(array_intersect($subset, $file->getCoverage()->getArrayCopy()), equalTo($subset));
+    assertThat(array_intersect($subset, (array) $file->getCoverage()), equalTo($subset));
     assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'lib/Configuration.php')));
     assertThat($file->getSourceDigest(), logicalNot(isEmpty()));
 
@@ -38,7 +38,7 @@ class CloverTest extends TestCase {
     $subset = [null, 2, 2, 2, 2, 2, 0, 0, 2, 2, null];
     assertThat($file, isInstanceOf(SourceFile::class));
     assertThat($file->getBranches(), isEmpty());
-    assertThat(array_intersect($subset, $file->getCoverage()->getArrayCopy()), equalTo($subset));
+    assertThat(array_intersect($subset, (array) $file->getCoverage()), equalTo($subset));
     assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'lib/GitCommit.php')));
     assertThat($file->getSourceDigest(), logicalNot(isEmpty()));
 

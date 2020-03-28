@@ -15,7 +15,7 @@ abstract class Lcov {
    * @throws \RuntimeException A source file is not found or empty.
    */
   static function parseReport(string $report): Job {
-    $records = Report::fromCoverage($report)->getRecords()->getArrayCopy();
+    $records = (array) Report::fromCoverage($report)->getRecords();
     $workingDir = (string) getcwd();
 
     return new Job(array_map(function(Record $record) use ($workingDir) {

@@ -96,10 +96,10 @@ class SourceFile implements \JsonSerializable {
    */
   function jsonSerialize(): \stdClass {
     $map = new \stdClass;
-    $map->coverage = $this->getCoverage()->getArrayCopy();
+    $map->coverage = (array) $this->getCoverage();
     $map->name = $this->getName();
     $map->source_digest = $this->getSourceDigest();
-    if (count($branches = $this->getBranches())) $map->branches = $branches->getArrayCopy();
+    if (count($branches = $this->getBranches())) $map->branches = (array) $branches;
     if (mb_strlen($source = $this->getSource())) $map->source = $source;
     return $map;
   }
