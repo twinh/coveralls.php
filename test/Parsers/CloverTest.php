@@ -21,7 +21,7 @@ class CloverTest extends TestCase {
     assertThat($file, isInstanceOf(SourceFile::class));
     assertThat($file->getBranches(), isEmpty());
     assertThat(array_intersect($subset, (array) $file->getCoverage()), equalTo($subset));
-    assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'lib/Client.php')));
+    assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'src/Client.php')));
     assertThat($file->getSourceDigest(), logicalNot(isEmpty()));
 
     /** @var SourceFile $file */
@@ -30,7 +30,7 @@ class CloverTest extends TestCase {
     assertThat($file, isInstanceOf(SourceFile::class));
     assertThat($file->getBranches(), isEmpty());
     assertThat(array_intersect($subset, (array) $file->getCoverage()), equalTo($subset));
-    assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'lib/Configuration.php')));
+    assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'src/Configuration.php')));
     assertThat($file->getSourceDigest(), logicalNot(isEmpty()));
 
     /** @var SourceFile $file */
@@ -39,7 +39,7 @@ class CloverTest extends TestCase {
     assertThat($file, isInstanceOf(SourceFile::class));
     assertThat($file->getBranches(), isEmpty());
     assertThat(array_intersect($subset, (array) $file->getCoverage()), equalTo($subset));
-    assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'lib/GitCommit.php')));
+    assertThat($file->getName(), equalTo(str_replace('/', DIRECTORY_SEPARATOR, 'src/GitCommit.php')));
     assertThat($file->getSourceDigest(), logicalNot(isEmpty()));
 
     // It should throw an exception if the Clover report is invalid or empty.
