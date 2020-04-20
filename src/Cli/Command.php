@@ -27,9 +27,8 @@ class Command extends \Symfony\Component\Console\Command\Command {
    * @return int The exit code.
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
-    /** @var string $file */
-    $file = $input->getArgument('file');
-    if (!is_file($file)) throw new RuntimeException("File not found: $file");
+    $file = new \SplFileInfo($input->getArgument('file'));
+    if (!$file->isFile()) throw new RuntimeException("File not found: {$file->getPathname()}");
 
     $client = new Client(new Uri($_SERVER['COVERALLS_ENDPOINT'] ?? Client::defaultEndPoint));
     $output->writeln("[Coveralls] Submitting to {$client->getEndPoint()}");
