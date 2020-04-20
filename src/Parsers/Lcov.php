@@ -42,7 +42,7 @@ abstract class Lcov {
       }
 
       $filename = Path::isAbsolute($sourceFile) ? Path::makeRelative($sourceFile, $workingDir) : Path::canonicalize($sourceFile);
-      return new SourceFile(str_replace('/', DIRECTORY_SEPARATOR, $filename), md5($source), $source, $lineCoverage->toArray(), $branchCoverage);
+      return new SourceFile(str_replace('/', DIRECTORY_SEPARATOR, $filename), md5($source), $source, (array) $lineCoverage, $branchCoverage);
     }, $records));
   }
 }
