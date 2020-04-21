@@ -34,7 +34,7 @@ class GitDataTest extends TestCase {
     assertThat($remotes, countOf(1));
 
     /** @var GitRemote $remote */
-    $remote = $remotes[0];
+    [$remote] = $remotes;
     assertThat($remote, isInstanceOf(GitRemote::class));
     assertThat($remote->getName(), equalTo('origin'));
   }
