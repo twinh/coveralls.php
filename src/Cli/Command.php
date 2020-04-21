@@ -32,7 +32,7 @@ class Command extends \Symfony\Component\Console\Command\Command {
 
     $client = new Client(new Uri($_SERVER['COVERALLS_ENDPOINT'] ?? Client::defaultEndPoint));
     $output->writeln("[Coveralls] Submitting to {$client->getEndPoint()}");
-    $client->upload((string) @file_get_contents($file));
+    $client->upload((string) @file_get_contents($file->getPathname()));
     return 0;
   }
 }
