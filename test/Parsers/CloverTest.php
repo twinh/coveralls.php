@@ -10,8 +10,10 @@ class CloverTest extends TestCase {
 
   /** @testdox ::parseReport() */
   function testParseReport(): void {
+    $report = new \SplFileObject('test/fixtures/clover.xml');
+
     // It should properly parse Clover reports.
-    $job = Clover::parseReport((string) @file_get_contents('test/fixtures/clover.xml'));
+    $job = Clover::parseReport((string) $report->fread($report->getSize()));
     $files = $job->getSourceFiles();
     assertThat($files, countOf(3));
 

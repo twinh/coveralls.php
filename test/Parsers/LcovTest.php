@@ -10,8 +10,10 @@ class LcovTest extends TestCase {
 
   /** @testdox ::parseReport() */
   function testParseReport(): void {
+    $report = new \SplFileObject('test/fixtures/lcov.info');
+
     // It should properly parse LCOV reports.
-    $job = Lcov::parseReport((string) @file_get_contents('test/fixtures/lcov.info'));
+    $job = Lcov::parseReport((string) $report->fread($report->getSize()));
     $files = $job->getSourceFiles();
     assertThat($files, countOf(3));
 
@@ -42,6 +44,7 @@ class LcovTest extends TestCase {
 
     // It should throw an exception when parsing reports with invalid source file.
     $this->expectException(\RuntimeException::class);
-    Lcov::parseReport((string) @file_get_contents('test/fixtures/invalid_lcov.info'));
+    $report = new \SplFileObject('test/fixtures/invalid_lcov.info');
+    Lcov::parseReport((string) $report->fread($report->getSize()));
   }
 }
