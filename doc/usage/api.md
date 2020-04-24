@@ -1,5 +1,7 @@
-path: blob/master
+---
+path: src/branch/master
 source: src/Client.php
+---
 
 # Application programming interface
 The hard way. Use the `Coveralls\Client` class to upload your coverage reports:
@@ -10,7 +12,7 @@ use Coveralls\{Client, ClientException};
 
 function main(): void {
   try {
-    $coverage = @file_get_contents('/path/to/coverage.report');
+    $coverage = file_get_contents('/path/to/coverage.report');
     (new Client)->upload($coverage);
     echo 'The report was sent successfully.';
   }

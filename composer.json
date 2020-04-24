@@ -1,6 +1,6 @@
 {
   "description": "Send Clover and LCOV coverage reports to the Coveralls service.",
-  "homepage": "https://dev.belin.io/coveralls.php",
+  "homepage": "https://docs.belin.io/coveralls.php",
   "license": "MIT",
   "name": "cedx/coveralls",
   "type": "library",
@@ -59,7 +59,7 @@
     "test": "robo test"
   },
   "support": {
-    "docs": "https://dev.belin.io/coveralls.php/api",
-    "issues": "https://github.com/cedx/coveralls.php/issues"
+    "docs": "https://api.belin.io/coveralls.php",
+    "issues": "https://git.belin.io/cedx/coveralls.php/issues"
   }
 }
