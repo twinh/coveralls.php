@@ -18,11 +18,6 @@ jobs:
         run: |
           php --version
           composer --version
-      - name: Debug if needed
-        run: |
-          if [[ "$DEBUG" == "true" ]]; then env; fi
-        env:
-          DEBUG: $ {{secrets.DEBUG}}
       - name: Fetch sources
         uses: actions/checkout@v2
       - name: Install dependencies
