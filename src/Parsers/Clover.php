@@ -26,7 +26,7 @@ abstract class Clover {
       if (!isset($file['name'])) throw new \InvalidArgumentException("Invalid file data: {$file->asXML()}");
 
       $sourceFile = new \SplFileObject((string) $file['name']);
-      if (!$sourceFile->isFile()) throw new \RuntimeException("Source file not found: {$sourceFile->getPathname()}");
+      if (!$sourceFile->isReadable()) throw new \RuntimeException("Source file not found: {$sourceFile->getPathname()}");
 
       $source = (string) $sourceFile->fread($sourceFile->getSize());
       if (!mb_strlen($source)) throw new \RuntimeException("Source file empty: {$sourceFile->getPathname()}");

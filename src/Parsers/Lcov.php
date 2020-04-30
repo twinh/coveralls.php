@@ -20,7 +20,7 @@ abstract class Lcov {
 
     return new Job(array_map(function(Record $record) use ($workingDir) {
       $sourceFile = new \SplFileObject($record->getSourceFile());
-      if (!$sourceFile->isFile()) throw new \RuntimeException("Source file not found: {$sourceFile->getPathname()}");
+      if (!$sourceFile->isReadable()) throw new \RuntimeException("Source file not found: {$sourceFile->getPathname()}");
 
       $source = (string) $sourceFile->fread($sourceFile->getSize());
       if (!mb_strlen($source)) throw new \RuntimeException("Source file empty: {$sourceFile->getPathname()}");

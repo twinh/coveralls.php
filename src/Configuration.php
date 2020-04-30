@@ -118,7 +118,7 @@ class Configuration implements \ArrayAccess, \Countable, \IteratorAggregate, \Js
 
     try {
       $file = new \SplFileObject($coverallsFile);
-      if ($file->isFile()) $defaults->merge(static::fromYaml((string) $file->fread($file->getSize())));
+      if ($file->isReadable()) $defaults->merge(static::fromYaml((string) $file->fread($file->getSize())));
       return $defaults;
     }
 
