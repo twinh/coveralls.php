@@ -1,2 +1,2 @@
 #!/usr/bin/env pwsh
-& php "$PSScriptRoot/coveralls" $args
+php "$PSScriptRoot/coveralls" $args
