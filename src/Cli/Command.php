@@ -10,31 +10,31 @@ use Symfony\Component\Console\Output\{OutputInterface};
 /** The console command. */
 class Command extends \Symfony\Component\Console\Command\Command {
 
-  /** @var string The command name. */
-  protected static $defaultName = 'coveralls';
+	/** @var string The command name. */
+	protected static $defaultName = "coveralls";
 
-  /** Configures the current command. */
-  protected function configure(): void {
-    $this
-      ->setDescription('Send a coverage report to the Coveralls service.')
-      ->addArgument('file', InputArgument::REQUIRED, 'The path of the coverage report to upload');
-  }
+	/** Configures the current command. */
+	protected function configure(): void {
+		$this
+			->setDescription("Send a coverage report to the Coveralls service.")
+			->addArgument("file", InputArgument::REQUIRED, "The path of the coverage report to upload");
+	}
 
-  /**
-   * Executes the current command.
-   * @param InputInterface $input The input arguments and options.
-   * @param OutputInterface $output The console output.
-   * @return int The exit code.
-   */
-  protected function execute(InputInterface $input, OutputInterface $output): int {
-    /** @var string $path */
-    $path = $input->getArgument('file');
-    $file = new \SplFileObject($path);
-    if (!$file->isReadable()) throw new RuntimeException("File not found: {$file->getPathname()}");
+	/**
+	 * Executes the current command.
+	 * @param InputInterface $input The input arguments and options.
+	 * @param OutputInterface $output The console output.
+	 * @return int The exit code.
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output): int {
+		/** @var string $path */
+		$path = $input->getArgument("file");
+		$file = new \SplFileObject($path);
+		if (!$file->isReadable()) throw new RuntimeException("File not found: {$file->getPathname()}");
 
-    $client = new Client(new Uri($_SERVER['COVERALLS_ENDPOINT'] ?? Client::defaultEndPoint));
-    $output->writeln("[Coveralls] Submitting to {$client->getEndPoint()}");
-    $client->upload((string) $file->fread($file->getSize()));
-    return 0;
-  }
+		$client = new Client(new Uri($_SERVER["COVERALLS_ENDPOINT"] ?? Client::defaultEndPoint));
+		$output->writeln("[Coveralls] Submitting to {$client->getEndPoint()}");
+		$client->upload((string) $file->fread($file->getSize()));
+		return 0;
+	}
 }

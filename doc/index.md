@@ -8,7 +8,7 @@ Send [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) and [Clover](https://w
 ## Quick start
 Install the latest version of **Coveralls for PHP** with [Composer](https://getcomposer.org):
 
-```shell
+``` shell
 composer require cedx/coveralls
 ```
 
