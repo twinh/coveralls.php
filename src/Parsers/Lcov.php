@@ -23,14 +23,18 @@ abstract class Lcov {
 			$source = (string) $sourceFile->fread($sourceFile->getSize());
 			if (!mb_strlen($source)) throw new \RuntimeException("Source file empty: {$sourceFile->getPathname()}");
 
+			/** @var \lcov\LineCoverage|null $lines */
+			$lines = $record->branches;
 			$lineCoverage = new \SplFixedArray(count(preg_split('/\r?\n/', $source) ?: []));
-			if ($record->lines) foreach ($record->lines->data as $lineData) {
+			if ($lines) foreach ($lines->data as $lineData) {
 				/** @var \lcov\LineData $lineData */
-				$lineCoverage[$lineData->lineNumber - 1] = $lineData->executionCount;
+				$lineCoverage[$lineData->lineNumber - 1] = $lineData->executionCount; // @phpstan-ignore-line
 			}
 
+			/** @var \lcov\BranchCoverage|null $branches */
+			$branches = $record->branches;
 			$branchCoverage = [];
-			if ($record->branches) foreach ($record->branches->data as $branchData) {
+			if ($branches) foreach ($branches->data as $branchData) {
 				/** @var \lcov\BranchData $branchData */
 				array_push($branchCoverage, $branchData->lineNumber, $branchData->blockNumber, $branchData->branchNumber, $branchData->taken);
 			}
