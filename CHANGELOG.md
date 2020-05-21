@@ -1,5 +1,9 @@
 # Changelog
 
+## Version [13.1.0](https://git.belin.io/cedx/coveralls.php/compare/v13.0.0...v13.1.0)
+- Replaced the build system based on [Robo](https://robo.li) by [PowerShell](https://docs.microsoft.com/en-us/powershell) scripts.
+- Updated the package dependencies.
+
 ## Version [13.0.0](https://git.belin.io/cedx/coveralls.php/compare/v12.0.0...v13.0.0)
 - Breaking change: moved all classes to the `Coveralls` root namespace.
 - Breaking change: replaced [PHP League Event](https://event.thephpleague.com) library by [Symfony EventDispatcher](https://symfony.com/doc/current/components/event_dispatcher.html) for event handling.
