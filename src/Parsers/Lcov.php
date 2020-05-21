@@ -2,7 +2,7 @@
 namespace Coveralls\Parsers;
 
 use Coveralls\{Job, SourceFile};
-use Lcov\{Record, Report};
+use lcov\{Record, Report};
 use Webmozart\PathUtil\{Path};
 
 /** Parses [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) coverage reports. */
@@ -15,32 +15,24 @@ abstract class Lcov {
 	 * @throws \RuntimeException A source file is not found or empty.
 	 */
 	static function parseReport(string $report): Job {
-		$records = (array) Report::fromCoverage($report)->getRecords();
 		$workingDir = (string) getcwd();
-
-		return new Job(array_map(function(Record $record) use ($workingDir) {
-			$sourceFile = new \SplFileObject($record->getSourceFile());
+		$sourceFiles = Report::fromCoverage($report)->records->map(function(Record $record) use ($workingDir) {
+			$sourceFile = new \SplFileObject($record->sourceFile);
 			if (!$sourceFile->isReadable()) throw new \RuntimeException("Source file not found: {$sourceFile->getPathname()}");
 
 			$source = (string) $sourceFile->fread($sourceFile->getSize());
 			if (!mb_strlen($source)) throw new \RuntimeException("Source file empty: {$sourceFile->getPathname()}");
 
 			$lineCoverage = new \SplFixedArray(count(preg_split('/\r?\n/', $source) ?: []));
-			if ($lines = $record->getLines()) foreach ($lines->getData() as $lineData) {
-				/** @var \Lcov\LineData $lineData */
-				$lineCoverage[$lineData->getLineNumber() - 1] = $lineData->getExecutionCount();
+			if ($record->lines) foreach ($record->lines->data as $lineData) {
+				/** @var \lcov\LineData $lineData */
+				$lineCoverage[$lineData->lineNumber - 1] = $lineData->executionCount;
 			}
 
 			$branchCoverage = [];
-			if ($branches = $record->getBranches()) foreach ($branches->getData() as $branchData) {
-				/** @var \Lcov\BranchData $branchData */
-				array_push(
-					$branchCoverage,
-					$branchData->getLineNumber(),
-					$branchData->getBlockNumber(),
-					$branchData->getBranchNumber(),
-					$branchData->getTaken()
-				);
+			if ($record->branches) foreach ($record->branches->data as $branchData) {
+				/** @var \lcov\BranchData $branchData */
+				array_push($branchCoverage, $branchData->lineNumber, $branchData->blockNumber, $branchData->branchNumber, $branchData->taken);
 			}
 
 			$filename = Path::isAbsolute($sourceFile->getPathname())
@@ -48,6 +40,8 @@ abstract class Lcov {
 				: Path::canonicalize($sourceFile->getPathname());
 
 			return new SourceFile(str_replace("/", DIRECTORY_SEPARATOR, $filename), md5($source), $source, (array) $lineCoverage, $branchCoverage);
-		}, $records));
+		});
+
+		return new Job($sourceFiles->arr);
 	}
 }

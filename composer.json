@@ -39,7 +39,7 @@
 		"ext-pcre": "*",
 		"ext-SimpleXML": "*",
 		"ext-spl": "*",
-		"cedx/lcov": "^8.2.0",
+		"cedx/lcov.hx": "^1.0.1",
 		"cedx/which": "^9.0.0",
 		"nyholm/psr7": "^1.2.1",
 		"psr/http-client": "^1.0.0",
