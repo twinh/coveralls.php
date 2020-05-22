@@ -24,11 +24,11 @@ abstract class Lcov {
 			if (!mb_strlen($source)) throw new \RuntimeException("Source file empty: {$sourceFile->getPathname()}");
 
 			/** @var \lcov\LineCoverage|null $lines */
-			$lines = $record->branches;
+			$lines = $record->lines;
 			$lineCoverage = new \SplFixedArray(count(preg_split('/\r?\n/', $source) ?: []));
 			if ($lines) foreach ($lines->data as $lineData) {
 				/** @var \lcov\LineData $lineData */
-				$lineCoverage[$lineData->lineNumber - 1] = $lineData->executionCount; // @phpstan-ignore-line
+				$lineCoverage[$lineData->lineNumber - 1] = $lineData->executionCount;
 			}
 
 			/** @var \lcov\BranchCoverage|null $branches */
