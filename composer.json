@@ -41,7 +41,7 @@
 		"ext-spl": "*",
 		"cedx/lcov.hx": "^1.0.1",
 		"cedx/which": "^9.0.0",
-		"nyholm/psr7": "^1.2.1",
+		"nyholm/psr7": "^1.3.0",
 		"psr/http-client": "^1.0.0",
 		"symfony/console": "^5.0.8",
 		"symfony/event-dispatcher": "^5.0.8",
