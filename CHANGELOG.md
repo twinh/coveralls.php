@@ -1,5 +1,8 @@
 # Changelog
 
+## Version [13.1.1](https://git.belin.io/cedx/coveralls.php/compare/v13.1.0...v13.1.1)
+- Fixed a regression in the [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) parser.
+
 ## Version [13.1.0](https://git.belin.io/cedx/coveralls.php/compare/v13.0.0...v13.1.0)
 - Replaced the build system based on [Robo](https://robo.li) by [PowerShell](https://docs.microsoft.com/en-us/powershell) scripts.
 - Updated the package dependencies.
