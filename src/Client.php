@@ -97,6 +97,8 @@ class Client extends EventDispatcher {
 			$jsonFile = json_encode($job, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 			$formData = new FormDataPart(["json_file" => new DataPart($jsonFile, "coveralls.json")]);
 
+			echo $jsonFile, "\n";
+
 			$request = ($this->http->createRequest("POST", $uri))->withBody($this->http->createStream($formData->bodyToString()));
 			foreach ($formData->getPreparedHeaders()->all() as $header) {
 				/** @var \Symfony\Component\Mime\Header\HeaderInterface $header */
